@@ -75,7 +75,7 @@ collection:
         meta:
           id: req_f074e6fc69fb4fb19290de9a2d3955df
           created: 1749035379556
-          modified: 1749199832079
+          modified: 1749203391598
           isPrivate: false
           sortKey: -1748881859977.5
         method: POST
@@ -83,7 +83,7 @@ collection:
           mimeType: application/json
           text: |-
             {
-            	"name":"Dietz Körner GmbH & Co. OHG",
+            	"name":"Schade Bader AG & Co. KG",
             	"currency":"EUR"
             }
         headers:
@@ -182,7 +182,7 @@ collection:
         meta:
           id: req_ce5b3ef65ffc457089e0bfa42bfea5a4
           created: 1749199920140
-          modified: 1749200026853
+          modified: 1749203448344
           isPrivate: false
           sortKey: -1749117589266
         method: POST
@@ -191,8 +191,8 @@ collection:
           text: |-
             {
             	"organizationId":"{{ _.active_organization_id }}",
-            	"name":"Cash – Payroll Checking",
-            	"code":"10200",
+            	"name":"Cash",
+            	"code":"10100",
             	"accountType":"ASSET"
             }
         headers:
@@ -281,22 +281,117 @@ collection:
         pathParameters:
           - name: id
             value: "1930910926215577600"
+  - name: Transactions
+    meta:
+      id: fld_083f1e2dd5bd4a87b8d357e7d21fefb1
+      created: 1749203458572
+      modified: 1749203458572
+      sortKey: -1749203458572
+    children:
+      - url: "{{_.server_url}}transactions/organization/:organizationId"
+        name: Get transactions
+        meta:
+          id: req_5e8ead4249cd4d058b693952ba67f1ae
+          created: 1749203460624
+          modified: 1749203504678
+          isPrivate: false
+          sortKey: -1749203460624
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.1.0
+        authentication:
+          type: oauth2
+          grantType: authorization_code
+          authorizationUrl: "{{_.auth_url}}"
+          accessTokenUrl: "{{ _.access_token_url }}"
+          clientId: "{{_.client_id}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: organizationId
+            value: "{{ _.active_organization_id }}"
+      - url: "{{_.server_url}}transactions/create"
+        name: Create transaction
+        meta:
+          id: req_1e2527a4174049868f7b440b583177cf
+          created: 1749203516335
+          modified: 1749203651328
+          isPrivate: false
+          sortKey: -1749201659953
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"date":"2025-06-06",
+            	"currency":"EUR",
+            	"description":"My new transaction",
+            	"organizationId":"{{ _.active_organization_id }}",
+            	"lines":[
+            		{
+            			"accountId":"1930925336065736704",
+            			"creditAmount":500.0,
+            			"debitAmount":0.0
+            		},
+            		{
+            			"accountId":"1930925282093432832",
+            			"creditAmount":0.0,
+            			"debitAmount":500.0
+            		}
+            	]
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.1.0
+        authentication:
+          type: oauth2
+          grantType: authorization_code
+          authorizationUrl: "{{_.auth_url}}"
+          accessTokenUrl: "{{ _.access_token_url }}"
+          clientId: "{{_.client_id}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
 cookieJar:
   name: Default Jar
   meta:
     id: jar_676597a9d4e9b24c6c7cf8e61c4566cefaacc897
     created: 1749035252073
-    modified: 1749035252073
+    modified: 1749203488220
+  cookies:
+    - key: JSESSIONID
+      value: 96C1B562909AE350FA74CD7FC09F7F38
+      domain: localhost
+      path: /
+      httpOnly: true
+      hostOnly: true
+      creation: 2025-06-06T09:51:28.220Z
+      lastAccessed: 2025-06-06T09:51:28.220Z
+      id: 82ad1afe-72c8-41a3-8b52-2bcdb3aa832f
 environments:
   name: Base Environment
   meta:
     id: env_676597a9d4e9b24c6c7cf8e61c4566cefaacc897
     created: 1749035252072
-    modified: 1749199846834
+    modified: 1749203403601
     isPrivate: false
   data:
     server_url: http://localhost:8000/api/
     access_token_url: http://localhost:8080/realms/accounting/protocol/openid-connect/token
     auth_url: http://localhost:8080/realms/accounting/protocol/openid-connect/auth
     client_id: accounting-rest
-    active_organization_id: "1930910202710720512"
+    active_organization_id: "1930925122495971328"
