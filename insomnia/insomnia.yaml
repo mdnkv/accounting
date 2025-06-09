@@ -4,6 +4,7 @@ meta:
   id: wrk_bdd8212d7ba94ef3883342c998a657e3
   created: 1749035252069
   modified: 1749035252069
+  description: ""
 collection:
   - name: Organizations
     meta:
@@ -11,6 +12,7 @@ collection:
       created: 1749035316384
       modified: 1749035316384
       sortKey: -1749035316384
+      description: ""
     children:
       - url: "{{_.server_url}}organizations/organization/:id"
         name: Get organization
@@ -19,6 +21,7 @@ collection:
           created: 1749035319250
           modified: 1749117389195
           isPrivate: false
+          description: ""
           sortKey: -1749035319250
         method: GET
         headers:
@@ -48,6 +51,7 @@ collection:
           created: 1749035370998
           modified: 1749117420957
           isPrivate: false
+          description: ""
           sortKey: -1748728400705
         method: DELETE
         headers:
@@ -75,15 +79,16 @@ collection:
         meta:
           id: req_f074e6fc69fb4fb19290de9a2d3955df
           created: 1749035379556
-          modified: 1749203391598
+          modified: 1749459890632
           isPrivate: false
+          description: ""
           sortKey: -1748881859977.5
         method: POST
         body:
           mimeType: application/json
           text: |-
             {
-            	"name":"Schade Bader AG & Co. KG",
+            	"name":"Another organization",
             	"currency":"EUR"
             }
         headers:
@@ -112,6 +117,7 @@ collection:
           created: 1749035456222
           modified: 1749117408265
           isPrivate: false
+          description: ""
           sortKey: -1748805130341.25
         method: PUT
         body:
@@ -147,6 +153,7 @@ collection:
       created: 1749199857101
       modified: 1749199857101
       sortKey: -1749199857101
+      description: ""
     children:
       - url: "{{_.server_url}}accounts/organization/:organizationId"
         name: Get accounts in organization
@@ -155,6 +162,7 @@ collection:
           created: 1749199859282
           modified: 1749199909861
           isPrivate: false
+          description: ""
           sortKey: -1749199859282
         method: GET
         headers:
@@ -184,6 +192,7 @@ collection:
           created: 1749199920140
           modified: 1749203448344
           isPrivate: false
+          description: ""
           sortKey: -1749117589266
         method: POST
         body:
@@ -221,6 +230,7 @@ collection:
           created: 1749200036626
           modified: 1749200063324
           isPrivate: false
+          description: ""
           sortKey: -1749076454258
         method: PUT
         body:
@@ -259,6 +269,7 @@ collection:
           created: 1749200075615
           modified: 1749200087084
           isPrivate: false
+          description: ""
           sortKey: -1749055886754
         method: DELETE
         headers:
@@ -287,6 +298,7 @@ collection:
       created: 1749203458572
       modified: 1749203458572
       sortKey: -1749203458572
+      description: ""
     children:
       - url: "{{_.server_url}}transactions/organization/:organizationId"
         name: Get transactions
@@ -295,6 +307,7 @@ collection:
           created: 1749203460624
           modified: 1749203504678
           isPrivate: false
+          description: ""
           sortKey: -1749203460624
         method: GET
         headers:
@@ -324,6 +337,7 @@ collection:
           created: 1749203516335
           modified: 1749203651328
           isPrivate: false
+          description: ""
           sortKey: -1749201659953
         method: POST
         body:
@@ -352,6 +366,68 @@ collection:
             value: application/json
           - name: User-Agent
             value: insomnia/11.1.0
+        authentication:
+          type: oauth2
+          grantType: authorization_code
+          authorizationUrl: "{{_.auth_url}}"
+          accessTokenUrl: "{{ _.access_token_url }}"
+          clientId: "{{_.client_id}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Roles
+    meta:
+      id: fld_56d51e0ad170470580fa0b2a1a5198b7
+      created: 1749461838130
+      modified: 1749461838130
+      sortKey: -1749461838130
+      description: ""
+    children:
+      - url: "{{_.server_url}}roles/active"
+        name: Get active role for user
+        meta:
+          id: req_a02ffd5903174c72b51e04b9e53cd812
+          created: 1749461937268
+          modified: 1749461969126
+          isPrivate: false
+          description: ""
+          sortKey: -1749461937269
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.2.0
+        authentication:
+          type: oauth2
+          grantType: authorization_code
+          authorizationUrl: "{{_.auth_url}}"
+          accessTokenUrl: "{{ _.access_token_url }}"
+          clientId: "{{_.client_id}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{_.server_url}}roles/user"
+        name: Get roles for user
+        meta:
+          id: req_66403ae1b76a40e1a14234a03d6be69f
+          created: 1749461986112
+          modified: 1749461988512
+          isPrivate: false
+          description: ""
+          sortKey: -1749332698946.5
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.2.0
         authentication:
           type: oauth2
           grantType: authorization_code

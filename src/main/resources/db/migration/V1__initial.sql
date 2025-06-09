@@ -46,3 +46,18 @@ CREATE TABLE IF NOT EXISTS user_accounts (
     first_name VARCHAR(255),
     last_name VARCHAR(255)
 );
+
+CREATE TYPE ROLE_TYPE AS ENUM ('OWNER', 'ADMINISTRATOR', 'ACCOUNTANT', 'USER');
+
+CREATE TABLE IF NOT EXISTS roles (
+    id BIGINT PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    organization_id BIGINT NOT NULL,
+    is_active BOOLEAN NOT NULL,
+    role_type ROLE_TYPE NOT NULL,
+    UNIQUE (user_id, organization_id),
+    CONSTRAINT fk_role_organization FOREIGN KEY (organization_id)
+        REFERENCES organizations(id) ON DELETE CASCADE,
+    CONSTRAINT fk_role_user FOREIGN KEY (user_id)
+        REFERENCES user_accounts(id) ON DELETE CASCADE
+);
