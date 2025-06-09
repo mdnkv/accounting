@@ -5,6 +5,7 @@ import dev.mednikov.accounting.organizations.dto.OrganizationDto;
 import dev.mednikov.accounting.organizations.exceptions.OrganizationNotFoundException;
 import dev.mednikov.accounting.organizations.models.Organization;
 import dev.mednikov.accounting.organizations.repositories.OrganizationRepository;
+import dev.mednikov.accounting.users.models.User;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,14 +13,17 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @ExtendWith(MockitoExtension.class)
 class OrganizationServiceImplTest {
 
     private final static SnowflakeGenerator snowflakeGenerator = new SnowflakeGenerator();
 
+    @Mock private ApplicationEventPublisher eventPublisher;
     @Mock private OrganizationRepository organizationRepository;
     @InjectMocks private OrganizationServiceImpl organizationService;
 
@@ -35,9 +39,15 @@ class OrganizationServiceImplTest {
         organization.setName("Wilhelm Meißner AG");
         organization.setCurrency("EUR");
 
+        Long userId = snowflakeGenerator.next();
+        User user = new User();
+        user.setId(userId);
+        user.setKeycloakId(UUID.randomUUID().toString());
+        user.setEmail("vy7e5804yikk6gcq33ht@ymail.com");
+
         Mockito.when(organizationRepository.save(organization)).thenReturn(organization);
 
-        OrganizationDto result = organizationService.createOrganization(payload);
+        OrganizationDto result = organizationService.createOrganization(user, payload);
         Mockito.verify(organizationRepository, Mockito.times(1)).save(organization);
         Assertions.assertThat(result).isNotNull();
 

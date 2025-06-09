@@ -79,7 +79,7 @@ collection:
         meta:
           id: req_f074e6fc69fb4fb19290de9a2d3955df
           created: 1749035379556
-          modified: 1749459890632
+          modified: 1749462676392
           isPrivate: false
           description: ""
           sortKey: -1748881859977.5
@@ -88,7 +88,7 @@ collection:
           mimeType: application/json
           text: |-
             {
-            	"name":"Another organization",
+            	"name":"Wittmann Jäger Stiftung & Co. KGaA",
             	"currency":"EUR"
             }
         headers:
@@ -442,6 +442,36 @@ collection:
             send: true
             store: true
           rebuildPath: true
+      - url: "{{_.server_url}}roles/active/:roleId"
+        name: Set active role for user
+        meta:
+          id: req_5234597807414ba6befd1314b1d0aed2
+          created: 1749462689259
+          modified: 1749462700616
+          isPrivate: false
+          description: ""
+          sortKey: -1749397318107.75
+        method: POST
+        headers:
+          - name: User-Agent
+            value: insomnia/11.2.0
+        authentication:
+          type: oauth2
+          grantType: authorization_code
+          authorizationUrl: "{{_.auth_url}}"
+          accessTokenUrl: "{{ _.access_token_url }}"
+          clientId: "{{_.client_id}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: roleId
+            value: "1932012616469708800"
 cookieJar:
   name: Default Jar
   meta:

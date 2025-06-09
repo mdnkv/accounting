@@ -31,7 +31,7 @@ public class OrganizationRestController {
             @AuthenticationPrincipal Jwt jwt
             ) {
         User user = this.userService.getOrCreateUser(jwt);
-        return this.organizationService.createOrganization(organizationDto);
+        return this.organizationService.createOrganization(user, organizationDto);
     }
 
     @PutMapping("/update")

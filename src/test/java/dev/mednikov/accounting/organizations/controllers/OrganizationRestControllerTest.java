@@ -55,8 +55,8 @@ class OrganizationRestControllerTest {
         user.setFirstName("Gertraude");
         user.setLastName("Schüler");
 
-        Mockito.when(organizationService.createOrganization(Mockito.any())).thenReturn(result);
         Mockito.when(userService.getOrCreateUser(Mockito.any())).thenReturn(user);
+        Mockito.when(organizationService.createOrganization(Mockito.any(), Mockito.any())).thenReturn(result);
 
         mvc.perform(post("/api/organizations/create")
                         .with(jwt().jwt(jwt -> jwt
