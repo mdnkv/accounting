@@ -4,6 +4,8 @@ import cn.hutool.core.lang.generator.SnowflakeGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.mednikov.accounting.organizations.dto.OrganizationDto;
 import dev.mednikov.accounting.organizations.services.OrganizationService;
+import dev.mednikov.accounting.users.models.User;
+import dev.mednikov.accounting.users.services.UserService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,7 @@ class OrganizationRestControllerTest {
     @Autowired private ObjectMapper objectMapper;
     @Autowired private MockMvc mvc;
     @MockitoBean private OrganizationService organizationService;
+    @MockitoBean private UserService userService;
 
     private final static SnowflakeGenerator snowflakeGenerator = new SnowflakeGenerator();
 
@@ -46,7 +49,14 @@ class OrganizationRestControllerTest {
         String body = objectMapper.writeValueAsString(payload);
         String keycloakId = UUID.randomUUID().toString();
 
-        Mockito.when(organizationService.createOrganization( Mockito.any())).thenReturn(result);
+        User user = new User();
+        user.setEmail("ilbxgj62taf@yahoo.com");
+        user.setKeycloakId(keycloakId);
+        user.setFirstName("Gertraude");
+        user.setLastName("Schüler");
+
+        Mockito.when(organizationService.createOrganization(Mockito.any())).thenReturn(result);
+        Mockito.when(userService.getOrCreateUser(Mockito.any())).thenReturn(user);
 
         mvc.perform(post("/api/organizations/create")
                         .with(jwt().jwt(jwt -> jwt

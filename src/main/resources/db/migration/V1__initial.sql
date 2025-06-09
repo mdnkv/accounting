@@ -38,3 +38,11 @@ CREATE TABLE IF NOT EXISTS transaction_lines (
     CONSTRAINT fk_transaction_line_transaction FOREIGN KEY (transaction_id)
         REFERENCES transactions(id) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS user_accounts (
+    id BIGINT PRIMARY KEY,
+    keycloak_id VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(255) NOT NULL,
+    first_name VARCHAR(255),
+    last_name VARCHAR(255)
+);

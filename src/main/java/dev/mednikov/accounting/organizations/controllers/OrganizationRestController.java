@@ -2,8 +2,12 @@ package dev.mednikov.accounting.organizations.controllers;
 
 import dev.mednikov.accounting.organizations.dto.OrganizationDto;
 import dev.mednikov.accounting.organizations.services.OrganizationService;
+import dev.mednikov.accounting.users.models.User;
+import dev.mednikov.accounting.users.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -12,15 +16,21 @@ import java.util.Optional;
 @RequestMapping("/api/organizations")
 public class OrganizationRestController {
 
+    private final UserService userService;
     private final OrganizationService organizationService;
 
-    public OrganizationRestController(OrganizationService organizationService) {
+    public OrganizationRestController(OrganizationService organizationService, UserService userService) {
         this.organizationService = organizationService;
+        this.userService = userService;
     }
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public @ResponseBody OrganizationDto createOrganization(@RequestBody OrganizationDto organizationDto) {
+    public @ResponseBody OrganizationDto createOrganization(
+            @RequestBody OrganizationDto organizationDto,
+            @AuthenticationPrincipal Jwt jwt
+            ) {
+        User user = this.userService.getOrCreateUser(jwt);
         return this.organizationService.createOrganization(organizationDto);
     }
 
