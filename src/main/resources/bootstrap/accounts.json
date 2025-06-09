@@ -1,0 +1,67 @@
+[
+  {
+    "name": "Cash",
+    "code": "10100",
+    "accountType": "ASSET"
+  },
+  {
+    "name": "Accounts Receivable",
+    "code": "12100",
+    "accountType": "ASSET"
+  },
+  {
+    "name": "Inventory",
+    "code": "13100",
+    "accountType": "ASSET"
+  },
+  {
+    "name": "Supplies",
+    "code": "14100",
+    "accountType": "ASSET"
+  },
+  {
+    "name": "Land",
+    "code": "17000",
+    "accountType": "ASSET"
+  },
+  {
+    "name": "Equipment",
+    "code": "17300",
+    "accountType": "ASSET"
+  },
+  {
+    "name": "Accumulated Depreciation - Equipment",
+    "code": "18300",
+    "accountType": "ASSET"
+  },
+  {
+    "name": "Accounts Payable",
+    "code": "21000",
+    "accountType": "LIABILITY"
+  },
+  {
+    "name": "Interest Payable",
+    "code": "23100",
+    "accountType": "ASSET"
+  },
+  {
+    "name": "Common stock",
+    "code": "27100",
+    "accountType": "EQUITY"
+  },
+  {
+    "name": "Sales",
+    "code": "31010",
+    "accountType": "INCOME"
+  },
+  {
+    "name": "Cost of Goods Sold",
+    "code": "41010",
+    "accountType": "EXPENSE"
+  },
+  {
+    "name": "Marketing expenses",
+    "code": "50100",
+    "accountType": "EXPENSE"
+  }
+]
