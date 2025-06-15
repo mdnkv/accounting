@@ -16,15 +16,25 @@ CREATE TABLE IF NOT EXISTS accounts (
     CONSTRAINT fk_account_organization FOREIGN KEY (organization_id)
         REFERENCES organizations(id) ON DELETE CASCADE
 );
+CREATE TABLE IF NOT EXISTS user_accounts (
+    id BIGINT PRIMARY KEY,
+    keycloak_id VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    first_name VARCHAR(255),
+    last_name VARCHAR(255)
+);
 
 CREATE TABLE IF NOT EXISTS transactions (
     id BIGINT PRIMARY KEY,
     organization_id BIGINT NOT NULL,
+    user_id BIGINT,
     description TEXT NOT NULL,
     transaction_date DATE NOT NULL,
     currency VARCHAR(3) NOT NULL CHECK(currency IN ('EUR')),
     CONSTRAINT fk_transaction_organization FOREIGN KEY (organization_id)
-        REFERENCES organizations(id) ON DELETE CASCADE
+        REFERENCES organizations(id) ON DELETE CASCADE,
+    CONSTRAINT fk_transaction_user FOREIGN KEY (user_id)
+        REFERENCES user_accounts(id) ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS transaction_lines (
@@ -39,13 +49,7 @@ CREATE TABLE IF NOT EXISTS transaction_lines (
         REFERENCES transactions(id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS user_accounts (
-    id BIGINT PRIMARY KEY,
-    keycloak_id VARCHAR(50) NOT NULL UNIQUE,
-    email VARCHAR(255) NOT NULL,
-    first_name VARCHAR(255),
-    last_name VARCHAR(255)
-);
+
 
 CREATE TYPE ROLE_TYPE AS ENUM ('OWNER', 'ADMINISTRATOR', 'ACCOUNTANT', 'USER');
 

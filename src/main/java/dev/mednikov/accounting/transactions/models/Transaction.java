@@ -1,6 +1,7 @@
 package dev.mednikov.accounting.transactions.models;
 
 import dev.mednikov.accounting.organizations.models.Organization;
+import dev.mednikov.accounting.users.models.User;
 import jakarta.persistence.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -8,6 +9,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Entity
@@ -21,6 +23,11 @@ public class Transaction {
     @JoinColumn(name = "organization_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Organization organization;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
+    private User user;
 
     @Column(nullable = false)
     private String description;
@@ -91,6 +98,14 @@ public class Transaction {
 
     public void setDate(LocalDate date) {
         this.date = date;
+    }
+
+    public Optional<User> getUser() {
+        return Optional.ofNullable(user);
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public void setLines(List<TransactionLine> lines) {

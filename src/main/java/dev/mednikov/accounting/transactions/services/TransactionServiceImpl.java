@@ -13,6 +13,7 @@ import dev.mednikov.accounting.transactions.models.Transaction;
 import dev.mednikov.accounting.transactions.models.TransactionLine;
 import dev.mednikov.accounting.transactions.repositories.TransactionLineRepository;
 import dev.mednikov.accounting.transactions.repositories.TransactionRepository;
+import dev.mednikov.accounting.users.models.User;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -41,7 +42,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public TransactionDto createTransaction(TransactionDto payload) {
+    public TransactionDto createTransaction(User user, TransactionDto payload) {
         // Check that transaction has at least 2 lines
         if (payload.getLines().size() < 2){
             throw new UnbalancedTransactionException();
@@ -67,6 +68,7 @@ public class TransactionServiceImpl implements TransactionService {
         transaction.setDescription(payload.getDescription());
         transaction.setDate(payload.getDate());
         transaction.setCurrency(payload.getCurrency());
+        transaction.setUser(user);
 
         // Persist transaction to the datasource
         Transaction transactionResult = this.transactionRepository.save(transaction);

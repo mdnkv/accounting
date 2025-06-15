@@ -6,6 +6,8 @@ import dev.mednikov.accounting.transactions.dto.TransactionDto;
 import dev.mednikov.accounting.transactions.dto.TransactionLineDto;
 import dev.mednikov.accounting.transactions.exceptions.UnbalancedTransactionException;
 import dev.mednikov.accounting.transactions.services.TransactionService;
+import dev.mednikov.accounting.users.models.User;
+import dev.mednikov.accounting.users.services.UserService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,7 @@ class TransactionRestControllerTest {
     private final static SnowflakeGenerator snowflakeGenerator = new SnowflakeGenerator();
 
     @MockitoBean private TransactionService transactionService;
+    @MockitoBean private UserService userService;
     @Autowired private MockMvc mockMvc;
     @Autowired private ObjectMapper objectMapper;
 
@@ -58,7 +61,15 @@ class TransactionRestControllerTest {
         String keycloakId = UUID.randomUUID().toString();
         String body = objectMapper.writeValueAsString(payload);
 
-        Mockito.when(transactionService.createTransaction(Mockito.any())).thenThrow(UnbalancedTransactionException.class);
+        User user = new User();
+        user.setKeycloakId(keycloakId);
+        user.setId(snowflakeGenerator.next());
+        user.setEmail("hqd7o71xqwyx@googlemail.com");
+        user.setFirstName("Margaretha");
+        user.setLastName("Scherer-Neuhaus");
+
+        Mockito.when(userService.getOrCreateUser(Mockito.any())).thenReturn(user);
+        Mockito.when(transactionService.createTransaction(Mockito.any(), Mockito.any())).thenThrow(UnbalancedTransactionException.class);
 
         mockMvc.perform(post("/api/transactions/create")
                         .with(jwt().jwt(jwt -> jwt
@@ -95,7 +106,16 @@ class TransactionRestControllerTest {
         String keycloakId = UUID.randomUUID().toString();
         String body = objectMapper.writeValueAsString(payload);
 
-        Mockito.when(transactionService.createTransaction(Mockito.any())).thenReturn(payload);
+        User user = new User();
+        user.setKeycloakId(keycloakId);
+        user.setId(snowflakeGenerator.next());
+        user.setEmail("mbwq6d141hsn6mg5rbqh@ymail.com");
+        user.setFirstName("Tanja");
+        user.setLastName("Krüger");
+
+        Mockito.when(userService.getOrCreateUser(Mockito.any())).thenReturn(user);
+
+        Mockito.when(transactionService.createTransaction(Mockito.any(), Mockito.any())).thenReturn(payload);
 
         mockMvc.perform(post("/api/transactions/create")
                         .with(jwt().jwt(jwt -> jwt

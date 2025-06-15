@@ -14,6 +14,7 @@ import dev.mednikov.accounting.transactions.models.Transaction;
 import dev.mednikov.accounting.transactions.models.TransactionLine;
 import dev.mednikov.accounting.transactions.repositories.TransactionLineRepository;
 import dev.mednikov.accounting.transactions.repositories.TransactionRepository;
+import dev.mednikov.accounting.users.models.User;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -67,8 +68,14 @@ class TransactionServiceImplTest {
         payload.setCurrency("EUR");
         payload.setDate(LocalDate.now().minusDays(7));
 
+        User user = new User();
+        user.setId(snowflakeGenerator.next());
+        user.setEmail("z8lv5zzjo00lg@outlook.com");
+        user.setFirstName("Karolina");
+        user.setLastName("Haase-Krauß");
+
         // Execute the method
-        Assertions.assertThatThrownBy(() -> transactionService.createTransaction(payload)).isInstanceOf(UnbalancedTransactionException.class);
+        Assertions.assertThatThrownBy(() -> transactionService.createTransaction(user, payload)).isInstanceOf(UnbalancedTransactionException.class);
     }
 
     @Test
@@ -128,13 +135,19 @@ class TransactionServiceImplTest {
         TransactionDtoMapper mapper = new TransactionDtoMapper();
         TransactionDto payload = mapper.apply(transaction);
 
+        User user = new User();
+        user.setId(snowflakeGenerator.next());
+        user.setEmail("ywcn3k1vo81ia@gmail.com");
+        user.setFirstName("Sieglinde");
+        user.setLastName("Buchholz");
+
         Mockito.when(organizationRepository.getReferenceById(organizationId)).thenReturn(organization);
         Mockito.when(accountRepository.getReferenceById(debitAccountId)).thenReturn(debitAccount);
         Mockito.when(accountRepository.getReferenceById(creditAccountId)).thenReturn(creditAccount);
         Mockito.when(transactionLineRepository.saveAll(Mockito.any())).thenReturn(List.of(line1, line2));
         Mockito.when(transactionRepository.save(transaction)).thenReturn(transaction);
 
-        TransactionDto result = transactionService.createTransaction(payload);
+        TransactionDto result = transactionService.createTransaction(user, payload);
         Assertions.assertThat(result).isNotNull();
     }
 
