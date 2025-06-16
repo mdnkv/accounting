@@ -79,7 +79,7 @@ collection:
         meta:
           id: req_f074e6fc69fb4fb19290de9a2d3955df
           created: 1749035379556
-          modified: 1749462676392
+          modified: 1750066691155
           isPrivate: false
           description: ""
           sortKey: -1748881859977.5
@@ -88,7 +88,7 @@ collection:
           mimeType: application/json
           text: |-
             {
-            	"name":"Wittmann Jäger Stiftung & Co. KGaA",
+            	"name":"Decker Nickel Stiftung & Co. KG",
             	"currency":"EUR"
             }
         headers:
@@ -160,7 +160,7 @@ collection:
         meta:
           id: req_18c2d685e6c94cb3b1aef4b6ae626c1a
           created: 1749199859282
-          modified: 1749199909861
+          modified: 1749463496443
           isPrivate: false
           description: ""
           sortKey: -1749199859282
@@ -335,7 +335,7 @@ collection:
         meta:
           id: req_1e2527a4174049868f7b440b583177cf
           created: 1749203516335
-          modified: 1749203651328
+          modified: 1749993328269
           isPrivate: false
           description: ""
           sortKey: -1749201659953
@@ -344,18 +344,18 @@ collection:
           mimeType: application/json
           text: |-
             {
-            	"date":"2025-06-06",
+            	"date":"2025-06-15",
             	"currency":"EUR",
             	"description":"My new transaction",
             	"organizationId":"{{ _.active_organization_id }}",
             	"lines":[
             		{
-            			"accountId":"1930925336065736704",
+            			"accountId":"1934238178663727104",
             			"creditAmount":500.0,
             			"debitAmount":0.0
             		},
             		{
-            			"accountId":"1930925282093432832",
+            			"accountId":"1934238178663727105",
             			"creditAmount":0.0,
             			"debitAmount":500.0
             		}
@@ -472,32 +472,117 @@ collection:
         pathParameters:
           - name: roleId
             value: "1932012616469708800"
+  - name: Reports
+    meta:
+      id: fld_f93e366819bd4f88b37d34ed34b6439e
+      created: 1750066709117
+      modified: 1750066709117
+      sortKey: -1750066709117
+      description: ""
+    children:
+      - url: "{{_.server_url}}reports/balance-sheet/:organizationId"
+        name: Balance sheet
+        meta:
+          id: req_5c0012e6fc7644e9b4da7baa76897380
+          created: 1750066711815
+          modified: 1750066896931
+          isPrivate: false
+          description: ""
+          sortKey: -1750066711815
+        method: GET
+        parameters:
+          - id: pair_8dc2f2a102194981b44f449abd5dda0d
+            name: ""
+            value: ""
+            description: ""
+            disabled: false
+        headers:
+          - name: User-Agent
+            value: insomnia/11.2.0
+        authentication:
+          type: oauth2
+          grantType: authorization_code
+          authorizationUrl: "{{_.auth_url}}"
+          accessTokenUrl: "{{ _.access_token_url }}"
+          clientId: "{{ _.client_id }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: organizationId
+            value: "{{ _.active_organization_id }}"
+      - url: "{{_.server_url}}reports/profit-loss/:organizationId"
+        name: Profit loss
+        meta:
+          id: req_a9de55310e3e45cabeb2f4069dcd58b2
+          created: 1750066903360
+          modified: 1750066929907
+          isPrivate: false
+          description: ""
+          sortKey: -1749764324542
+        method: GET
+        parameters:
+          - id: pair_8dc2f2a102194981b44f449abd5dda0d
+            name: fromDate
+            value: 2025-06-01
+            description: ""
+            disabled: false
+          - id: pair_c7375a8338f84707aa5a9502a3f0f4e3
+            name: toDate
+            value: 2025-06-16
+            description: ""
+            disabled: false
+        headers:
+          - name: User-Agent
+            value: insomnia/11.2.0
+        authentication:
+          type: oauth2
+          grantType: authorization_code
+          authorizationUrl: "{{_.auth_url}}"
+          accessTokenUrl: "{{ _.access_token_url }}"
+          clientId: "{{ _.client_id }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: organizationId
+            value: "{{ _.active_organization_id }}"
 cookieJar:
   name: Default Jar
   meta:
     id: jar_676597a9d4e9b24c6c7cf8e61c4566cefaacc897
     created: 1749035252073
-    modified: 1749203488220
+    modified: 1749993235277
   cookies:
     - key: JSESSIONID
-      value: 96C1B562909AE350FA74CD7FC09F7F38
+      value: 826A68B99D6DFB9B19BD92394DCC5D12
       domain: localhost
       path: /
       httpOnly: true
       hostOnly: true
       creation: 2025-06-06T09:51:28.220Z
-      lastAccessed: 2025-06-06T09:51:28.220Z
-      id: 82ad1afe-72c8-41a3-8b52-2bcdb3aa832f
+      lastAccessed: 2025-06-15T13:13:55.277Z
+      id: 0a43944d-0f9f-4c5c-ab01-2f2c60185929
 environments:
   name: Base Environment
   meta:
     id: env_676597a9d4e9b24c6c7cf8e61c4566cefaacc897
     created: 1749035252072
-    modified: 1749203403601
+    modified: 1750066702388
     isPrivate: false
   data:
     server_url: http://localhost:8000/api/
     access_token_url: http://localhost:8080/realms/accounting/protocol/openid-connect/token
     auth_url: http://localhost:8080/realms/accounting/protocol/openid-connect/auth
     client_id: accounting-rest
-    active_organization_id: "1930925122495971328"
+    active_organization_id: "1934546059598495744"
