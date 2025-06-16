@@ -1,0 +1,39 @@
+<!--Header-->
+<div class="block">
+  <div class="level">
+    <div class="level-left">
+      <div class="level-item">
+        <p class="title is-2">My roles</p>
+      </div>
+    </div>
+    <div class="level-right">
+      <div class="level-item">
+        <a [routerLink]="['/organizations/create']" class="button is-primary">
+          <span class="icon">
+            <i class="bx bx-plus"></i>
+          </span>
+          <span>Create organization</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Roles list-->
+@if (roles.length > 0){
+
+  @for (role of roles; track role.id){
+
+    <app-role-card [role]="role" (setActive)="onSetActive($event)"/>
+
+  }
+
+} @else {
+  <!-- No roles placeholder -->
+  <div class="notification is-info">
+    <p>You do not have any roles yet. Maybe you want to create your organization?</p>
+    <p>
+      <a [routerLink]="['/organizations/create']">Create organization</a>
+    </p>
+  </div>
+}

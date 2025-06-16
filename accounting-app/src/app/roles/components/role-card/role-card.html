@@ -1,0 +1,16 @@
+<div class="card app-role-card">
+  <div class="card-content">
+    <div class="media">
+      <div class="media-content">
+        <p class="is-size-5">{{role().organization.name}}</p>
+      </div>
+      <div class="media-right">
+        @if (role().active) {
+          <span class="tag is-primary">Active</span>
+        } @else {
+          <button class="button" (click)="onSetActive()">Set active</button>
+        }
+      </div>
+    </div>
+  </div>
+</div>

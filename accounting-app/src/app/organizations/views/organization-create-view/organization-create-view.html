@@ -1,0 +1,51 @@
+<div class="block">
+  <p class="title is-3">Create new organization</p>
+</div>
+
+<div class="block">
+  <form [formGroup]="form" (submit)="submit()">
+
+    <!-- Organization name -->
+    <div class="field">
+      <label class="label">Organization name</label>
+      <div class="control">
+
+        <input type="text"
+               class="input"
+               formControlName="name"
+               placeholder="Enter the name of the organization"
+               [class.is-danger]="form.get('name')?.touched && form.get('name')?.invalid"
+               [class.is-success]="form.get('name')?.touched && form.get('name')?.valid"
+        >
+
+      </div>
+      @if (form.get('name')?.touched && form.get('name')?.invalid ){
+        <p class="help is-danger">
+          <span class="icon">
+            <i class="bx bx-error-circle"></i>
+          </span>
+          <span>This field cannot be empty</span>
+        </p>
+      }
+    </div>
+
+    <!-- Organization currency -->
+    <div class="field">
+      <label class="label">Currency</label>
+      <div class="select is-fullwidth">
+        <select formControlName="currency">
+          <option value="EUR">EUR - Euro</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="block buttons">
+      <button
+        class="button is-primary"
+        type="submit"
+        [disabled]="form.invalid"
+      >Create</button>
+      <a [routerLink]="['/roles/list']" class="button">Back</a>
+    </div>
+  </form>
+</div>
