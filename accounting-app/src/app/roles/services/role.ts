@@ -1,6 +1,6 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import {map, Observable} from 'rxjs';
 
 import {environment} from '../../../environments/environment';
 import {Role} from '../models/roles.models';
@@ -15,7 +15,12 @@ export class RoleService {
   serverUrl: string = environment.serverUrl
 
   getActiveRole (): Observable<Role> {
-    return this.http.get<Role>(`${this.serverUrl}/roles/active`)
+    return this.http.get<Role>(`${this.serverUrl}/roles/active`).pipe(
+      map(result => {
+        localStorage.setItem('activeOrganizationId', result.organization.id!)
+        return result
+      })
+    )
   }
 
   getRoles (): Observable<Role[]>{
@@ -23,7 +28,12 @@ export class RoleService {
   }
 
   setActiveRole(id: string): Observable<Role>{
-    return this.http.post<Role>(`${this.serverUrl}/roles/active/${id}`, {})
+    return this.http.post<Role>(`${this.serverUrl}/roles/active/${id}`, {}).pipe(
+      map(result => {
+        localStorage.setItem('activeOrganizationId', result.organization.id!)
+        return result
+      })
+    )
   }
 
 
