@@ -557,32 +557,130 @@ collection:
         pathParameters:
           - name: organizationId
             value: "{{ _.active_organization_id }}"
+  - name: Dashboard
+    meta:
+      id: fld_8bfd4b7902104743aabd6db13627bf46
+      created: 1750238386104
+      modified: 1750238391251
+      sortKey: -1750238386104
+      description: ""
+    children:
+      - url: "{{_.server_url}}dashboard/profit-loss/:organizationId"
+        name: Profit loss summary widget
+        meta:
+          id: req_ef5f69b8c8f0412198106fad2d661426
+          created: 1750238393283
+          modified: 1750238460186
+          isPrivate: false
+          description: ""
+          sortKey: -1750238393283
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.2.0
+        authentication:
+          type: oauth2
+          grantType: authorization_code
+          authorizationUrl: "{{_.auth_url}}"
+          accessTokenUrl: "{{ _.access_token_url }}"
+          clientId: "{{_.client_id}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: organizationId
+            value: "{{ _.active_organization_id }}"
+      - url: "{{_.server_url}}dashboard/net-worth/:organizationId"
+        name: Net worth summary widget
+        meta:
+          id: req_c51dcdb6e0e6469388c42454af6e7711
+          created: 1750238611887
+          modified: 1750238618973
+          isPrivate: false
+          description: ""
+          sortKey: -1750152552549
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.2.0
+        authentication:
+          type: oauth2
+          grantType: authorization_code
+          authorizationUrl: "{{_.auth_url}}"
+          accessTokenUrl: "{{ _.access_token_url }}"
+          clientId: "{{_.client_id}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: organizationId
+            value: "{{ _.active_organization_id }}"
+      - url: "{{_.server_url}}dashboard/expense-categories/:organizationId"
+        name: Expense categories widget
+        meta:
+          id: req_543d0a5c4822484f8f6e277499f61046
+          created: 1750238634665
+          modified: 1750238645617
+          isPrivate: false
+          description: ""
+          sortKey: -1750109632182
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.2.0
+        authentication:
+          type: oauth2
+          grantType: authorization_code
+          authorizationUrl: "{{_.auth_url}}"
+          accessTokenUrl: "{{ _.access_token_url }}"
+          clientId: "{{_.client_id}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: organizationId
+            value: "{{ _.active_organization_id }}"
 cookieJar:
   name: Default Jar
   meta:
     id: jar_676597a9d4e9b24c6c7cf8e61c4566cefaacc897
     created: 1749035252073
-    modified: 1749993235277
+    modified: 1750238566685
   cookies:
     - key: JSESSIONID
-      value: 826A68B99D6DFB9B19BD92394DCC5D12
+      value: 1D470F655763CA2CAF471C2124EA6D57
       domain: localhost
       path: /
       httpOnly: true
       hostOnly: true
       creation: 2025-06-06T09:51:28.220Z
-      lastAccessed: 2025-06-15T13:13:55.277Z
-      id: 0a43944d-0f9f-4c5c-ab01-2f2c60185929
+      lastAccessed: 2025-06-18T09:22:46.685Z
+      id: 7a9b26c1-5a85-4ef5-aa5f-d24199944ae7
 environments:
   name: Base Environment
   meta:
     id: env_676597a9d4e9b24c6c7cf8e61c4566cefaacc897
     created: 1749035252072
-    modified: 1750066702388
+    modified: 1750238585037
     isPrivate: false
   data:
     server_url: http://localhost:8000/api/
     access_token_url: http://localhost:8080/realms/accounting/protocol/openid-connect/token
     auth_url: http://localhost:8080/realms/accounting/protocol/openid-connect/auth
     client_id: accounting-rest
-    active_organization_id: "1934546059598495744"
+    active_organization_id: "1935266976414826496"
