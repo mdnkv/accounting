@@ -16,7 +16,7 @@ export class CreateAccountModal {
 
   formBuilder: FormBuilder = inject(FormBuilder)
   form: FormGroup = this.formBuilder.group({
-    code: ['', [Validators.required, Validators.maxLength(25)]],
+    code: ['', [Validators.required, Validators.maxLength(20)]],
     name: ['', [Validators.required, Validators.maxLength(255)]],
   })
 
