@@ -1,0 +1,28 @@
+<div class="dropdown is-right" [class.is-active]="isActive">
+  <div class="dropdown-trigger">
+    <button class="button" type="button" (click)="isActive = !isActive">
+      <span class="icon">
+        <i class="bx bx-sort-alt-2"></i>
+      </span>
+      <span>Sort by...</span>
+    </button>
+  </div>
+  <div class="dropdown-menu">
+    <div class="dropdown-content">
+      <!-- Sort by name -->
+      <a (click)="selectSortOrder('name-asc')" class="dropdown-item">
+        <span class="icon">
+          <i class="bx bx-sort-a-z"></i>
+        </span>
+        <span>By account name, A-Z</span>
+      </a>
+      <a (click)="selectSortOrder('name-desc')" class="dropdown-item">
+        <span class="icon">
+          <i class="bx bx-sort-z-a"></i>
+        </span>
+        <span>By account name, Z-A</span>
+      </a>
+      <!-- -->
+    </div>
+  </div>
+</div>

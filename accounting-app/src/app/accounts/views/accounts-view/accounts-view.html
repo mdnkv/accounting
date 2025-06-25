@@ -1,0 +1,26 @@
+<div class="block">
+  <p class="title is-2">Chart of Accounts</p>
+</div>
+
+<div class="block">
+  <div class="level">
+    <div class="level-left">
+      <div class="level-item">
+        <app-create-account-modal (createAccount)="onCreateAccount($event)"/>
+      </div>
+    </div>
+    <div class="level-right">
+      <div class="level-item">
+        <app-sort-account-dropdown (selectOrder)="onSortAccounts($event)"/>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="block">
+  <app-accounts-tabs (selectType)="selectAccountType($event)"/>
+</div>
+
+<div class="block">
+  <app-accounts-list [accounts]="shownAccounts"/>
+</div>

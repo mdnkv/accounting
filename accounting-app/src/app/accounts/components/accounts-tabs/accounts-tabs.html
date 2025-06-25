@@ -1,0 +1,22 @@
+<div class="tabs is-toggle">
+  <ul>
+    <li [class.is-active]="selected() == null">
+      <a (click)="onSelectType(null)">All accounts</a>
+    </li>
+    <li [class.is-active]="selected() == 'ASSET'">
+      <a (click)="onSelectType('ASSET')">Assets</a>
+    </li>
+    <li [class.is-active]="selected() == 'LIABILITY'">
+      <a (click)="onSelectType('LIABILITY')">Liabilities</a>
+    </li>
+    <li [class.is-active]="selected() == 'EQUITY'">
+      <a (click)="onSelectType('EQUITY')">Equity</a>
+    </li>
+    <li [class.is-active]="selected() == 'INCOME'">
+      <a (click)="onSelectType('INCOME')">Income</a>
+    </li>
+    <li [class.is-active]="selected() == 'EXPENSE'">
+      <a (click)="onSelectType('EXPENSE')">Expense</a>
+    </li>
+  </ul>
+</div>

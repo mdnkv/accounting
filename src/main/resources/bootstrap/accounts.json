@@ -42,7 +42,7 @@
   {
     "name": "Interest Payable",
     "code": "23100",
-    "accountType": "ASSET"
+    "accountType": "LIABILITY"
   },
   {
     "name": "Common stock",

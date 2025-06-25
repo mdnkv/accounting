@@ -1,0 +1,82 @@
+<div class="modal" [class.is-active]="showModal()">
+  <div class="modal-background"></div>
+  <form (submit)="submit()" class="modal-card" [formGroup]="form">
+    <div class="modal-card-head">
+      <p class="modal-card-title">Create account</p>
+      <button class="delete" aria-label="close" type="button" (click)="closeModal()"></button>
+    </div>
+    <div class="modal-card-body">
+      <!-- Type -->
+      <label class="label">Account type</label>
+      <div class="tags">
+        <span
+          [class.is-info]="accountType() == 'ASSET'"
+          (click)="setAccountType('ASSET')"
+          class="tag is-medium is-clickable">Assets</span>
+        <span
+          [class.is-info]="accountType() == 'LIABILITY'"
+          (click)="setAccountType('LIABILITY')"
+          class="tag is-medium is-clickable">Liabilities</span>
+        <span
+          [class.is-info]="accountType() == 'EQUITY'"
+          (click)="setAccountType('EQUITY')"
+          class="tag is-medium is-clickable">Equity</span>
+        <span
+          [class.is-info]="accountType() == 'INCOME'"
+          (click)="setAccountType('INCOME')"
+          class="tag is-medium is-clickable">Income</span>
+        <span
+          [class.is-info]="accountType() == 'EXPENSE'"
+          (click)="setAccountType('EXPENSE')"
+          class="tag is-medium is-clickable">Expense</span>
+      </div>
+      <!-- Code -->
+      <div class="field">
+        <label class="label">Account code</label>
+        <div class="control">
+          <input
+            [class.is-success]="form.get('code')?.touched && form.get('code')?.valid"
+            [class.is-danger]="form.get('code')?.touched && form.get('code')?.invalid"
+            formControlName="code"
+            type="text"
+            class="input">
+        </div>
+        @if (form.get('code')?.touched && form.get('code')?.invalid){
+          <p class="help is-danger">This field is not valid</p>
+        }
+      </div>
+      <!-- Name -->
+      <div class="field">
+        <label class="label">Account name</label>
+        <div class="control">
+          <input
+            [class.is-success]="form.get('name')?.touched && form.get('name')?.valid"
+            [class.is-danger]="form.get('name')?.touched && form.get('name')?.invalid"
+            formControlName="name"
+            type="text"
+            class="input">
+        </div>
+        @if (form.get('name')?.touched && form.get('name')?.invalid){
+          <p class="help is-danger">This field is not valid</p>
+        }
+      </div>
+    </div>
+    <div class="modal-card-foot">
+      <div class="buttons">
+        <button class="button is-primary" type="submit" [disabled]="form.invalid">
+          Create
+        </button>
+        <button class="button" type="button" (click)="closeModal()">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<button class="button is-primary" type="button" (click)="openModal()">
+  <span class="icon">
+    <i class="bx bx-plus"></i>
+  </span>
+  <span>New account</span>
+</button>

@@ -1,4 +1,4 @@
-<nav class="navbar is-fixed-top is-primary">
+<nav class="navbar is-fixed-top has-shadow">
   <div class="navbar-brand">
     <a role="button" class="navbar-burger" [class.is-active]="active()" (click)="toggleNavMenu()">
       <span aria-hidden="true"></span>
@@ -8,7 +8,9 @@
     </a>
   </div>
   <div class="navbar-menu" [class.is-active]="active()">
-    <div class="navbar-start"></div>
+    <div class="navbar-start">
+      <a [routerLink]="['/accounts']" class="navbar-item">Accounts</a>
+    </div>
     <div class="navbar-end">
       <a (click)="logout()" class="navbar-item">Logout</a>
     </div>
