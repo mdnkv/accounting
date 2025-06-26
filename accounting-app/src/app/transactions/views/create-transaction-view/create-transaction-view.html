@@ -1,0 +1,105 @@
+<div class="block">
+  <p class="title is-3">Create new transaction</p>
+</div>
+
+<div class="block">
+  <form [formGroup]="form" (submit)="submit()">
+    <!-- Transaction meta data -->
+    <div class="block">
+
+      <div class="columns">
+        <div class="column is-one-third">
+
+          <div class="field">
+            <label class="label">Transaction date</label>
+            <div class="control">
+              <input
+                [class.is-success]="form.get('date')?.touched && form.get('date')?.valid"
+                [class.is-danger]="form.get('date')?.touched && form.get('date')?.invalid"
+                type="date"
+                class="input"
+                formControlName="date">
+            </div>
+            @if (form.get('date')?.touched && form.get('date')?.invalid ){
+              <p class="help is-danger">This field cannot be empty</p>
+            }
+          </div>
+
+        </div>
+        <div class="column">
+
+          <div class="field">
+            <label class="label">Description</label>
+            <div class="control">
+              <textarea
+                [class.is-success]="form.get('description')?.touched && form.get('description')?.valid"
+                [class.is-danger]="form.get('description')?.touched && form.get('description')?.invalid"
+                formControlName="description"
+                class="textarea"></textarea>
+            </div>
+            @if (form.get('date')?.touched && form.get('date')?.invalid ){
+              <p class="help is-danger">This field cannot be empty</p>
+            }
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <hr>
+
+    <!-- Transactions lines -->
+    <div class="block">
+      @for (line of transactionsLines; track $index){
+        <app-transaction-line-item [item]="line" (deleteTransactionLine)="onDeleteLine($index)"/>
+      }
+    </div>
+    <div class="block">
+      <app-create-transaction-line-modal (createTransactionLine)="onCreateLine($event)"/>
+    </div>
+
+    <hr>
+
+    <!-- Summary -->
+    <div class="block">
+      <div class="level">
+        <div class="level-item">
+          <div class="has-text-centered">
+            <p>Debit amount</p>
+            <p class="is-size-4">{{totalDebitAmount|currency:currency}}</p>
+          </div>
+        </div>
+        <div class="level-item has-text-centered">
+          <div class="has-text-centered">
+            <p>Credit amount</p>
+            <p class="is-size-4">{{totalCreditAmount|currency:currency}}</p>
+          </div>
+        </div>
+        <div class="level-item">
+          <div class="has-text-centered">
+            <p>Balance</p>
+            <p
+              [class.has-text-success]="balanced"
+              [class.has-text-danger]="!balanced"
+              class="is-size-4">{{balance|currency:currency}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="block">
+      <div class="buttons">
+        <button
+          [class.is-loading]="loading()"
+          [disabled]="form.invalid || transactionsLines.length == 0 || !balanced"
+          class="button is-primary"
+          type="submit">Create</button>
+        <button class="button" type="button" (click)="onCancel()">Cancel</button>
+      </div>
+    </div>
+
+    <!-- -->
+  </form>
+</div>

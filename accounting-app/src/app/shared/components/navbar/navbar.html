@@ -9,7 +9,9 @@
   </div>
   <div class="navbar-menu" [class.is-active]="active()">
     <div class="navbar-start">
+      <a [routerLink]="['/dashboard']" class="navbar-item">Dashboard</a>
       <a [routerLink]="['/accounts']" class="navbar-item">Accounts</a>
+      <a [routerLink]="['/transactions']" class="navbar-item">Transactions</a>
     </div>
     <div class="navbar-end">
       <a (click)="logout()" class="navbar-item">Logout</a>

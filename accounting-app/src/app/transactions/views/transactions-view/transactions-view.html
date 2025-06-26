@@ -1,0 +1,27 @@
+<div class="block">
+  <p class="title is-2">General journal</p>
+</div>
+
+<div class="block">
+  <div class="level">
+    <div class="level-left">
+      <div class="level-item">
+        <a [routerLink]="['/transactions/create']" class="button is-primary">
+          <span class="icon">
+            <i class="bx bx-plus"></i>
+          </span>
+          <span>New entry</span>
+        </a>
+      </div>
+    </div>
+    <div class="level-right">
+      <div class="level-item">
+        <app-sort-transactions-dropdown (selectOrder)="onSortTransactions($event)"/>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="block">
+  <app-transactions-list [transactions]="transactions"/>
+</div>

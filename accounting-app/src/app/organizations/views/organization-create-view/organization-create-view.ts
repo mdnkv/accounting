@@ -1,6 +1,6 @@
 import {Component, inject, signal} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {RouterLink} from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 
 import {OrganizationService} from '../../services/organization';
 import {Organization} from '../../models/organizations.models';
@@ -18,6 +18,7 @@ export class OrganizationCreateView {
 
   organizationService: OrganizationService = inject(OrganizationService)
   formBuilder: FormBuilder = inject(FormBuilder)
+  router: Router = inject(Router)
   form: FormGroup = this.formBuilder.group({
     name: ['', [Validators.required, Validators.maxLength(255)]],
     currency: ['EUR', [Validators.required]]
@@ -38,10 +39,12 @@ export class OrganizationCreateView {
       next: result => {
         console.log(result)
         this.loading.set(false)
+        this.router.navigateByUrl('/dashboard')
       },
       error: (err) => {
         console.log(err)
         this.loading.set(false)
+        this.error.set('Cannot create the organization')
       }
     })
   }
