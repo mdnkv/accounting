@@ -16,6 +16,11 @@ const localUrlCondition = createInterceptorCondition<IncludeBearerTokenCondition
   bearerPrefix: 'Bearer'
 });
 
+const prodUrlCondition = createInterceptorCondition<IncludeBearerTokenCondition>({
+  urlPattern: /^(\/.*)?$/i,
+  bearerPrefix: 'Bearer'
+});
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideKeycloak({
@@ -37,7 +42,7 @@ export const appConfig: ApplicationConfig = {
     }),
     {
       provide: INCLUDE_BEARER_TOKEN_INTERCEPTOR_CONFIG,
-      useValue: [localUrlCondition]
+      useValue: [localUrlCondition, prodUrlCondition]
     },
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
