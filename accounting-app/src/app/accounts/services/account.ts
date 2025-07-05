@@ -21,4 +21,16 @@ export class AccountService {
     return this.http.post<Account>(`${this.serverUrl}/accounts/create`, payload)
   }
 
+  getAccount(id: string): Observable<Account>{
+    return this.http.get<Account>(`${this.serverUrl}/accounts/account/${id}`)
+  }
+
+  updateAccount(payload: Account):  Observable<Account>{
+    return this.http.put<Account>(`${this.serverUrl}/accounts/update`, payload)
+  }
+
+  deleteAccount(id: string): Observable<void>{
+    return this.http.delete<void>(`${this.serverUrl}/accounts/delete/${id}`)
+  }
+
 }

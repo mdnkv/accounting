@@ -80,6 +80,17 @@ export class AccountsView implements OnInit{
     }
   }
 
+  onDeleteAccount(id: string){
+    this.accountService.deleteAccount(id).subscribe({
+      next: result => {
+        this.accounts = this.accounts.filter(a => a.id! !== id)
+      },
+      error: (err: HttpErrorResponse) => {
+        console.log(err)
+      }
+    })
+  }
+
   ngOnInit() {
     this.accountService.getAccounts().subscribe({
       next: result => {

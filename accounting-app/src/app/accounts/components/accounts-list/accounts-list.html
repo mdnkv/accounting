@@ -14,12 +14,12 @@
           <td>{{account.code}}</td>
           <td>{{account.name}}</td>
           <td>
-            <a href="#">
+            <a [routerLink]="['/accounts/update', account.id!]">
               <span class="icon">
                 <i class="bx bx-edit-alt"></i>
               </span>
             </a>
-            <a href="#">
+            <a (click)="onDelete(account.id!)">
               <span class="icon">
                 <i class="bx bx-trash-alt"></i>
               </span>
