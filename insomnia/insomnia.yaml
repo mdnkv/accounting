@@ -79,7 +79,7 @@ collection:
         meta:
           id: req_f074e6fc69fb4fb19290de9a2d3955df
           created: 1749035379556
-          modified: 1750066691155
+          modified: 1751716280740
           isPrivate: false
           description: ""
           sortKey: -1748881859977.5
@@ -88,7 +88,7 @@ collection:
           mimeType: application/json
           text: |-
             {
-            	"name":"Decker Nickel Stiftung & Co. KG",
+            	"name":"Meyer Fleischer GmbH",
             	"currency":"EUR"
             }
         headers:
@@ -160,7 +160,7 @@ collection:
         meta:
           id: req_18c2d685e6c94cb3b1aef4b6ae626c1a
           created: 1749199859282
-          modified: 1749463496443
+          modified: 1751716453048
           isPrivate: false
           description: ""
           sortKey: -1749199859282
@@ -292,6 +292,36 @@ collection:
         pathParameters:
           - name: id
             value: "1930910926215577600"
+      - url: "{{_.server_url}}accounts/account/:id"
+        name: Get account
+        meta:
+          id: req_074c441505924c8f903186f7536a3645
+          created: 1751716259014
+          modified: 1751716463394
+          isPrivate: false
+          description: ""
+          sortKey: -1749158724274
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.1.0
+        authentication:
+          type: oauth2
+          grantType: authorization_code
+          authorizationUrl: "{{_.auth_url}}"
+          accessTokenUrl: "{{_.access_token_url}}"
+          clientId: "{{_.client_id}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: id
+            value: "1941465581437845504"
   - name: Transactions
     meta:
       id: fld_083f1e2dd5bd4a87b8d357e7d21fefb1
@@ -561,7 +591,7 @@ collection:
     meta:
       id: fld_8bfd4b7902104743aabd6db13627bf46
       created: 1750238386104
-      modified: 1750238391251
+      modified: 1750240746951
       sortKey: -1750238386104
       description: ""
     children:
@@ -660,27 +690,27 @@ cookieJar:
   meta:
     id: jar_676597a9d4e9b24c6c7cf8e61c4566cefaacc897
     created: 1749035252073
-    modified: 1750238566685
+    modified: 1751716309041
   cookies:
     - key: JSESSIONID
-      value: 1D470F655763CA2CAF471C2124EA6D57
+      value: 3EF1F27423008747436001650FDA14C2
       domain: localhost
       path: /
       httpOnly: true
       hostOnly: true
       creation: 2025-06-06T09:51:28.220Z
-      lastAccessed: 2025-06-18T09:22:46.685Z
-      id: 7a9b26c1-5a85-4ef5-aa5f-d24199944ae7
+      lastAccessed: 2025-07-05T11:51:49.041Z
+      id: 8486402c-f987-4ec1-aae2-4c7b1af90548
 environments:
   name: Base Environment
   meta:
     id: env_676597a9d4e9b24c6c7cf8e61c4566cefaacc897
     created: 1749035252072
-    modified: 1750238585037
+    modified: 1751716446750
     isPrivate: false
   data:
     server_url: http://localhost:8000/api/
     access_token_url: http://localhost:8080/realms/accounting/protocol/openid-connect/token
     auth_url: http://localhost:8080/realms/accounting/protocol/openid-connect/auth
     client_id: accounting-rest
-    active_organization_id: "1935266976414826496"
+    active_organization_id: "1941465581404291072"

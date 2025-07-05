@@ -3,9 +3,11 @@ package dev.mednikov.accounting.accounts.controllers;
 import dev.mednikov.accounting.accounts.dto.AccountDto;
 import dev.mednikov.accounting.accounts.services.AccountService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/accounts")
@@ -35,8 +37,14 @@ public class AccountRestController {
     }
 
     @GetMapping("/organization/{organizationId}")
-    public @ResponseBody List<AccountDto> getAllAccounts(@PathVariable Long organizationId) {
+    public @ResponseBody List<AccountDto> getAccounts(@PathVariable Long organizationId) {
         return this.accountService.getAccounts(organizationId);
+    }
+
+    @GetMapping("/account/{accountId}")
+    public ResponseEntity<AccountDto> getAccount(@PathVariable Long accountId) {
+        Optional<AccountDto> accountDto = this.accountService.getAccount(accountId);
+        return ResponseEntity.of(accountDto);
     }
 
 }

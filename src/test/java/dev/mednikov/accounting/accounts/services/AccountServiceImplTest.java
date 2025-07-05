@@ -204,4 +204,33 @@ class AccountServiceImplTest {
         Assertions.assertThat(result).isNotNull().hasSize(2);
     }
 
+    @Test
+    void getAccount_existsTest(){
+        Long accountId = snowflakeGenerator.next();
+        Long organizationId = snowflakeGenerator.next();
+        Organization organization = new Organization();
+        organization.setId(organizationId);
+        organization.setName("Gottschalk Metzger OHG mbH\t");
+        organization.setCurrency("EUR");
+
+        Account account = new Account();
+        account.setId(accountId);
+        account.setAccountType(AccountType.LIABILITY);
+        account.setOrganization(organization);
+        account.setName("Notes Payable – Credit Line #2");
+        account.setCode("20200");
+
+        Mockito.when(accountRepository.findById(accountId)).thenReturn(Optional.of(account));
+        Optional<AccountDto> result = accountService.getAccount(accountId);
+        Assertions.assertThat(result).isPresent();
+    }
+
+    @Test
+    void getAccount_notExistsTest(){
+        Long accountId = snowflakeGenerator.next();
+        Mockito.when(accountRepository.findById(accountId)).thenReturn(Optional.empty());
+        Optional<AccountDto> result = accountService.getAccount(accountId);
+        Assertions.assertThat(result).isEmpty();
+    }
+
 }

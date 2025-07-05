@@ -16,6 +16,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
@@ -161,7 +162,7 @@ class AccountRestControllerTest {
     }
 
     @Test
-    void getAccountTest() throws Exception {
+    void getAccountsTest() throws Exception {
         Long organizationId = snowflakeGenerator.next();
         String keycloakId = UUID.randomUUID().toString();
         Mockito.when(accountService.getAccounts(organizationId)).thenReturn(List.of());
@@ -169,6 +170,34 @@ class AccountRestControllerTest {
                         .with(jwt().jwt(jwt -> jwt
                                 .claim("sub", keycloakId))))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void getAccount_existsTest() throws Exception {
+        Long accountId = snowflakeGenerator.next();
+        AccountDto payload = new AccountDto();
+        payload.setId(snowflakeGenerator.next().toString());
+        payload.setOrganizationId(snowflakeGenerator.next().toString());
+        payload.setAccountType(AccountType.LIABILITY);
+        payload.setCode("21000");
+        payload.setName("Accounts Payable");
+        String keycloakId = UUID.randomUUID().toString();
+        Mockito.when(accountService.getAccount(accountId)).thenReturn(Optional.of(payload));
+        mvc.perform(get("/api/accounts/account/{id}", accountId)
+                        .with(jwt().jwt(jwt -> jwt
+                                .claim("sub", keycloakId))))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void getAccount_doesNotTest() throws Exception {
+        Long accountId = snowflakeGenerator.next();
+        String keycloakId = UUID.randomUUID().toString();
+        Mockito.when(accountService.getAccount(accountId)).thenReturn(Optional.empty());
+        mvc.perform(get("/api/accounts/account/{id}", accountId)
+                        .with(jwt().jwt(jwt -> jwt
+                                .claim("sub", keycloakId))))
+                .andExpect(status().isNotFound());
     }
 
 }

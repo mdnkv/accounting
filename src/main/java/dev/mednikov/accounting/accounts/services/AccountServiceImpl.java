@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class AccountServiceImpl implements AccountService {
@@ -84,5 +85,10 @@ public class AccountServiceImpl implements AccountService {
                 .stream()
                 .map(accountDtoMapper)
                 .toList();
+    }
+
+    @Override
+    public Optional<AccountDto> getAccount(Long id) {
+        return this.accountRepository.findById(id).map(accountDtoMapper);
     }
 }
