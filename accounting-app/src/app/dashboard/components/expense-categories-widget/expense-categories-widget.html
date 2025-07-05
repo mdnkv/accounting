@@ -1,0 +1,37 @@
+<div class="card">
+  <div class="card-header">
+    <p class="card-header-title">Expense categories</p>
+    <button class="card-header-icon" type="button" (click)="refresh()" [class.is-skeleton]="loading()">
+      <span class="icon">
+        <i class="bx bx-refresh"></i>
+      </span>
+    </button>
+  </div>
+  <div class="card-content">
+    @if (data.length > 0){
+
+      <div class="columns">
+        <div class="column is-full">
+          @for (category of data; track $index){
+            <div class="level is-mobile">
+              <div class="level-left">
+                <div class="level-item">
+                  <p>{{category.name}}</p>
+                </div>
+              </div>
+              <div class="level-right">
+                <div class="level-item">
+                  <p>{{category.amount|currency:'EUR'}}</p>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+
+    } @else {
+      <p>No data to show</p>
+    }
+
+  </div>
+</div>

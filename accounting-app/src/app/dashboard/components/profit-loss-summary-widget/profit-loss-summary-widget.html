@@ -1,0 +1,34 @@
+<div class="card">
+  <div class="card-header">
+    <p class="card-header-title">Profit loss summary</p>
+    <button class="card-header-icon" type="button" (click)="refresh()" [class.is-skeleton]="loading()">
+      <span class="icon">
+        <i class="bx bx-refresh"></i>
+      </span>
+    </button>
+  </div>
+  <div class="card-content">
+    @if (data() != undefined){
+      <div class="level">
+        <div class="level-item">
+          <div class="has-text-centered">
+            <p class="is-size-5 has-text-weight-semibold">{{data()!.totalIncome|currency:data()!.currency}}</p>
+            <p>Total income</p>
+          </div>
+        </div>
+        <div class="level-item">
+          <div class="has-text-centered">
+            <p class="is-size-5 has-text-weight-semibold">{{data()!.totalExpenses|currency:data()!.currency}}</p>
+            <p>Total expenses</p>
+          </div>
+        </div>
+        <div class="level-item">
+          <div class="has-text-centered">
+            <p class="is-size-5 has-text-weight-bold">{{data()!.netProfit|currency:data()!.currency}}</p>
+            <p>Net profit</p>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>

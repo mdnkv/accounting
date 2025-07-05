@@ -1,1 +1,22 @@
-<p>dashboard-view works!</p>
+<div class="block">
+  <p class="title is-2">Hello again!</p>
+</div>
+
+@if (!loading()){
+  <div class="block">
+    <div class="columns is-multiline">
+      <!-- Profit loss widget-->
+      <div class="column is-half is-full-mobile">
+        <app-profit-loss-summary-widget/>
+      </div>
+      <!-- Net worth widget-->
+      <div class="column is-half is-full-mobile">
+        <app-net-worth-summary-widget/>
+      </div>
+      <!--Expense categories -->
+      <div class="column is-full is-full-mobile">
+        <app-expense-categories-widget/>
+      </div>
+    </div>
+  </div>
+}

@@ -1,0 +1,34 @@
+<div class="card">
+  <div class="card-header">
+    <p class="card-header-title">Net worth summary</p>
+    <button class="card-header-icon" type="button" (click)="refresh()" [class.is-skeleton]="loading()">
+      <span class="icon">
+        <i class="bx bx-refresh"></i>
+      </span>
+    </button>
+  </div>
+  <div class="card-content">
+    @if (data() != undefined){
+      <div class="level">
+        <div class="level-item">
+          <div class="has-text-centered">
+            <p class="is-size-5 has-text-weight-semibold">{{data()!.totalAssets|currency:data()!.currency}}</p>
+            <p>Total assets</p>
+          </div>
+        </div>
+        <div class="level-item">
+          <div class="has-text-centered">
+            <p class="is-size-5 has-text-weight-semibold">{{data()!.totalLiabilities|currency:data()!.currency}}</p>
+            <p>Total liabilities</p>
+          </div>
+        </div>
+        <div class="level-item">
+          <div class="has-text-centered">
+            <p class="is-size-5 has-text-weight-bold">{{data()!.netWorth|currency:data()!.currency}}</p>
+            <p>Net worth</p>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>
