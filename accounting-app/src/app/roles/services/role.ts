@@ -18,6 +18,7 @@ export class RoleService {
     return this.http.get<Role>(`${this.serverUrl}/roles/active`).pipe(
       map(result => {
         localStorage.setItem('activeOrganizationId', result.organization.id!)
+        localStorage.setItem('activeRoleType', result.roleType)
         return result
       })
     )
@@ -31,6 +32,7 @@ export class RoleService {
     return this.http.post<Role>(`${this.serverUrl}/roles/active/${id}`, {}).pipe(
       map(result => {
         localStorage.setItem('activeOrganizationId', result.organization.id!)
+        localStorage.setItem('activeRoleType', result.roleType)
         return result
       })
     )

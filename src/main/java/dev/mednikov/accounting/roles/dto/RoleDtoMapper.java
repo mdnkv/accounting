@@ -17,6 +17,7 @@ public final class RoleDtoMapper implements Function<Role, RoleDto> {
         result.setId(role.getId().toString());
         result.setOrganization(organizationDto);
         result.setActive(role.isActive());
+        result.setRoleType(role.getRoleType());
         return result;
     }
 

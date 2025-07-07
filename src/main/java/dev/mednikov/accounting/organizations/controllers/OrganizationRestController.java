@@ -6,6 +6,7 @@ import dev.mednikov.accounting.users.models.User;
 import dev.mednikov.accounting.users.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,7 @@ public class OrganizationRestController {
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('organizations:create')")
     public @ResponseBody OrganizationDto createOrganization(
             @RequestBody OrganizationDto organizationDto,
             @AuthenticationPrincipal Jwt jwt
@@ -35,12 +37,14 @@ public class OrganizationRestController {
     }
 
     @PutMapping("/update")
+    @PreAuthorize("hasAuthority('organizations:update')")
     public @ResponseBody OrganizationDto updateOrganization(@RequestBody OrganizationDto organizationDto) {
         return this.organizationService.updateOrganization(organizationDto);
     }
 
     @DeleteMapping("/delete/{organizationId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAuthority('organizations:delete')")
     public void deleteOrganization(@PathVariable Long organizationId) {
         this.organizationService.deleteOrganization(organizationId);
     }

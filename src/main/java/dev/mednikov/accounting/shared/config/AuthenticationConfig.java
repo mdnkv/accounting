@@ -1,17 +1,24 @@
 package dev.mednikov.accounting.shared.config;
 
+import dev.mednikov.accounting.shared.auth.RoleConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
-@Profile({"prod"})
+@Profile({"prod", "dev"})
 @EnableWebSecurity
 public class AuthenticationConfig {
+
+    private final RoleConverter roleConverter;
+
+    public AuthenticationConfig(RoleConverter roleConverter) {
+        this.roleConverter = roleConverter;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -21,7 +28,9 @@ public class AuthenticationConfig {
                         .requestMatchers("/", "/index.html**", "/*.css", "/*.js", "/media/**", "/images/**").permitAll()
                         .anyRequest().authenticated()
                 )
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt());
+                .cors(Customizer.withDefaults())
+                .oauth2ResourceServer(oauth2 -> oauth2
+                        .jwt(jwtConfigurer -> jwtConfigurer.jwtAuthenticationConverter(roleConverter)));
 
         return http.build();
     }

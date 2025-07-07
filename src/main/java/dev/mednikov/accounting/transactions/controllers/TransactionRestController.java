@@ -5,6 +5,7 @@ import dev.mednikov.accounting.transactions.services.TransactionService;
 import dev.mednikov.accounting.users.models.User;
 import dev.mednikov.accounting.users.services.UserService;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
@@ -25,12 +26,14 @@ public class TransactionRestController {
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('transactions:create')")
     public @ResponseBody TransactionDto createTransaction(@RequestBody TransactionDto transactionDto, @AuthenticationPrincipal Jwt jwt) {
         User user = this.userService.getOrCreateUser(jwt);
         return this.transactionService.createTransaction(user, transactionDto);
     }
 
     @GetMapping("/organization/{organizationId}")
+    @PreAuthorize("hasAuthority('transactions:view')")
     public @ResponseBody List<TransactionDto> getAllTransactions(@PathVariable Long organizationId) {
         return this.transactionService.getTransactions(organizationId);
     }
