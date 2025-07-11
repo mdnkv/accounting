@@ -6,19 +6,21 @@ Web based accounting application, that supports double entry accounting and mult
 ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
 ![Spring](https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white)
 ![Hibernate](https://img.shields.io/badge/Hibernate-59666C?style=for-the-badge&logo=Hibernate&logoColor=white)
+![Apache Maven](https://img.shields.io/badge/Apache%20Maven-C71A36?style=for-the-badge&logo=Apache%20Maven&logoColor=white)
+![Apache Tomcat](https://img.shields.io/badge/apache%20tomcat-%23F8DC75.svg?style=for-the-badge&logo=apache-tomcat&logoColor=black)
 ![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)
 ![Angular](https://img.shields.io/badge/angular-%23DD0031.svg?style=for-the-badge&logo=angular&logoColor=white)
 ![Bulma](https://img.shields.io/badge/bulma-00D0B1?style=for-the-badge&logo=bulma&logoColor=white)
 
 ## About the Project
 
-The goal of this project was to create a simple, yet complete double entry accounting application. To achieve this task, relevant academic sources were reviewed, as well other general ledget accounting systems (such as Quickbooks or SevDesk).
+The goal of this project was to create a simple, yet complete double entry accounting application. To achieve this task, relevant academic sources were reviewed, as well as other general ledger accounting systems (such as Quickbooks or SevDesk).
 
-The system allows to manage different payment accounts (assets, liabilities, equity, income and expenses) and organize transactions in a form of a general ledger. The dashboard includes several quick report widgets (profit loss, net worth, expense categories). Detailed customized reports are to be implemented. The application supports unlimited organizations and each user can have different roles in different organizations. Role based authentication was implemented on the backend side to protect user data.
+The system allows to manage different payment accounts (assets, liabilities, equity, income and expenses) and organize transactions in the form of a general ledger. The dashboard includes several quick report widgets (profit loss, net worth, expense categories). Detailed customized reports are to be implemented. The application supports unlimited organizations and each user can have different roles in different organizations. Role based authentication was implemented on the backend side to protect user data.
 
 ## Features
 
-This section presents a list of features of this project, both implemented and planned:
+This section presents a list of features supported by this project, both implemented and planned:
 
 - Double entry accounting
 - Transactions can have multiple transaction entries as long as the double entry accoutning rule confirms
@@ -55,7 +57,7 @@ The project can be run manually or using Docker [TODO].
 
 ### Manual setup
 
-In order to run the application manually make sure to have following dependencies installed:
+To run the application manually make sure to have following dependencies installed:
 
 - Java 24
 - PostgreSQL 17+
