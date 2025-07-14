@@ -1,13 +1,16 @@
 <div class="card">
-  <div class="card-header">
-    <p class="card-header-title">Profit loss summary</p>
-    <button class="card-header-icon" type="button" (click)="refresh()" [class.is-skeleton]="loading()">
-      <span class="icon">
-        <i class="bx bx-refresh"></i>
-      </span>
-    </button>
-  </div>
   <div class="card-content">
+
+    <div class="media">
+      <div class="media-content">
+        <p class="title is-5">Profit loss summary</p>
+        <p class="subtitle has-text-grey is-6">Last {{days()}} days</p>
+      </div>
+      <div class="media-right">
+        <app-widget-range-dropdown (selectRange)="refresh($event)" [loading]="loading()"/>
+      </div>
+    </div>
+
     @if (data() != undefined){
       <div class="level">
         <div class="level-item">

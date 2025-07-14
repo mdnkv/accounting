@@ -25,10 +25,10 @@ public class NetWorthServiceImpl implements NetWorthService {
     }
 
     @Override
-    public NetWorthSummaryDto getNetWorthSummary(Long organizationId) {
+    public NetWorthSummaryDto getNetWorthSummary(Long organizationId, int daysCount) {
         Organization organization = this.organizationRepository.findById(organizationId).orElseThrow(OrganizationNotFoundException::new);
         LocalDate toDate = LocalDate.now();
-        LocalDate fromDate = toDate.minusDays(30); // default last 30 days
+        LocalDate fromDate = toDate.minusDays(daysCount);
 
         List<TransactionLine> transactionLines = this.transactionLineRepository.getAssetsAndLiabilityLines(organizationId, fromDate, toDate);
         BigDecimal totalAssets = BigDecimal.ZERO;

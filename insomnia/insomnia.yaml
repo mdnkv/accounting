@@ -607,11 +607,17 @@ collection:
         meta:
           id: req_ef5f69b8c8f0412198106fad2d661426
           created: 1750238393283
-          modified: 1750238460186
+          modified: 1752487283511
           isPrivate: false
           description: ""
           sortKey: -1750238393283
         method: GET
+        parameters:
+          - id: pair_8c0f3dd063b44c99919d3c9ea9937b26
+            name: daysCount
+            value: "60"
+            description: ""
+            disabled: false
         headers:
           - name: User-Agent
             value: insomnia/11.2.0
@@ -637,11 +643,17 @@ collection:
         meta:
           id: req_c51dcdb6e0e6469388c42454af6e7711
           created: 1750238611887
-          modified: 1750238618973
+          modified: 1752487280269
           isPrivate: false
           description: ""
           sortKey: -1750152552549
         method: GET
+        parameters:
+          - id: pair_adbda9178ad243fab7b66a06ce332e65
+            name: daysCount
+            value: "30"
+            description: ""
+            disabled: false
         headers:
           - name: User-Agent
             value: insomnia/11.2.0
@@ -667,11 +679,17 @@ collection:
         meta:
           id: req_543d0a5c4822484f8f6e277499f61046
           created: 1750238634665
-          modified: 1750238645617
+          modified: 1752487288231
           isPrivate: false
           description: ""
           sortKey: -1750109632182
         method: GET
+        parameters:
+          - id: pair_06da82247d8d4029b17525c47ed5745b
+            name: daysCount
+            value: "30"
+            description: ""
+            disabled: false
         headers:
           - name: User-Agent
             value: insomnia/11.2.0

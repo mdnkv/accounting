@@ -10,6 +10,7 @@ Web based accounting application, that supports double entry accounting and mult
 ![Apache Tomcat](https://img.shields.io/badge/apache%20tomcat-%23F8DC75.svg?style=for-the-badge&logo=apache-tomcat&logoColor=black)
 ![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)
 ![Angular](https://img.shields.io/badge/angular-%23DD0031.svg?style=for-the-badge&logo=angular&logoColor=white)
+![RxJS](https://img.shields.io/badge/rxjs-%23B7178C.svg?style=for-the-badge&logo=reactivex&logoColor=white)
 ![Bulma](https://img.shields.io/badge/bulma-00D0B1?style=for-the-badge&logo=bulma&logoColor=white)
 
 ## About the Project
@@ -23,13 +24,13 @@ The system allows to manage different payment accounts (assets, liabilities, equ
 This section presents a list of features supported by this project, both implemented and planned:
 
 - Double entry accounting
-- Transactions can have multiple transaction entries as long as the double entry accoutning rule confirms
+- Transactions can have multiple transaction entries as long as the double entry accounting rule confirms
 - Payment accounts categorized by type (assets, liabilities, equity, income, expense)
 - Chart of accounts bootstraps (generates) for newly created organizations
 - Multi organization support
-- Role based access control
+- Role-based access control
 - OAuth authentication with Keycloak
-- Dashboard with widgets (profit loss, net worth, expense categories) that are based on last 30 days
+- Dashboard with widgets (profit loss, net worth, expense categories) that are based on last 30, 60, 90 days
 - Managing users in organizations [TODO]
 - Transaction category auto suggestions [TODO]
 - Recurring transactions [TODO]
@@ -67,7 +68,7 @@ To run the application manually make sure to have following dependencies install
 You need to complete following steps:
 
 1. Clone the source code
-2. Create a new database with following credentials:
+2. Create a new database with the following credentials:
 - Username: ```accounting_user```
 - Password: ```secret```
 - Database name: ```accounting_db```

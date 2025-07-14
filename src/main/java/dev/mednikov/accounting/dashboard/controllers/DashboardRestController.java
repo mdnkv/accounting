@@ -28,18 +28,27 @@ public class DashboardRestController {
     }
 
     @GetMapping("/profit-loss/{organizationId}")
-    public @ResponseBody ProfitLossSummaryDto getProfitLossSummary (@PathVariable Long organizationId) {
-        return this.profitLossService.getProfitLossSummary(organizationId);
+    public @ResponseBody ProfitLossSummaryDto getProfitLossSummary (
+            @PathVariable Long organizationId,
+            @RequestParam(required = false, defaultValue = "30") int daysCount
+    ) {
+        return this.profitLossService.getProfitLossSummary(organizationId, daysCount);
     }
 
     @GetMapping("/net-worth/{organizationId}")
-    public @ResponseBody NetWorthSummaryDto getNetWorthSummary(@PathVariable Long organizationId) {
-        return this.netWorthService.getNetWorthSummary(organizationId);
+    public @ResponseBody NetWorthSummaryDto getNetWorthSummary(
+            @PathVariable Long organizationId,
+            @RequestParam(required = false, defaultValue = "30") int daysCount
+    ) {
+        return this.netWorthService.getNetWorthSummary(organizationId, daysCount);
     }
 
     @GetMapping("/expense-categories/{organizationId}")
-    public @ResponseBody List<ExpenseCategoryDto> getExpenseCategories (@PathVariable Long organizationId) {
-        return this.expenseCategoryService.getExpenseCategories(organizationId);
+    public @ResponseBody List<ExpenseCategoryDto> getExpenseCategories (
+            @PathVariable Long organizationId,
+            @RequestParam(required = false, defaultValue = "30") int daysCount
+    ) {
+        return this.expenseCategoryService.getExpenseCategories(organizationId, daysCount);
     }
 
 }

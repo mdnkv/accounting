@@ -4,6 +4,6 @@ import dev.mednikov.accounting.reports.dto.NetWorthSummaryDto;
 
 public interface NetWorthService {
 
-    NetWorthSummaryDto getNetWorthSummary (Long organizationId);
+    NetWorthSummaryDto getNetWorthSummary (Long organizationId, int daysCount);
 
 }
