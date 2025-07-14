@@ -38,7 +38,6 @@ class RoleServiceImplTest {
         Organization organization = new Organization();
         organization.setId(snowflakeGenerator.next());
         organization.setName("Pfeiffer Gebhardt GmbH & Co. KGaA");
-        organization.setCurrency("EUR");
 
         Role role = new Role();
         role.setId(snowflakeGenerator.next());
@@ -63,7 +62,6 @@ class RoleServiceImplTest {
         Organization organization = new Organization();
         organization.setId(snowflakeGenerator.next());
         organization.setName("Conrad Dittrich Stiftung & Co. KGaA");
-        organization.setCurrency("EUR");
 
         Role role = new Role();
         role.setId(snowflakeGenerator.next());
@@ -102,7 +100,6 @@ class RoleServiceImplTest {
         Organization organization = new Organization();
         organization.setId(snowflakeGenerator.next());
         organization.setName("Raab GmbH & Co. OHG");
-        organization.setCurrency("EUR");
 
         Role role = new Role();
         role.setId(roleId);

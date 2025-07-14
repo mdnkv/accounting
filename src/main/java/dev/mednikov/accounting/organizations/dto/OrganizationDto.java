@@ -4,7 +4,6 @@ public final class OrganizationDto {
 
     private String id;
     private String name;
-    private String currency;
 
     public String getId() {
         return id;
@@ -22,12 +21,5 @@ public final class OrganizationDto {
         this.name = name;
     }
 
-    public String getCurrency() {
-        return currency;
-    }
-
-    public void setCurrency(String currency) {
-        this.currency = currency;
-    }
 
 }

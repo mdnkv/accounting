@@ -45,7 +45,7 @@ public class NetWorthServiceImpl implements NetWorthService {
         }
         BigDecimal netWorth = totalAssets.subtract(totalLiabilities);
         return new NetWorthSummaryDto(
-                organization.getCurrency(),
+                "EUR",
                 totalAssets,
                 totalLiabilities,
                 netWorth

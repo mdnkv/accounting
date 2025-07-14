@@ -16,11 +16,9 @@ import java.util.List;
 @RequestMapping("/api/transactions")
 public class TransactionRestController {
 
-    private final UserService userService;
     private final TransactionService transactionService;
 
-    public TransactionRestController(UserService userService, TransactionService transactionService) {
-        this.userService = userService;
+    public TransactionRestController(TransactionService transactionService) {
         this.transactionService = transactionService;
     }
 
@@ -28,8 +26,7 @@ public class TransactionRestController {
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAuthority('transactions:create')")
     public @ResponseBody TransactionDto createTransaction(@RequestBody TransactionDto transactionDto, @AuthenticationPrincipal Jwt jwt) {
-        User user = this.userService.getOrCreateUser(jwt);
-        return this.transactionService.createTransaction(user, transactionDto);
+        return this.transactionService.createTransaction(transactionDto);
     }
 
     @GetMapping("/organization/{organizationId}")

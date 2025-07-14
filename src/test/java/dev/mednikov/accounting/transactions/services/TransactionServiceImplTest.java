@@ -4,6 +4,8 @@ import cn.hutool.core.lang.generator.SnowflakeGenerator;
 import dev.mednikov.accounting.accounts.models.Account;
 import dev.mednikov.accounting.accounts.models.AccountType;
 import dev.mednikov.accounting.accounts.repositories.AccountRepository;
+import dev.mednikov.accounting.currencies.models.Currency;
+import dev.mednikov.accounting.currencies.repositories.CurrencyRepository;
 import dev.mednikov.accounting.organizations.models.Organization;
 import dev.mednikov.accounting.organizations.repositories.OrganizationRepository;
 import dev.mednikov.accounting.transactions.dto.TransactionDto;
@@ -14,7 +16,6 @@ import dev.mednikov.accounting.transactions.models.Transaction;
 import dev.mednikov.accounting.transactions.models.TransactionLine;
 import dev.mednikov.accounting.transactions.repositories.TransactionLineRepository;
 import dev.mednikov.accounting.transactions.repositories.TransactionRepository;
-import dev.mednikov.accounting.users.models.User;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,6 +37,7 @@ class TransactionServiceImplTest {
     @Mock private TransactionRepository transactionRepository;
     @Mock private AccountRepository accountRepository;
     @Mock private TransactionLineRepository transactionLineRepository;
+    @Mock private CurrencyRepository currencyRepository;
     @Mock private OrganizationRepository organizationRepository;
 
     @InjectMocks private TransactionServiceImpl transactionService;
@@ -65,17 +67,11 @@ class TransactionServiceImplTest {
         payload.setOrganizationId(organizationId.toString());
         payload.setLines(payloadLines);
         payload.setDescription("Aliquam vulputate, dolor non mollis rhoncus");
-        payload.setCurrency("EUR");
+        payload.setCurrencyId(snowflakeGenerator.next().toString());
         payload.setDate(LocalDate.now().minusDays(7));
 
-        User user = new User();
-        user.setId(snowflakeGenerator.next());
-        user.setEmail("z8lv5zzjo00lg@outlook.com");
-        user.setFirstName("Karolina");
-        user.setLastName("Haase-Krauß");
-
         // Execute the method
-        Assertions.assertThatThrownBy(() -> transactionService.createTransaction(user, payload)).isInstanceOf(UnbalancedTransactionException.class);
+        Assertions.assertThatThrownBy(() -> transactionService.createTransaction(payload)).isInstanceOf(UnbalancedTransactionException.class);
     }
 
     @Test
@@ -85,7 +81,14 @@ class TransactionServiceImplTest {
         Organization organization = new Organization();
         organization.setId(organizationId);
         organization.setName("Schade Bader AG & Co. KG");
-        organization.setCurrency("EUR");
+
+        // Create a currency
+        Long currencyId = snowflakeGenerator.next();
+        Currency currency = new Currency();
+        currency.setId(currencyId);
+        currency.setName("EUR - Euro");
+        currency.setCode("EUR");
+        currency.setOrganization(organization);
 
         // Create a debited account
         Long debitAccountId = snowflakeGenerator.next();
@@ -109,7 +112,7 @@ class TransactionServiceImplTest {
         Long transactionId = snowflakeGenerator.next();
         Transaction transaction = new Transaction();
         transaction.setOrganization(organization);
-        transaction.setCurrency("EUR");
+        transaction.setCurrency(currency);
         transaction.setDate(LocalDate.now().minusDays(10));
         transaction.setDescription("Aliquam mi leo, mattis a rhoncus eu, hendrerit vitae odio.");
         transaction.setId(transactionId);
@@ -135,19 +138,14 @@ class TransactionServiceImplTest {
         TransactionDtoMapper mapper = new TransactionDtoMapper();
         TransactionDto payload = mapper.apply(transaction);
 
-        User user = new User();
-        user.setId(snowflakeGenerator.next());
-        user.setEmail("ywcn3k1vo81ia@gmail.com");
-        user.setFirstName("Sieglinde");
-        user.setLastName("Buchholz");
-
         Mockito.when(organizationRepository.getReferenceById(organizationId)).thenReturn(organization);
+        Mockito.when(currencyRepository.getReferenceById(currencyId)).thenReturn(currency);
         Mockito.when(accountRepository.getReferenceById(debitAccountId)).thenReturn(debitAccount);
         Mockito.when(accountRepository.getReferenceById(creditAccountId)).thenReturn(creditAccount);
         Mockito.when(transactionLineRepository.saveAll(Mockito.any())).thenReturn(List.of(line1, line2));
         Mockito.when(transactionRepository.save(transaction)).thenReturn(transaction);
 
-        TransactionDto result = transactionService.createTransaction(user, payload);
+        TransactionDto result = transactionService.createTransaction(payload);
         Assertions.assertThat(result).isNotNull();
     }
 

@@ -39,14 +39,12 @@ class OrganizationRestControllerTest {
         // Create payload
         OrganizationDto payload = new OrganizationDto();
         payload.setName("Kern Urban GmbH & Co. KGaA");
-        payload.setCurrency("EUR");
 
         // Create mock response
         String id = snowflakeGenerator.next().toString();
         OrganizationDto result = new OrganizationDto();
         result.setId(id);
         result.setName("Kern Urban GmbH & Co. KGaA");
-        result.setCurrency("EUR");
 
         String body = objectMapper.writeValueAsString(payload);
         String keycloakId = UUID.randomUUID().toString();
@@ -76,7 +74,6 @@ class OrganizationRestControllerTest {
         // Create payload
         OrganizationDto payload = new OrganizationDto();
         payload.setId(id);
-        payload.setCurrency("EUR");
         payload.setName("Hartung Hoppe AG");
 
         String body = objectMapper.writeValueAsString(payload);
@@ -91,8 +88,7 @@ class OrganizationRestControllerTest {
                         .content(body))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(id))
-                .andExpect(jsonPath("$.name").value("Hartung Hoppe AG"))
-                .andExpect(jsonPath("$.currency").value("EUR"));
+                .andExpect(jsonPath("$.name").value("Hartung Hoppe AG"));
     }
 
     @Test
@@ -111,7 +107,6 @@ class OrganizationRestControllerTest {
         OrganizationDto result = new OrganizationDto();
         result.setId(id.toString());
         result.setName("Gärtner GmbH & Co. KG");
-        result.setCurrency("EUR");
         Mockito.when(organizationService.getOrganization(id)).thenReturn(Optional.of(result));
         mvc.perform(get("/api/organizations/organization/{id}", id)
                         .with(jwt().jwt(jwt -> jwt
@@ -119,8 +114,7 @@ class OrganizationRestControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(id))
-                .andExpect(jsonPath("$.name").value("Gärtner GmbH & Co. KG"))
-                .andExpect(jsonPath("$.currency").value("EUR"));
+                .andExpect(jsonPath("$.name").value("Gärtner GmbH & Co. KG"));
 
     }
 

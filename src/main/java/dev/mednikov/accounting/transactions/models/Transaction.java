@@ -1,7 +1,7 @@
 package dev.mednikov.accounting.transactions.models;
 
+import dev.mednikov.accounting.currencies.models.Currency;
 import dev.mednikov.accounting.organizations.models.Organization;
-import dev.mednikov.accounting.users.models.User;
 import jakarta.persistence.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -9,7 +9,6 @@ import org.hibernate.annotations.OnDeleteAction;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @Entity
@@ -25,15 +24,12 @@ public class Transaction {
     private Organization organization;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
-    @OnDelete(action = OnDeleteAction.SET_NULL)
-    private User user;
+    @JoinColumn(name = "currency_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Currency currency;
 
     @Column(nullable = false)
     private String description;
-
-    @Column(nullable = false)
-    private String currency;
 
     @Column(nullable = false, name = "transaction_date")
     private LocalDate date;
@@ -46,16 +42,16 @@ public class Transaction {
         if (!(o instanceof Transaction that)) return false;
 
         return organization.equals(that.organization)
-                && description.equals(that.description)
                 && currency.equals(that.currency)
+                && description.equals(that.description)
                 && date.equals(that.date);
     }
 
     @Override
     public int hashCode() {
         int result = organization.hashCode();
-        result = 31 * result + description.hashCode();
         result = 31 * result + currency.hashCode();
+        result = 31 * result + description.hashCode();
         result = 31 * result + date.hashCode();
         return result;
     }
@@ -84,14 +80,6 @@ public class Transaction {
         this.description = description;
     }
 
-    public String getCurrency() {
-        return currency;
-    }
-
-    public void setCurrency(String currency) {
-        this.currency = currency;
-    }
-
     public LocalDate getDate() {
         return date;
     }
@@ -100,12 +88,12 @@ public class Transaction {
         this.date = date;
     }
 
-    public Optional<User> getUser() {
-        return Optional.ofNullable(user);
+    public Currency getCurrency() {
+        return currency;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setCurrency(Currency currency) {
+        this.currency = currency;
     }
 
     public void setLines(List<TransactionLine> lines) {

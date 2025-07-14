@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface TransactionService {
 
-    TransactionDto createTransaction(User user, TransactionDto transactionDto);
+    TransactionDto createTransaction(TransactionDto transactionDto);
 
     List<TransactionDto> getTransactions (Long organizationId);
 

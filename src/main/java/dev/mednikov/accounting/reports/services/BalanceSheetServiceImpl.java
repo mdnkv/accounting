@@ -69,7 +69,7 @@ public class BalanceSheetServiceImpl implements BalanceSheetService {
         boolean balanced = totalCreditAmount.equals(totalDebitAmount);
         return new BalanceSheetDto(
                 organization.getName(),
-                organization.getCurrency(),
+                "EUR",
                 items,
                 totalCreditAmount,
                 totalDebitAmount,

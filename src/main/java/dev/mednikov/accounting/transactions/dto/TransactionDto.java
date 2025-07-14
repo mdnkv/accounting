@@ -1,5 +1,7 @@
 package dev.mednikov.accounting.transactions.dto;
 
+import dev.mednikov.accounting.currencies.dto.CurrencyDto;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -9,10 +11,11 @@ public final class TransactionDto {
     private String id;
     private String organizationId;
     private String description;
-    private String currency;
+    private String currencyId;
     private LocalDate date;
     private BigDecimal totalCreditAmount;
     private BigDecimal totalDebitAmount;
+    private CurrencyDto currency;
     private List<TransactionLineDto> lines;
 
     public String getId() {
@@ -39,12 +42,12 @@ public final class TransactionDto {
         this.description = description;
     }
 
-    public String getCurrency() {
-        return currency;
+    public String getCurrencyId() {
+        return currencyId;
     }
 
-    public void setCurrency(String currency) {
-        this.currency = currency;
+    public void setCurrencyId(String currency) {
+        this.currencyId = currency;
     }
 
     public LocalDate getDate() {
@@ -77,5 +80,13 @@ public final class TransactionDto {
 
     public void setTotalDebitAmount(BigDecimal totalDebitAmount) {
         this.totalDebitAmount = totalDebitAmount;
+    }
+
+    public CurrencyDto getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(CurrencyDto currency) {
+        this.currency = currency;
     }
 }

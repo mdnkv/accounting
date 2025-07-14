@@ -32,12 +32,10 @@ class OrganizationServiceImplTest {
         Long organizationId = snowflakeGenerator.next();
         OrganizationDto payload = new OrganizationDto();
         payload.setName("Wilhelm Meißner AG");
-        payload.setCurrency("EUR");
 
         Organization organization = new Organization();
         organization.setId(organizationId);
         organization.setName("Wilhelm Meißner AG");
-        organization.setCurrency("EUR");
 
         Long userId = snowflakeGenerator.next();
         User user = new User();
@@ -58,7 +56,6 @@ class OrganizationServiceImplTest {
         Long organizationId = snowflakeGenerator.next();
         OrganizationDto payload = new OrganizationDto();
         payload.setName("Sturm Kessler GmbH");
-        payload.setCurrency("EUR");
         payload.setId(organizationId.toString());
 
         Mockito.when(organizationRepository.findById(organizationId)).thenReturn(Optional.empty());
@@ -73,13 +70,11 @@ class OrganizationServiceImplTest {
 
         OrganizationDto payload = new OrganizationDto();
         payload.setName("Hanke Stiftung & Co. KG");
-        payload.setCurrency("EUR");
         payload.setId(organizationId.toString());
 
         Organization organization = new Organization();
         organization.setId(organizationId);
         organization.setName("Hanke Stiftung & Co. KG");
-        organization.setCurrency("EUR");
 
         Mockito.when(organizationRepository.findById(organizationId)).thenReturn(Optional.of(organization));
         Mockito.when(organizationRepository.save(organization)).thenReturn(organization);
@@ -96,7 +91,6 @@ class OrganizationServiceImplTest {
         Organization organization = new Organization();
         organization.setId(organizationId);
         organization.setName("Gärtner GmbH & Co. KG");
-        organization.setCurrency("EUR");
 
         Mockito.when(organizationRepository.findById(organizationId)).thenReturn(Optional.of(organization));
 

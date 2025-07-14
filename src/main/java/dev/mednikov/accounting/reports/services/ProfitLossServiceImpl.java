@@ -79,7 +79,7 @@ public class ProfitLossServiceImpl implements ProfitLossService {
 
         return new ProfitLossDto(
                 organization.getName(),
-                organization.getCurrency(),
+                "EUR",
                 expenseItems,
                 incomeItems,
                 netIncome
@@ -112,7 +112,7 @@ public class ProfitLossServiceImpl implements ProfitLossService {
         BigDecimal netProfit = totalIncome.subtract(totalExpense);
 
         return new ProfitLossSummaryDto(
-                organization.getCurrency(),
+                "EUR",
                 totalIncome,
                 totalExpense,
                 netProfit
