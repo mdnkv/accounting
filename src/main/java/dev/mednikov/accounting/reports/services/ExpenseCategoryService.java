@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface ExpenseCategoryService {
 
-    List<ExpenseCategoryDto> getExpenseCategories(Long organizationId);
+    List<ExpenseCategoryDto> getExpenseCategories(Long organizationId, int daysCount);
 
 }

@@ -24,9 +24,9 @@ public class ExpenseCategoryServiceImpl implements ExpenseCategoryService {
     }
 
     @Override
-    public List<ExpenseCategoryDto> getExpenseCategories(Long organizationId) {
+    public List<ExpenseCategoryDto> getExpenseCategories(Long organizationId, int daysCount) {
         LocalDate toDate = LocalDate.now();
-        LocalDate fromDate = toDate.minusDays(30);
+        LocalDate fromDate = toDate.minusDays(daysCount);
         List<TransactionLine> transactionLines = this.transactionLineRepository.getExpenseLines(organizationId, fromDate, toDate);
         Map<Account, List<TransactionLine>> accounts = transactionLines.stream().collect(Collectors.groupingBy(TransactionLine::getAccount));
         List<ExpenseCategoryDto> expenseCategories = new ArrayList<>();

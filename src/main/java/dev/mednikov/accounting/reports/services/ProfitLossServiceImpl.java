@@ -87,12 +87,12 @@ public class ProfitLossServiceImpl implements ProfitLossService {
     }
 
     @Override
-    public ProfitLossSummaryDto getProfitLossSummary(Long organizationId) {
+    public ProfitLossSummaryDto getProfitLossSummary(Long organizationId, int daysCount) {
         Organization organization = this.organizationRepository.findById(organizationId).orElseThrow(OrganizationNotFoundException::new);
 
-        // Calculate dates (default 30 days from current date)
+        // Calculate dates
         LocalDate toDate = LocalDate.now();
-        LocalDate fromDate = toDate.minusDays(30);
+        LocalDate fromDate = toDate.minusDays(daysCount);
 
         List<TransactionLine> transactionLines = this.transactionLineRepository.getProfitLossLines(organizationId, fromDate, toDate);
 

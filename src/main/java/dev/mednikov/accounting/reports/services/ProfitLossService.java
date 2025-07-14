@@ -9,6 +9,6 @@ public interface ProfitLossService {
 
     ProfitLossDto getProfitLoss (Long organizationId, LocalDate fromDate, LocalDate toDate);
 
-    ProfitLossSummaryDto getProfitLossSummary (Long organizationId);
+    ProfitLossSummaryDto getProfitLossSummary (Long organizationId, int daysCount);
 
 }
