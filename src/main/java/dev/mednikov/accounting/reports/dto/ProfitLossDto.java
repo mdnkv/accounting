@@ -5,7 +5,6 @@ import java.util.List;
 
 public record ProfitLossDto(
         String organizationName,
-        String currency,
         List<ProfitLossLineDto> expenseItems,
         List<ProfitLossLineDto> incomeItems,
         BigDecimal netIncome

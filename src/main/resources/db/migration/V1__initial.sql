@@ -1,7 +1,6 @@
 CREATE TABLE IF NOT EXISTS organizations (
     id BIGINT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    currency VARCHAR(3) NOT NULL CHECK(currency IN ('EUR'))
+    name VARCHAR(255) NOT NULL
 );
 
 CREATE TYPE ACCOUNT_TYPE AS ENUM ('ASSET', 'LIABILITY', 'EQUITY', 'INCOME', 'EXPENSE');
@@ -25,17 +24,27 @@ CREATE TABLE IF NOT EXISTS user_accounts (
     last_name VARCHAR(255)
 );
 
+CREATE TABLE IF NOT EXISTS currencies (
+    id BIGINT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    code VARCHAR(3) NOT NULL,
+    is_primary BOOLEAN NOT NULL DEFAULT FALSE,
+    organization_id BIGINT NOT NULL,
+    UNIQUE (organization_id, code),
+    CONSTRAINT fk_currency_organization FOREIGN KEY (organization_id)
+        REFERENCES organizations(id) ON DELETE CASCADE
+);
+
 CREATE TABLE IF NOT EXISTS transactions (
     id BIGINT PRIMARY KEY,
     organization_id BIGINT NOT NULL,
-    user_id BIGINT,
+    currency_id BIGINT NOT NULL,
     description TEXT NOT NULL,
     transaction_date DATE NOT NULL,
-    currency VARCHAR(3) NOT NULL CHECK(currency IN ('EUR')),
     CONSTRAINT fk_transaction_organization FOREIGN KEY (organization_id)
         REFERENCES organizations(id) ON DELETE CASCADE,
-    CONSTRAINT fk_transaction_user FOREIGN KEY (user_id)
-        REFERENCES user_accounts(id) ON DELETE SET NULL
+    CONSTRAINT fk_transaction_currency FOREIGN KEY (currency_id)
+        REFERENCES currencies(id) ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS transaction_lines (
@@ -49,8 +58,6 @@ CREATE TABLE IF NOT EXISTS transaction_lines (
     CONSTRAINT fk_transaction_line_transaction FOREIGN KEY (transaction_id)
         REFERENCES transactions(id) ON DELETE CASCADE
 );
-
-
 
 CREATE TYPE ROLE_TYPE AS ENUM ('OWNER', 'ADMINISTRATOR', 'ACCOUNTANT', 'USER');
 

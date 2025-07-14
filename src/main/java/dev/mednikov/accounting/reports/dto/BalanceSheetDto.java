@@ -5,7 +5,6 @@ import java.util.List;
 
 public record BalanceSheetDto(
         String organizationName,
-        String currency,
         List<BalanceSheetLineDto> items,
         BigDecimal totalCreditAmount,
         BigDecimal totalDebitAmount,

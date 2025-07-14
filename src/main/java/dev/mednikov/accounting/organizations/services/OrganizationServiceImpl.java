@@ -33,7 +33,6 @@ public class OrganizationServiceImpl implements OrganizationService {
     public OrganizationDto createOrganization(User owner, OrganizationDto organizationDto) {
         Organization organization = new Organization();
         organization.setName(organizationDto.getName());
-        organization.setCurrency(organizationDto.getCurrency());
         organization.setId(snowflakeGenerator.next());
 
         Organization result = this.organizationRepository.save(organization);
@@ -54,7 +53,6 @@ public class OrganizationServiceImpl implements OrganizationService {
         Long organizationId = Long.valueOf(organizationDto.getId());
         Organization organization = this.organizationRepository.findById(organizationId).orElseThrow(OrganizationNotFoundException::new);
         organization.setName(organizationDto.getName());
-        organization.setCurrency(organizationDto.getCurrency());
         Organization result = this.organizationRepository.save(organization);
         return organizationDtoMapper.apply(result);
     }

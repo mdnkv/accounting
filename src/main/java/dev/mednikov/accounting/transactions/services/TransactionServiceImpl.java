@@ -3,6 +3,8 @@ package dev.mednikov.accounting.transactions.services;
 import cn.hutool.core.lang.generator.SnowflakeGenerator;
 import dev.mednikov.accounting.accounts.models.Account;
 import dev.mednikov.accounting.accounts.repositories.AccountRepository;
+import dev.mednikov.accounting.currencies.models.Currency;
+import dev.mednikov.accounting.currencies.repositories.CurrencyRepository;
 import dev.mednikov.accounting.organizations.models.Organization;
 import dev.mednikov.accounting.organizations.repositories.OrganizationRepository;
 import dev.mednikov.accounting.transactions.dto.TransactionDto;
@@ -26,6 +28,7 @@ public class TransactionServiceImpl implements TransactionService {
     private final static SnowflakeGenerator snowflakeGenerator = new SnowflakeGenerator();
     private final static TransactionDtoMapper transactionDtoMapper = new TransactionDtoMapper();
 
+    private final CurrencyRepository currencyRepository;
     private final OrganizationRepository organizationRepository;
     private final TransactionRepository transactionRepository;
     private final TransactionLineRepository transactionLineRepository;
@@ -34,15 +37,17 @@ public class TransactionServiceImpl implements TransactionService {
     public TransactionServiceImpl(OrganizationRepository organizationRepository,
                                   TransactionRepository transactionRepository,
                                   TransactionLineRepository transactionLineRepository,
+                                  CurrencyRepository currencyRepository,
                                   AccountRepository accountRepository) {
         this.organizationRepository = organizationRepository;
         this.transactionRepository = transactionRepository;
         this.transactionLineRepository = transactionLineRepository;
         this.accountRepository = accountRepository;
+        this.currencyRepository = currencyRepository;
     }
 
     @Override
-    public TransactionDto createTransaction(User user, TransactionDto payload) {
+    public TransactionDto createTransaction(TransactionDto payload) {
         // Check that transaction has at least 2 lines
         if (payload.getLines().size() < 2){
             throw new UnbalancedTransactionException();
@@ -61,14 +66,17 @@ public class TransactionServiceImpl implements TransactionService {
         Long organizationId = Long.valueOf(payload.getOrganizationId());
         Organization organization = this.organizationRepository.getReferenceById(organizationId);
 
+        // Get currency
+        Long currencyId = Long.valueOf(payload.getCurrencyId());
+        Currency currency = this.currencyRepository.getReferenceById(currencyId);
+
         // Create transaction
         Transaction transaction = new Transaction();
         transaction.setId(snowflakeGenerator.next());
         transaction.setOrganization(organization);
         transaction.setDescription(payload.getDescription());
         transaction.setDate(payload.getDate());
-        transaction.setCurrency(payload.getCurrency());
-        transaction.setUser(user);
+        transaction.setCurrency(currency);
 
         // Persist transaction to the datasource
         Transaction transactionResult = this.transactionRepository.save(transaction);

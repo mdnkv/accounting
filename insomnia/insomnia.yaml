@@ -79,7 +79,7 @@ collection:
         meta:
           id: req_f074e6fc69fb4fb19290de9a2d3955df
           created: 1749035379556
-          modified: 1752484451006
+          modified: 1752505878367
           isPrivate: false
           description: ""
           sortKey: -1748881859977.5
@@ -88,8 +88,7 @@ collection:
           mimeType: application/json
           text: |-
             {
-            	"name":"Rauch GmbH & Co. KG",
-            	"currency":"EUR"
+            	"name":"Zimmermann Will AG & Co. KGaA"
             }
         headers:
           - name: Content-Type
@@ -115,7 +114,7 @@ collection:
         meta:
           id: req_ccedaa57ee1549a498305c9bbb8fa3cd
           created: 1749035456222
-          modified: 1749117408265
+          modified: 1752505921922
           isPrivate: false
           description: ""
           sortKey: -1748805130341.25
@@ -125,8 +124,7 @@ collection:
           text: |-
             {
             	"id":"{{ _.active_organization_id }}",
-            	"name":"My company",
-            	"currency":"EUR"
+            	"name":"My company"
             }
         headers:
           - name: Content-Type
@@ -372,7 +370,7 @@ collection:
         meta:
           id: req_1e2527a4174049868f7b440b583177cf
           created: 1749203516335
-          modified: 1749993328269
+          modified: 1752506932244
           isPrivate: false
           description: ""
           sortKey: -1749201659953
@@ -382,17 +380,17 @@ collection:
           text: |-
             {
             	"date":"2025-06-15",
-            	"currency":"EUR",
+            	"currencyId":"1944779802758086656",
             	"description":"My new transaction",
             	"organizationId":"{{ _.active_organization_id }}",
             	"lines":[
             		{
-            			"accountId":"1934238178663727104",
+            			"accountId":"1944776843580145664",
             			"creditAmount":500.0,
             			"debitAmount":0.0
             		},
             		{
-            			"accountId":"1934238178663727105",
+            			"accountId":"1944776843580145666",
             			"creditAmount":0.0,
             			"debitAmount":500.0
             		}
@@ -710,6 +708,150 @@ collection:
         pathParameters:
           - name: organizationId
             value: "{{ _.active_organization_id }}"
+  - name: Currencies
+    meta:
+      id: fld_aaece76467f44e06a78be442ecacc4ad
+      created: 1752505938939
+      modified: 1752505938939
+      sortKey: -1752505938939
+      description: ""
+    children:
+      - url: "{{ _.server_url }}currencies/organization/:organizationId"
+        name: Get currencies for organization
+        meta:
+          id: req_cf57833475354449b649d67ab09d665a
+          created: 1752505941860
+          modified: 1752506002993
+          isPrivate: false
+          description: ""
+          sortKey: -1752505941860
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.3.0
+        authentication:
+          type: oauth2
+          grantType: authorization_code
+          authorizationUrl: "{{_.auth_url}}"
+          accessTokenUrl: "{{_.access_token_url}}"
+          clientId: "{{_.client_id}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: organizationId
+            value: "{{ _.active_organization_id }}"
+      - url: "{{ _.server_url }}currencies/create"
+        name: Create currency
+        meta:
+          id: req_cd38ebb861d942d3a14113e1f0ea69a7
+          created: 1752506515026
+          modified: 1752507364026
+          isPrivate: false
+          description: ""
+          sortKey: -1751372167571.5
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"organizationId":"{{_.active_organization_id}}",
+            	"name":"RSD - Serbian Dinar",
+            	"code":"RSD"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.3.0
+        authentication:
+          type: oauth2
+          grantType: authorization_code
+          authorizationUrl: "{{_.auth_url}}"
+          accessTokenUrl: "{{_.access_token_url}}"
+          clientId: "{{_.client_id}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.server_url }}currencies/update"
+        name: Update currency
+        meta:
+          id: req_6cc5399a3eeb44ff918cdd5a6fe9ec0c
+          created: 1752506674004
+          modified: 1752507384329
+          isPrivate: false
+          description: ""
+          sortKey: -1750805280427.25
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"organizationId":"{{_.active_organization_id}}",
+            	"name":"Serbian Dinar",
+            	"id":"1944782961215799296",
+            	"code":"RSD",
+            	"primary":true
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.3.0
+        authentication:
+          type: oauth2
+          grantType: authorization_code
+          authorizationUrl: "{{_.auth_url}}"
+          accessTokenUrl: "{{_.access_token_url}}"
+          clientId: "{{_.client_id}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.server_url }}currencies/primary/:organizationId"
+        name: Get primary currency for organization
+        meta:
+          id: req_6b642e6ee17a4fbcbd108ee36da7197c
+          created: 1752506860409
+          modified: 1752506864240
+          isPrivate: false
+          description: ""
+          sortKey: -1751939054715.75
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.3.0
+        authentication:
+          type: oauth2
+          grantType: authorization_code
+          authorizationUrl: "{{_.auth_url}}"
+          accessTokenUrl: "{{_.access_token_url}}"
+          clientId: "{{_.client_id}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: organizationId
+            value: "{{ _.active_organization_id }}"
 cookieJar:
   name: Default Jar
   meta:
@@ -731,11 +873,11 @@ environments:
   meta:
     id: env_676597a9d4e9b24c6c7cf8e61c4566cefaacc897
     created: 1749035252072
-    modified: 1752484469737
+    modified: 1752505915213
     isPrivate: false
   data:
     server_url: http://localhost:8000/api/
     access_token_url: http://localhost:8080/realms/accounting/protocol/openid-connect/token
     auth_url: http://localhost:8080/realms/accounting/protocol/openid-connect/auth
     client_id: accounting-rest
-    active_organization_id: "1944686900203749376"
+    active_organization_id: "1944776843550785536"

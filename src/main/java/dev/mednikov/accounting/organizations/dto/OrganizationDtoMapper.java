@@ -11,7 +11,6 @@ public final class OrganizationDtoMapper implements Function<Organization, Organ
         OrganizationDto organizationDto = new OrganizationDto();
         organizationDto.setId(organization.getId().toString());
         organizationDto.setName(organization.getName());
-        organizationDto.setCurrency(organization.getCurrency());
         return organizationDto;
     }
 }

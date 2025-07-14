@@ -34,7 +34,6 @@ class TransactionRestControllerTest {
     private final static SnowflakeGenerator snowflakeGenerator = new SnowflakeGenerator();
 
     @MockitoBean private TransactionService transactionService;
-    @MockitoBean private UserService userService;
     @Autowired private MockMvc mockMvc;
     @Autowired private ObjectMapper objectMapper;
 
@@ -54,7 +53,7 @@ class TransactionRestControllerTest {
         lines.add(line2);
 
         TransactionDto payload = new TransactionDto();
-        payload.setCurrency("EUR");
+        payload.setCurrencyId(snowflakeGenerator.next().toString());
         payload.setDate(LocalDate.now().minusDays(10));
         payload.setDescription("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
         payload.setLines(lines);
@@ -63,15 +62,7 @@ class TransactionRestControllerTest {
         String keycloakId = UUID.randomUUID().toString();
         String body = objectMapper.writeValueAsString(payload);
 
-        User user = new User();
-        user.setKeycloakId(keycloakId);
-        user.setId(snowflakeGenerator.next());
-        user.setEmail("hqd7o71xqwyx@googlemail.com");
-        user.setFirstName("Margaretha");
-        user.setLastName("Scherer-Neuhaus");
-
-        Mockito.when(userService.getOrCreateUser(Mockito.any())).thenReturn(user);
-        Mockito.when(transactionService.createTransaction(Mockito.any(), Mockito.any())).thenThrow(UnbalancedTransactionException.class);
+        Mockito.when(transactionService.createTransaction(Mockito.any())).thenThrow(UnbalancedTransactionException.class);
 
         mockMvc.perform(post("/api/transactions/create")
                         .with(jwt().jwt(jwt -> jwt
@@ -99,7 +90,7 @@ class TransactionRestControllerTest {
 
         TransactionDto payload = new TransactionDto();
         payload.setId(snowflakeGenerator.next().toString());
-        payload.setCurrency("EUR");
+        payload.setCurrencyId(snowflakeGenerator.next().toString());
         payload.setDate(LocalDate.now().minusDays(10));
         payload.setDescription("Pellentesque condimentum magna at iaculis consequat.");
         payload.setLines(lines);
@@ -108,16 +99,7 @@ class TransactionRestControllerTest {
         String keycloakId = UUID.randomUUID().toString();
         String body = objectMapper.writeValueAsString(payload);
 
-        User user = new User();
-        user.setKeycloakId(keycloakId);
-        user.setId(snowflakeGenerator.next());
-        user.setEmail("mbwq6d141hsn6mg5rbqh@ymail.com");
-        user.setFirstName("Tanja");
-        user.setLastName("Krüger");
-
-        Mockito.when(userService.getOrCreateUser(Mockito.any())).thenReturn(user);
-
-        Mockito.when(transactionService.createTransaction(Mockito.any(), Mockito.any())).thenReturn(payload);
+        Mockito.when(transactionService.createTransaction(Mockito.any())).thenReturn(payload);
 
         mockMvc.perform(post("/api/transactions/create")
                         .with(jwt().jwt(jwt -> jwt

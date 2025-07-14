@@ -21,7 +21,6 @@ export class OrganizationCreateView {
   router: Router = inject(Router)
   form: FormGroup = this.formBuilder.group({
     name: ['', [Validators.required, Validators.maxLength(255)]],
-    currency: ['EUR', [Validators.required]]
   })
 
   submit(){
@@ -30,8 +29,7 @@ export class OrganizationCreateView {
 
     // Create payload
     const payload: Organization = {
-      name: this.form.get('name')?.value,
-      currency: this.form.get('currency')?.value
+      name: this.form.get('name')?.value
     }
 
     // Execute request

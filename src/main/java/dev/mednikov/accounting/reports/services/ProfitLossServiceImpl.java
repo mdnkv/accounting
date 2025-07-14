@@ -55,7 +55,7 @@ public class ProfitLossServiceImpl implements ProfitLossService {
         for (Map.Entry<Account, List<TransactionLine>> entry : accounts.entrySet()) {
             AccountDto account = accountDtoMapper.apply(entry.getKey());
             BigDecimal amount = BigDecimal.ZERO;
-            // Calculate amount for account
+            // Calculate amount for the account
             BigDecimal debit = entry.getValue().stream()
                     .map(TransactionLine::getDebitAmount)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -79,7 +79,6 @@ public class ProfitLossServiceImpl implements ProfitLossService {
 
         return new ProfitLossDto(
                 organization.getName(),
-                organization.getCurrency(),
                 expenseItems,
                 incomeItems,
                 netIncome
@@ -112,7 +111,6 @@ public class ProfitLossServiceImpl implements ProfitLossService {
         BigDecimal netProfit = totalIncome.subtract(totalExpense);
 
         return new ProfitLossSummaryDto(
-                organization.getCurrency(),
                 totalIncome,
                 totalExpense,
                 netProfit

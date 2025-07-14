@@ -34,10 +34,10 @@
             <td></td>
             <td>{{line.account!.code}} - {{line.account!.name}}</td>
             <td>
-              {{line.debitAmount|currency:transaction.currency}}
+              {{line.debitAmount|currency:transaction.currency!.code}}
             </td>
             <td>
-              {{line.creditAmount|currency:transaction.currency}}
+              {{line.creditAmount|currency:transaction.currency!.code}}
             </td>
           </tr>
         }

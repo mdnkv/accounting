@@ -42,7 +42,6 @@ class AccountServiceImplTest {
         Organization organization = new Organization();
         organization.setId(organizationId);
         organization.setName("Jäger AG & Co. KGaA");
-        organization.setCurrency("EUR");
 
         Account account = new Account();
         account.setId(accountId);
@@ -69,7 +68,6 @@ class AccountServiceImplTest {
         Organization organization = new Organization();
         organization.setId(organizationId);
         organization.setName("Reichert AG & Co. KG");
-        organization.setCurrency("EUR");
 
         Account account = new Account();
         account.setId(accountId);
@@ -118,7 +116,6 @@ class AccountServiceImplTest {
         Organization organization = new Organization();
         organization.setId(organizationId);
         organization.setName("Springer Popp GmbH");
-        organization.setCurrency("EUR");
 
         AccountDto payload = new AccountDto();
         payload.setOrganizationId(organizationId.toString());
@@ -156,7 +153,6 @@ class AccountServiceImplTest {
         Organization organization = new Organization();
         organization.setId(organizationId);
         organization.setName("Breuer GmbH & Co. KG");
-        organization.setCurrency("EUR");
 
         AccountDto payload = new AccountDto();
         payload.setOrganizationId(organizationId.toString());
@@ -184,7 +180,6 @@ class AccountServiceImplTest {
         Organization organization = new Organization();
         organization.setId(organizationId);
         organization.setName("Fiedler GmbH & Co. KGaA");
-        organization.setCurrency("EUR");
 
         List<Account> accounts = new ArrayList<>();
         Account account1 = new Account();
@@ -216,7 +211,6 @@ class AccountServiceImplTest {
         Organization organization = new Organization();
         organization.setId(organizationId);
         organization.setName("Ackermann Oswald AG");
-        organization.setCurrency("EUR");
 
         List<Account> accounts = new ArrayList<>();
         Account account1 = new Account();
@@ -240,7 +234,6 @@ class AccountServiceImplTest {
         Organization organization = new Organization();
         organization.setId(organizationId);
         organization.setName("Gottschalk Metzger OHG mbH");
-        organization.setCurrency("EUR");
 
         Account account = new Account();
         account.setId(accountId);

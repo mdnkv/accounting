@@ -1,4 +1,5 @@
 import {Account} from '../../accounts/models/accounts.models';
+import {Currency} from '../../currencies/models/currencies.models';
 
 export interface TransactionLine {
   debitAmount: number
@@ -13,7 +14,8 @@ export interface Transaction {
   description: string
   organizationId: string
   lines: TransactionLine[]
-  currency: string
+  currencyId: string
+  currency?: Currency
   totalCreditAmount?: number
   totalDebitAmount?: number
   id?: string
