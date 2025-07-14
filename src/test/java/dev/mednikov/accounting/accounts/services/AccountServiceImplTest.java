@@ -3,12 +3,15 @@ package dev.mednikov.accounting.accounts.services;
 import cn.hutool.core.lang.generator.SnowflakeGenerator;
 import dev.mednikov.accounting.accounts.dto.AccountDto;
 import dev.mednikov.accounting.accounts.exceptions.AccountAlreadyExistsException;
+import dev.mednikov.accounting.accounts.exceptions.AccountDeletionException;
 import dev.mednikov.accounting.accounts.exceptions.AccountNotFoundException;
 import dev.mednikov.accounting.accounts.models.Account;
 import dev.mednikov.accounting.accounts.models.AccountType;
 import dev.mednikov.accounting.accounts.repositories.AccountRepository;
 import dev.mednikov.accounting.organizations.models.Organization;
 import dev.mednikov.accounting.organizations.repositories.OrganizationRepository;
+import dev.mednikov.accounting.transactions.models.TransactionLine;
+import dev.mednikov.accounting.transactions.repositories.TransactionLineRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,6 +31,7 @@ class AccountServiceImplTest {
 
     @Mock private AccountRepository accountRepository;
     @Mock private OrganizationRepository organizationRepository;
+    @Mock private TransactionLineRepository transactionLineRepository;
     @InjectMocks private AccountServiceImpl accountService;
 
     @Test
@@ -175,7 +179,7 @@ class AccountServiceImplTest {
     }
 
     @Test
-    void getAccountsTest(){
+    void getAllAccountsTest(){
         Long organizationId = snowflakeGenerator.next();
         Organization organization = new Organization();
         organization.setId(organizationId);
@@ -189,6 +193,7 @@ class AccountServiceImplTest {
         account1.setOrganization(organization);
         account1.setName("Notes Payable – Credit Line #2");
         account1.setCode("20200");
+        account1.setDeprecated(false);
         accounts.add(account1);
 
         Account account2 = new Account();
@@ -197,11 +202,35 @@ class AccountServiceImplTest {
         account2.setOrganization(organization);
         account2.setName("Revenue");
         account2.setCode("31010");
+        account2.setDeprecated(false);
         accounts.add(account2);
 
-        Mockito.when(accountRepository.findByOrganizationId(organizationId)).thenReturn(accounts);
-        List<AccountDto> result = accountService.getAccounts(organizationId);
+        Mockito.when(accountRepository.findAllByOrganizationId(organizationId)).thenReturn(accounts);
+        List<AccountDto> result = accountService.getAccounts(organizationId, true);
         Assertions.assertThat(result).isNotNull().hasSize(2);
+    }
+
+    @Test
+    void getActiveAccountsTest(){
+        Long organizationId = snowflakeGenerator.next();
+        Organization organization = new Organization();
+        organization.setId(organizationId);
+        organization.setName("Ackermann Oswald AG");
+        organization.setCurrency("EUR");
+
+        List<Account> accounts = new ArrayList<>();
+        Account account1 = new Account();
+        account1.setId(snowflakeGenerator.next());
+        account1.setAccountType(AccountType.LIABILITY);
+        account1.setOrganization(organization);
+        account1.setName("Notes Payable – Credit Line #2");
+        account1.setCode("20200");
+        account1.setDeprecated(true);
+        accounts.add(account1);
+
+        Mockito.when(accountRepository.findActiveByOrganizationId(organizationId)).thenReturn(accounts);
+        List<AccountDto> result = accountService.getAccounts(organizationId, false);
+        Assertions.assertThat(result).isNotNull().hasSize(1);
     }
 
     @Test
@@ -210,7 +239,7 @@ class AccountServiceImplTest {
         Long organizationId = snowflakeGenerator.next();
         Organization organization = new Organization();
         organization.setId(organizationId);
-        organization.setName("Gottschalk Metzger OHG mbH\t");
+        organization.setName("Gottschalk Metzger OHG mbH");
         organization.setCurrency("EUR");
 
         Account account = new Account();
@@ -231,6 +260,16 @@ class AccountServiceImplTest {
         Mockito.when(accountRepository.findById(accountId)).thenReturn(Optional.empty());
         Optional<AccountDto> result = accountService.getAccount(accountId);
         Assertions.assertThat(result).isEmpty();
+    }
+
+    @Test
+    void deleteAccountWithTransactionsTest(){
+        Long accountId = snowflakeGenerator.next();
+        TransactionLine transactionLine = new TransactionLine();
+        Mockito.when(transactionLineRepository.findByAccountId(accountId)).thenReturn(List.of(transactionLine));
+        Assertions
+                .assertThatThrownBy(() -> accountService.deleteAccount(accountId))
+                .isInstanceOf(AccountDeletionException.class);
     }
 
 }

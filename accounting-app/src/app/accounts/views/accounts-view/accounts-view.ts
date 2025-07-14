@@ -84,15 +84,19 @@ export class AccountsView implements OnInit{
     this.accountService.deleteAccount(id).subscribe({
       next: result => {
         this.accounts = this.accounts.filter(a => a.id! !== id)
+        alert('Account was deleted successfully')
       },
       error: (err: HttpErrorResponse) => {
         console.log(err)
+        if (err.status == 400){
+          alert('This account has associated transactions and cannot be deleted. You can make it deprecated instead')
+        }
       }
     })
   }
 
   ngOnInit() {
-    this.accountService.getAccounts().subscribe({
+    this.accountService.getAccounts(true).subscribe({
       next: result => {
         this.accounts = result
         this.shownAccounts = result

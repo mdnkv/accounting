@@ -42,8 +42,11 @@ public class AccountRestController {
 
     @GetMapping("/organization/{organizationId}")
     @PreAuthorize("hasAuthority('accounts:view')")
-    public @ResponseBody List<AccountDto> getAccounts(@PathVariable Long organizationId) {
-        return this.accountService.getAccounts(organizationId);
+    public @ResponseBody List<AccountDto> getAccounts(
+            @PathVariable Long organizationId,
+            @RequestParam(defaultValue = "false", required = false) boolean includeDeprecated
+    ) {
+        return this.accountService.getAccounts(organizationId, includeDeprecated);
     }
 
     @GetMapping("/account/{accountId}")

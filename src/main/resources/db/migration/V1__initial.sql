@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS accounts (
     code VARCHAR(20) NOT NULL,
     account_type ACCOUNT_TYPE NOT NULL,
     organization_id BIGINT NOT NULL,
+    is_deprecated BOOLEAN NOT NULL DEFAULT FALSE,
     UNIQUE (organization_id, code),
     CONSTRAINT fk_account_organization FOREIGN KEY (organization_id)
         REFERENCES organizations(id) ON DELETE CASCADE

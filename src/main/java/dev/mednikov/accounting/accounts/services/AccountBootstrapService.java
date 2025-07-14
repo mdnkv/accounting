@@ -58,6 +58,7 @@ public class AccountBootstrapService {
                         account.setName(result.getName());
                         account.setAccountType(result.getAccountType());
                         account.setId(snowflakeGenerator.next());
+                        account.setDeprecated(false);
                         return account;
                     })
                     .toList();

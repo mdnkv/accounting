@@ -8,6 +8,7 @@ public final class AccountDto {
     private String organizationId;
     private String name;
     private String code;
+    private boolean deprecated;
     private AccountType accountType;
 
     public String getId() {
@@ -50,4 +51,11 @@ public final class AccountDto {
         this.accountType = accountType;
     }
 
+    public boolean isDeprecated() {
+        return deprecated;
+    }
+
+    public void setDeprecated(boolean deprecated) {
+        this.deprecated = deprecated;
+    }
 }

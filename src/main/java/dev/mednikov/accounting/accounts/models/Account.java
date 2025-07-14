@@ -33,6 +33,9 @@ public class Account {
     @Column(nullable = false)
     private String code;
 
+    @Column(nullable = false, name = "is_deprecated")
+    private boolean deprecated;
+
     @Override
     public final boolean equals(Object o) {
         if (!(o instanceof Account account)) return false;
@@ -85,5 +88,13 @@ public class Account {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public boolean isDeprecated() {
+        return deprecated;
+    }
+
+    public void setDeprecated(boolean deprecated) {
+        this.deprecated = deprecated;
     }
 }

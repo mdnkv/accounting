@@ -43,5 +43,6 @@ public interface TransactionLineRepository extends JpaRepository<TransactionLine
     """)
     List<TransactionLine> getExpenseLines (Long organizationId, LocalDate fromDate, LocalDate toDate);
 
+    List<TransactionLine> findByAccountId(Long accountId);
 
 }
