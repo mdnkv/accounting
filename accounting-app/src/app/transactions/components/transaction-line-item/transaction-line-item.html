@@ -3,10 +3,10 @@
     <p>{{item().account!.code}} - {{item().account!.name}}</p>
   </div>
   <div class="column is-2">
-    <p>{{item().debitAmount|currency: 'EUR'}}</p>
+    <p>{{item().debitAmount|currency: currency()}}</p>
   </div>
   <div class="column is-2">
-    <p>{{item().creditAmount|currency: 'EUR'}}</p>
+    <p>{{item().creditAmount|currency: currency()}}</p>
   </div>
   <div class="column is-1">
     <button class="button is-danger" type="button" (click)="onDelete()">

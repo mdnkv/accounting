@@ -12,6 +12,7 @@ export class TransactionLineItem {
 
   deleteTransactionLine = output()
   item = input.required<TransactionLine>()
+  currency = input.required<string>()
 
   onDelete() {
     if (confirm('Do you want to remove this transaction line?')){

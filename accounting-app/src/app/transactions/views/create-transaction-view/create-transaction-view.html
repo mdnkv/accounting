@@ -10,6 +10,7 @@
       <div class="columns">
         <div class="column is-one-third">
 
+          <!-- Transaction date -->
           <div class="field">
             <label class="label">Transaction date</label>
             <div class="control">
@@ -24,6 +25,27 @@
               <p class="help is-danger">This field cannot be empty</p>
             }
           </div>
+
+          <!-- Currency -->
+          <fieldset [disabled]="currencies.length == 0">
+            <div class="field">
+              <label class="label">Currency</label>
+              <div class="control">
+                <div class="select is-fullwidth">
+                  <select formControlName="currencyId">
+                    @for (currency of currencies; track currency.id!){
+                      <option [value]="currency.id!">{{currency.name}}</option>
+                    }
+                  </select>
+                </div>
+              </div>
+              @if (form.get('currencyId')?.touched && form.get('currencyId')?.invalid ){
+                <p class="help is-danger">This field cannot be empty</p>
+              }
+            </div>
+          </fieldset>
+
+          <!-- -->
 
         </div>
         <div class="column">
@@ -52,7 +74,7 @@
     <!-- Transactions lines -->
     <div class="block">
       @for (line of transactionsLines; track $index){
-        <app-transaction-line-item [item]="line" (deleteTransactionLine)="onDeleteLine($index)"/>
+        <app-transaction-line-item [currency]="primaryCurrencyCode" [item]="line" (deleteTransactionLine)="onDeleteLine($index)"/>
       }
     </div>
     <div class="block">
@@ -67,13 +89,13 @@
         <div class="level-item">
           <div class="has-text-centered">
             <p>Debit amount</p>
-            <p class="is-size-4">{{totalDebitAmount|currency:currency}}</p>
+            <p class="is-size-4">{{totalDebitAmount|currency:primaryCurrencyCode}}</p>
           </div>
         </div>
         <div class="level-item has-text-centered">
           <div class="has-text-centered">
             <p>Credit amount</p>
-            <p class="is-size-4">{{totalCreditAmount|currency:currency}}</p>
+            <p class="is-size-4">{{totalCreditAmount|currency:primaryCurrencyCode}}</p>
           </div>
         </div>
         <div class="level-item">
@@ -82,7 +104,7 @@
             <p
               [class.has-text-success]="balanced"
               [class.has-text-danger]="!balanced"
-              class="is-size-4">{{balance|currency:currency}}</p>
+              class="is-size-4">{{balance|currency:primaryCurrencyCode}}</p>
           </div>
         </div>
       </div>
