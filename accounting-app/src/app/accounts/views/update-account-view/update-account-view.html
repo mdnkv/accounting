@@ -58,6 +58,15 @@
         (click)="setAccountType('EXPENSE')"
         class="tag is-medium is-clickable">Expense</span>
     </div>
+
+    <!-- Status -->
+    <div class="block">
+      <label class="checkbox">
+        <input type="checkbox" formControlName="deprecated"/>
+        Account is deprecated
+      </label>
+    </div>
+
     <!-- Buttons -->
     <div class="block buttons">
       <button class="button is-primary" type="submit" [disabled]="form.invalid" [class.is-skeleton]="loading()">

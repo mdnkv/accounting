@@ -23,6 +23,7 @@ export class UpdateAccountView implements OnInit{
   form: FormGroup = this.formBuilder.group({
     name: ['', [Validators.required, Validators.maxLength(255)]],
     code: ['', [Validators.required, Validators.maxLength(20)]],
+    deprecated: [false]
   })
 
   account: Account | undefined = undefined
@@ -35,6 +36,7 @@ export class UpdateAccountView implements OnInit{
       ...this.account!,
       name: this.form.get('name')?.value,
       code: this.form.get('code')?.value,
+      deprecated: this.form.get('deprecated')?.value,
       accountType: this.accountType()
     }
 
@@ -63,6 +65,7 @@ export class UpdateAccountView implements OnInit{
     this.account = payload
     this.form.get('name')?.setValue(payload.name)
     this.form.get('code')?.setValue(payload.code)
+    this.form.get('deprecated')?.setValue(payload.deprecated)
     this.accountType.set(payload.accountType)
   }
 

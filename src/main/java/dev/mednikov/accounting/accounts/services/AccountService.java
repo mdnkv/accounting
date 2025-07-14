@@ -13,7 +13,7 @@ public interface AccountService {
 
     void deleteAccount(Long id);
 
-    List<AccountDto> getAccounts(Long organizationId);
+    List<AccountDto> getAccounts(Long organizationId, boolean includeDeprecated);
 
     Optional<AccountDto> getAccount(Long id);
 

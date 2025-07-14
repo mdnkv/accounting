@@ -26,6 +26,7 @@ export class CreateAccountModal {
       name: this.form.get('name')?.value,
       code: this.form.get('code')?.value,
       accountType: this.accountType(),
+      deprecated: false,
       organizationId
     }
     this.createAccount.emit(payload)

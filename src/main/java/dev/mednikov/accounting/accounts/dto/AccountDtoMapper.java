@@ -14,6 +14,7 @@ public final class AccountDtoMapper implements Function<Account, AccountDto> {
         result.setCode(account.getCode());
         result.setAccountType(account.getAccountType());
         result.setOrganizationId(account.getOrganization().getId().toString());
+        result.setDeprecated(account.isDeprecated());
         return result;
     }
 

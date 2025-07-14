@@ -4,6 +4,7 @@ import cn.hutool.core.lang.generator.SnowflakeGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.mednikov.accounting.accounts.dto.AccountDto;
 import dev.mednikov.accounting.accounts.exceptions.AccountAlreadyExistsException;
+import dev.mednikov.accounting.accounts.exceptions.AccountDeletionException;
 import dev.mednikov.accounting.accounts.exceptions.AccountNotFoundException;
 import dev.mednikov.accounting.accounts.models.AccountType;
 import dev.mednikov.accounting.accounts.services.AccountService;
@@ -153,7 +154,7 @@ class AccountRestControllerTest {
     }
 
     @Test
-    void deleteAccountTest() throws Exception {
+    void deleteAccount_successTest() throws Exception {
         Long id = snowflakeGenerator.next();
         String keycloakId = UUID.randomUUID().toString();
         Mockito.doNothing().when(accountService).deleteAccount(id);
@@ -164,10 +165,33 @@ class AccountRestControllerTest {
     }
 
     @Test
-    void getAccountsTest() throws Exception {
+    void deleteAccount_failTest() throws Exception {
+        Long id = snowflakeGenerator.next();
+        String keycloakId = UUID.randomUUID().toString();
+        Mockito.doThrow(new AccountDeletionException()).when(accountService).deleteAccount(id);
+        mvc.perform(delete("/api/accounts/delete/{id}", id)
+                        .with(jwt().jwt(jwt -> jwt
+                                .claim("sub", keycloakId))))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void getAllAccountsTest() throws Exception {
         Long organizationId = snowflakeGenerator.next();
         String keycloakId = UUID.randomUUID().toString();
-        Mockito.when(accountService.getAccounts(organizationId)).thenReturn(List.of());
+        Mockito.when(accountService.getAccounts(organizationId, true)).thenReturn(List.of());
+        mvc.perform(get("/api/accounts/organization/{id}", organizationId)
+                        .queryParam("includeDeprecated", "true")
+                        .with(jwt().jwt(jwt -> jwt
+                                .claim("sub", keycloakId))))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void getActiveAccountsTest() throws Exception {
+        Long organizationId = snowflakeGenerator.next();
+        String keycloakId = UUID.randomUUID().toString();
+        Mockito.when(accountService.getAccounts(organizationId, false)).thenReturn(List.of());
         mvc.perform(get("/api/accounts/organization/{id}", organizationId)
                         .with(jwt().jwt(jwt -> jwt
                                 .claim("sub", keycloakId))))

@@ -4,11 +4,13 @@ import cn.hutool.core.lang.generator.SnowflakeGenerator;
 import dev.mednikov.accounting.accounts.dto.AccountDto;
 import dev.mednikov.accounting.accounts.dto.AccountDtoMapper;
 import dev.mednikov.accounting.accounts.exceptions.AccountAlreadyExistsException;
+import dev.mednikov.accounting.accounts.exceptions.AccountDeletionException;
 import dev.mednikov.accounting.accounts.exceptions.AccountNotFoundException;
 import dev.mednikov.accounting.accounts.models.Account;
 import dev.mednikov.accounting.accounts.repositories.AccountRepository;
 import dev.mednikov.accounting.organizations.models.Organization;
 import dev.mednikov.accounting.organizations.repositories.OrganizationRepository;
+import dev.mednikov.accounting.transactions.repositories.TransactionLineRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,11 +24,16 @@ public class AccountServiceImpl implements AccountService {
     private final static SnowflakeGenerator snowflakeGenerator = new SnowflakeGenerator();
 
     private final AccountRepository accountRepository;
+    private final TransactionLineRepository transactionLineRepository;
     private final OrganizationRepository organizationRepository;
 
-    public AccountServiceImpl(AccountRepository accountRepository, OrganizationRepository organizationRepository) {
+    public AccountServiceImpl(
+            AccountRepository accountRepository,
+            OrganizationRepository organizationRepository,
+            TransactionLineRepository transactionLineRepository) {
         this.accountRepository = accountRepository;
         this.organizationRepository = organizationRepository;
+        this.transactionLineRepository = transactionLineRepository;
     }
 
     @Override
@@ -45,6 +52,7 @@ public class AccountServiceImpl implements AccountService {
         account.setId(snowflakeGenerator.next());
         account.setAccountType(accountDto.getAccountType());
         account.setOrganization(organization);
+        account.setDeprecated(false);
 
         Account result = this.accountRepository.save(account);
 
@@ -59,6 +67,7 @@ public class AccountServiceImpl implements AccountService {
 
         account.setName(accountDto.getName());
         account.setAccountType(accountDto.getAccountType());
+        account.setDeprecated(accountDto.isDeprecated());
 
         if (!account.getCode().equals(accountDto.getCode())) {
             Long organizationId = Long.valueOf(accountDto.getOrganizationId());
@@ -75,16 +84,26 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public void deleteAccount(Long id) {
-        this.accountRepository.deleteById(id);
-
+        if (this.transactionLineRepository.findByAccountId(id).isEmpty()){
+            this.accountRepository.deleteById(id);
+        } else {
+            throw new AccountDeletionException();
+        }
     }
 
     @Override
-    public List<AccountDto> getAccounts(Long organizationId) {
-        return this.accountRepository.findByOrganizationId(organizationId)
-                .stream()
-                .map(accountDtoMapper)
-                .toList();
+    public List<AccountDto> getAccounts(Long organizationId, boolean includeDeprecated) {
+        if (includeDeprecated) {
+            return this.accountRepository.findAllByOrganizationId(organizationId)
+                    .stream()
+                    .map(accountDtoMapper)
+                    .toList();
+        } else {
+            return this.accountRepository.findActiveByOrganizationId(organizationId)
+                    .stream()
+                    .map(accountDtoMapper)
+                    .toList();
+        }
     }
 
     @Override

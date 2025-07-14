@@ -79,7 +79,7 @@ collection:
         meta:
           id: req_f074e6fc69fb4fb19290de9a2d3955df
           created: 1749035379556
-          modified: 1751716280740
+          modified: 1752484451006
           isPrivate: false
           description: ""
           sortKey: -1748881859977.5
@@ -88,7 +88,7 @@ collection:
           mimeType: application/json
           text: |-
             {
-            	"name":"Meyer Fleischer GmbH",
+            	"name":"Rauch GmbH & Co. KG",
             	"currency":"EUR"
             }
         headers:
@@ -160,11 +160,17 @@ collection:
         meta:
           id: req_18c2d685e6c94cb3b1aef4b6ae626c1a
           created: 1749199859282
-          modified: 1751716453048
+          modified: 1752485057850
           isPrivate: false
           description: ""
           sortKey: -1749199859282
         method: GET
+        parameters:
+          - id: pair_36aafbd234d34ecb8579334906d11f08
+            name: includeDeprecated
+            value: "false"
+            description: ""
+            disabled: false
         headers:
           - name: User-Agent
             value: insomnia/11.1.0
@@ -228,7 +234,7 @@ collection:
         meta:
           id: req_10a0c145d2a84e878e65f473088a3611
           created: 1749200036626
-          modified: 1749200063324
+          modified: 1752484508498
           isPrivate: false
           description: ""
           sortKey: -1749076454258
@@ -237,12 +243,13 @@ collection:
           mimeType: application/json
           text: |-
             {
-            	"id": "1930910926215577600",
-            	"organizationId": "1930910202710720512",
-            	"name": "Cash – Regular Checking-update",
-            	"code": "10100",
-            	"accountType": "ASSET"
-            }
+            		"id": "1944686900241498112",
+            		"organizationId": "1944686900203749376",
+            		"name": "Cash",
+            		"code": "10100",
+            		"deprecated": true,
+            		"accountType": "ASSET"
+            	}
         headers:
           - name: Content-Type
             value: application/json
@@ -706,11 +713,11 @@ environments:
   meta:
     id: env_676597a9d4e9b24c6c7cf8e61c4566cefaacc897
     created: 1749035252072
-    modified: 1751716446750
+    modified: 1752484469737
     isPrivate: false
   data:
     server_url: http://localhost:8000/api/
     access_token_url: http://localhost:8080/realms/accounting/protocol/openid-connect/token
     auth_url: http://localhost:8080/realms/accounting/protocol/openid-connect/auth
     client_id: accounting-rest
-    active_organization_id: "1941465581404291072"
+    active_organization_id: "1944686900203749376"

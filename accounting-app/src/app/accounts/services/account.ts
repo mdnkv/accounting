@@ -12,9 +12,9 @@ export class AccountService {
   http: HttpClient = inject(HttpClient)
   serverUrl: string = environment.serverUrl
 
-  getAccounts(): Observable<Account[]>{
+  getAccounts(includeDeprecated = false): Observable<Account[]>{
     const organizationId = localStorage.getItem('activeOrganizationId') as string
-    return this.http.get<Account[]>(`${this.serverUrl}/accounts/organization/${organizationId}`)
+    return this.http.get<Account[]>(`${this.serverUrl}/accounts/organization/${organizationId}?includeDeprecated=${includeDeprecated}`)
   }
 
   createAccount(payload: Account):  Observable<Account>{

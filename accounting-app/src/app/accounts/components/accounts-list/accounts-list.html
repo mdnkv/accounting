@@ -5,6 +5,7 @@
         <tr>
           <th>Code</th>
           <th>Account name</th>
+          <th>Status</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -13,6 +14,13 @@
         <tr>
           <td>{{account.code}}</td>
           <td>{{account.name}}</td>
+          <td>
+            @if (account.deprecated){
+              <span class="tag is-warning">Deprecated</span>
+            } @else {
+              <span class="tag is-success">Active</span>
+            }
+          </td>
           <td>
             <a [routerLink]="['/accounts/update', account.id!]">
               <span class="icon">
