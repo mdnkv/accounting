@@ -27,7 +27,7 @@ public class Role {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Organization organization;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "roles_authorities",
             joinColumns = @JoinColumn(name = "role_id"),

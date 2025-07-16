@@ -16,7 +16,12 @@
       "accounts:view",
       "transactions:create",
       "transactions:view",
-      "organizations:delete"
+      "organizations:update",
+      "organizations:delete",
+      "currencies:create",
+      "currencies:update",
+      "currencies:delete",
+      "currencies:view"
     ]
   },
   {
@@ -35,7 +40,12 @@
       "accounts:delete",
       "accounts:view",
       "transactions:create",
-      "transactions:view"
+      "transactions:view",
+      "currencies:create",
+      "currencies:update",
+      "currencies:delete",
+      "currencies:view",
+      "organizations:update"
     ]
   },
   {
@@ -46,7 +56,8 @@
       "accounts:delete",
       "accounts:view",
       "transactions:create",
-      "transactions:view"
+      "transactions:view",
+      "currencies:view"
     ]
   },
   {
@@ -54,7 +65,8 @@
     "authorities": [
       "accounts:view",
       "transactions:create",
-      "transactions:view"
+      "transactions:view",
+      "currencies:view"
     ]
   }
 ]

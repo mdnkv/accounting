@@ -27,7 +27,6 @@ public class OrganizationRestController {
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAuthority('organizations:create')")
     public @ResponseBody OrganizationDto createOrganization(
             @RequestBody OrganizationDto organizationDto,
             @AuthenticationPrincipal Jwt jwt

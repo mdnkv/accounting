@@ -3,6 +3,7 @@ package dev.mednikov.accounting.roles.controllers;
 import dev.mednikov.accounting.roles.dto.RoleDto;
 import dev.mednikov.accounting.roles.services.RoleService;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,34 +20,40 @@ public class RoleRestController {
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('roles:create')")
     public @ResponseBody RoleDto createRole (@RequestBody RoleDto body){
         return this.roleService.createRole(body);
     }
 
     @PutMapping("/update")
+    @PreAuthorize("hasAuthority('roles:update')")
     public @ResponseBody RoleDto updateRole (@RequestBody RoleDto body){
         return this.roleService.updateRole(body);
     }
 
     @DeleteMapping("/delete/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAuthority('roles:delete')")
     public void deleteRole (@PathVariable Long id){
         this.roleService.deleteRole(id);
     }
 
     @GetMapping("/organization/{organizationId}")
+    @PreAuthorize("hasAuthority('roles:view')")
     public @ResponseBody List<RoleDto> getRoles (@PathVariable Long organizationId){
         return this.roleService.getRoles(organizationId);
     }
 
     @PostMapping("/authority/add/{roleId}/{authorityId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAuthority('roles:update')")
     public void addAuthorityToRole (@PathVariable Long roleId, @PathVariable Long authorityId){
         this.roleService.addAuthorityToRole(roleId, authorityId);
     }
 
     @PostMapping("/authority/remove/{roleId}/{authorityId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAuthority('roles:update')")
     public void removeAuthorityFromRole (@PathVariable Long roleId, @PathVariable Long authorityId){
         this.roleService.removeAuthorityFromRole(roleId, authorityId);
     }
