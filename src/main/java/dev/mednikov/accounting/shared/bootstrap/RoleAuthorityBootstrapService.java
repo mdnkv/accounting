@@ -5,12 +5,14 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.mednikov.accounting.authorities.models.Authority;
 import dev.mednikov.accounting.authorities.repositories.AuthorityRepository;
+import dev.mednikov.accounting.organizations.events.CreateOwnerEvent;
 import dev.mednikov.accounting.organizations.events.OrganizationCreatedEvent;
 import dev.mednikov.accounting.organizations.models.Organization;
 import dev.mednikov.accounting.roles.models.Role;
 import dev.mednikov.accounting.roles.repositories.RoleRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -30,17 +32,20 @@ public class RoleAuthorityBootstrapService {
     private final ObjectMapper objectMapper;
     private final RoleRepository roleRepository;
     private final AuthorityRepository authorityRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     public RoleAuthorityBootstrapService(
             RoleRepository roleRepository,
             AuthorityRepository authorityRepository,
             ResourceLoader resourceLoader,
-            ObjectMapper objectMapper
+            ObjectMapper objectMapper,
+            ApplicationEventPublisher eventPublisher
     ) {
         this.roleRepository = roleRepository;
         this.authorityRepository = authorityRepository;
         this.resourceLoader = resourceLoader;
         this.objectMapper = objectMapper;
+        this.eventPublisher = eventPublisher;
     }
 
     private List<Role> createRoles(Organization organization, Set<String> loaded){
@@ -112,6 +117,15 @@ public class RoleAuthorityBootstrapService {
                 assignedRoles.add(role);
             }
             List<Role> result = roleRepository.saveAll(assignedRoles);
+
+            // Set up an owner role for the user who created the organization
+            Optional<Role> ownerRole = result.stream().filter(r -> r.getName().equals("Owner")).findFirst();
+            if (ownerRole.isPresent()){
+                Role owner = ownerRole.get();
+                CreateOwnerEvent createOwnerEvent = new CreateOwnerEvent(this, organization, event.getOwner(), owner);
+                this.eventPublisher.publishEvent(createOwnerEvent);
+            }
+            // Send event
         } catch (Exception ex){
             logger.error(ex.getMessage());
         }

@@ -37,7 +37,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         Organization result = this.organizationRepository.save(organization);
 
         // Send events
-        OrganizationCreatedEvent oce = new OrganizationCreatedEvent(this, result);
+        OrganizationCreatedEvent oce = new OrganizationCreatedEvent(this, result, owner);
         eventPublisher.publishEvent(oce);
 
         return organizationDtoMapper.apply(result);
