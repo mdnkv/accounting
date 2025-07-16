@@ -59,17 +59,43 @@ CREATE TABLE IF NOT EXISTS transaction_lines (
         REFERENCES transactions(id) ON DELETE CASCADE
 );
 
-CREATE TYPE ROLE_TYPE AS ENUM ('OWNER', 'ADMINISTRATOR', 'ACCOUNTANT', 'USER');
-
 CREATE TABLE IF NOT EXISTS roles (
+    id BIGINT PRIMARY KEY,
+    organization_id BIGINT NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    UNIQUE (organization_id, name),
+    CONSTRAINT fk_role_organization FOREIGN KEY (organization_id)
+        REFERENCES organizations(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS authorities (
+    id BIGINT PRIMARY KEY,
+    organization_id BIGINT NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    UNIQUE (organization_id, name),
+    CONSTRAINT fk_authority_organization FOREIGN KEY (organization_id)
+        REFERENCES organizations(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS roles_authorities (
+    id BIGSERIAL PRIMARY KEY,
+    authority_id BIGINT NOT NULL,
+    role_id BIGINT NOT NULL,
+    CONSTRAINT fk_roles_authorities_authority FOREIGN KEY (authority_id) REFERENCES authorities(id),
+    CONSTRAINT fk_roles_authorities_role FOREIGN KEY (role_id) REFERENCES roles(id)
+);
+
+CREATE TABLE IF NOT EXISTS organization_users (
     id BIGINT PRIMARY KEY,
     user_id BIGINT NOT NULL,
     organization_id BIGINT NOT NULL,
-    is_active BOOLEAN NOT NULL,
-    role_type ROLE_TYPE NOT NULL,
+    role_id BIGINT NOT NULL,
+    is_active BOOLEAN NOT NULL DEFAULT FALSE,
     UNIQUE (user_id, organization_id),
-    CONSTRAINT fk_role_organization FOREIGN KEY (organization_id)
+    CONSTRAINT fk_organization_user_organization FOREIGN KEY (organization_id)
         REFERENCES organizations(id) ON DELETE CASCADE,
-    CONSTRAINT fk_role_user FOREIGN KEY (user_id)
-        REFERENCES user_accounts(id) ON DELETE CASCADE
+    CONSTRAINT fk_organization_user_user FOREIGN KEY (user_id)
+        REFERENCES user_accounts(id) ON DELETE CASCADE,
+    CONSTRAINT fk_organization_user_role FOREIGN KEY (role_id)
+        REFERENCES roles(id) ON DELETE CASCADE
 );

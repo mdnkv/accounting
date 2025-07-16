@@ -1,7 +1,7 @@
-package dev.mednikov.accounting.roles.models;
+package dev.mednikov.accounting.authorities.models;
 
-import dev.mednikov.accounting.authorities.models.Authority;
 import dev.mednikov.accounting.organizations.models.Organization;
+import dev.mednikov.accounting.roles.models.Role;
 import jakarta.persistence.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -11,10 +11,10 @@ import java.util.Set;
 
 @Entity
 @Table(
-        name = "roles",
+        name = "authorities",
         uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "organization_id"})}
 )
-public class Role {
+public class Authority {
 
     @Id
     private Long id;
@@ -27,26 +27,21 @@ public class Role {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Organization organization;
 
-    @ManyToMany
-    @JoinTable(
-            name = "roles_authorities",
-            joinColumns = @JoinColumn(name = "role_id"),
-            inverseJoinColumns = @JoinColumn(name = "authority_id")
-    )
-    private Set<Authority> authorities = new HashSet<>();
+    @ManyToMany(mappedBy = "authorities")
+    private Set<Role> roles = new HashSet<>();
 
-    public Role() {}
+    public Authority() {}
 
-    public Role(String name, Organization organization) {
+    public Authority(String name, Organization organization) {
         this.name = name;
         this.organization = organization;
     }
 
     @Override
     public final boolean equals(Object o) {
-        if (!(o instanceof Role role)) return false;
+        if (!(o instanceof Authority authority)) return false;
 
-        return name.equals(role.name) && organization.equals(role.organization);
+        return name.equals(authority.name) && organization.equals(authority.organization);
     }
 
     @Override
@@ -79,13 +74,4 @@ public class Role {
     public void setOrganization(Organization organization) {
         this.organization = organization;
     }
-
-    public void setAuthorities(Set<Authority> authorities) {
-        this.authorities = authorities;
-    }
-
-    public Set<Authority> getAuthorities() {
-        return authorities;
-    }
-
 }

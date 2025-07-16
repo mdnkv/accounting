@@ -79,7 +79,7 @@ collection:
         meta:
           id: req_f074e6fc69fb4fb19290de9a2d3955df
           created: 1749035379556
-          modified: 1752505878367
+          modified: 1752653096363
           isPrivate: false
           description: ""
           sortKey: -1748881859977.5
@@ -88,7 +88,7 @@ collection:
           mimeType: application/json
           text: |-
             {
-            	"name":"Zimmermann Will AG & Co. KGaA"
+            	"name":"Fleischer Paul GmbH & Co. OHG"
             }
         headers:
           - name: Content-Type
@@ -415,98 +415,6 @@ collection:
             send: true
             store: true
           rebuildPath: true
-  - name: Roles
-    meta:
-      id: fld_56d51e0ad170470580fa0b2a1a5198b7
-      created: 1749461838130
-      modified: 1749461838130
-      sortKey: -1749461838130
-      description: ""
-    children:
-      - url: "{{_.server_url}}roles/active"
-        name: Get active role for user
-        meta:
-          id: req_a02ffd5903174c72b51e04b9e53cd812
-          created: 1749461937268
-          modified: 1749461969126
-          isPrivate: false
-          description: ""
-          sortKey: -1749461937269
-        method: GET
-        headers:
-          - name: User-Agent
-            value: insomnia/11.2.0
-        authentication:
-          type: oauth2
-          grantType: authorization_code
-          authorizationUrl: "{{_.auth_url}}"
-          accessTokenUrl: "{{ _.access_token_url }}"
-          clientId: "{{_.client_id}}"
-        settings:
-          renderRequestBody: true
-          encodeUrl: true
-          followRedirects: global
-          cookies:
-            send: true
-            store: true
-          rebuildPath: true
-      - url: "{{_.server_url}}roles/user"
-        name: Get roles for user
-        meta:
-          id: req_66403ae1b76a40e1a14234a03d6be69f
-          created: 1749461986112
-          modified: 1749461988512
-          isPrivate: false
-          description: ""
-          sortKey: -1749332698946.5
-        method: GET
-        headers:
-          - name: User-Agent
-            value: insomnia/11.2.0
-        authentication:
-          type: oauth2
-          grantType: authorization_code
-          authorizationUrl: "{{_.auth_url}}"
-          accessTokenUrl: "{{ _.access_token_url }}"
-          clientId: "{{_.client_id}}"
-        settings:
-          renderRequestBody: true
-          encodeUrl: true
-          followRedirects: global
-          cookies:
-            send: true
-            store: true
-          rebuildPath: true
-      - url: "{{_.server_url}}roles/active/:roleId"
-        name: Set active role for user
-        meta:
-          id: req_5234597807414ba6befd1314b1d0aed2
-          created: 1749462689259
-          modified: 1749462700616
-          isPrivate: false
-          description: ""
-          sortKey: -1749397318107.75
-        method: POST
-        headers:
-          - name: User-Agent
-            value: insomnia/11.2.0
-        authentication:
-          type: oauth2
-          grantType: authorization_code
-          authorizationUrl: "{{_.auth_url}}"
-          accessTokenUrl: "{{ _.access_token_url }}"
-          clientId: "{{_.client_id}}"
-        settings:
-          renderRequestBody: true
-          encodeUrl: true
-          followRedirects: global
-          cookies:
-            send: true
-            store: true
-          rebuildPath: true
-        pathParameters:
-          - name: roleId
-            value: "1932012616469708800"
   - name: Reports
     meta:
       id: fld_f93e366819bd4f88b37d34ed34b6439e
@@ -852,6 +760,365 @@ collection:
         pathParameters:
           - name: organizationId
             value: "{{ _.active_organization_id }}"
+  - name: Authorities
+    meta:
+      id: fld_0efadb8783ea4c4889db30ec967be747
+      created: 1752571958351
+      modified: 1752571958351
+      sortKey: -1752571958351
+      description: ""
+    children:
+      - url: "{{ _.server_url }}authorities/organization/:organizationId"
+        name: Get authorities for organization
+        meta:
+          id: req_43dd750a82cf4e319405cd4dacf27288
+          created: 1752652938291
+          modified: 1752652987720
+          isPrivate: false
+          description: ""
+          sortKey: -1752652938291
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.3.0
+        authentication:
+          type: oauth2
+          grantType: authorization_code
+          authorizationUrl: "{{_.auth_url}}"
+          accessTokenUrl: "{{ _.access_token_url }}"
+          clientId: "{{_.client_id}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: organizationId
+            value: "{{ _.active_organization_id }}"
+      - url: "{{ _.server_url }}authorities/create"
+        name: Create authority
+        meta:
+          id: req_58c9ae81870e4883bbd30a32df89ff11
+          created: 1752653164148
+          modified: 1752653651924
+          isPrivate: false
+          description: ""
+          sortKey: -1752579440075.5
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"name":"transactions:create",
+            	"organizationId":"{{ _.active_organization_id }}"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.3.0
+        authentication:
+          type: oauth2
+          grantType: authorization_code
+          authorizationUrl: "{{_.auth_url}}"
+          accessTokenUrl: "{{ _.access_token_url }}"
+          clientId: "{{_.client_id}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.server_url }}authorities/update"
+        name: Update authority
+        meta:
+          id: req_a51510cc4915497f984c43d550cdb61a
+          created: 1752653212641
+          modified: 1752653240884
+          isPrivate: false
+          description: ""
+          sortKey: -1752542690967.75
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"id":"1945394648952340480",
+            	"name":"accounts:create",
+            	"organizationId":"{{ _.active_organization_id }}"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.3.0
+        authentication:
+          type: oauth2
+          grantType: authorization_code
+          authorizationUrl: "{{_.auth_url}}"
+          accessTokenUrl: "{{ _.access_token_url }}"
+          clientId: "{{_.client_id}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.server_url }}authorities/delete/:id"
+        name: Delete authority
+        meta:
+          id: req_428b1e02e4104c918eb1a43df83c3cc2
+          created: 1752653247648
+          modified: 1752653261433
+          isPrivate: false
+          description: ""
+          sortKey: -1752524316413.875
+        method: DELETE
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"id":"1945394648952340480",
+            	"name":"accounts:create",
+            	"organizationId":"{{ _.active_organization_id }}"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.3.0
+        authentication:
+          type: oauth2
+          grantType: authorization_code
+          authorizationUrl: "{{_.auth_url}}"
+          accessTokenUrl: "{{ _.access_token_url }}"
+          clientId: "{{_.client_id}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: id
+            value: "1945394648952340480"
+  - name: Roles
+    meta:
+      id: fld_57aa2fe1c84c4b0d8aa4b8caa15a42c4
+      created: 1752653277518
+      modified: 1752653277518
+      sortKey: -1752653277518
+      description: ""
+    children:
+      - url: "{{_.server_url}}roles/organization/:id"
+        name: Get roles for organization
+        meta:
+          id: req_ec940674370141aa8d3d03383346bded
+          created: 1752653281268
+          modified: 1752653327497
+          isPrivate: false
+          description: ""
+          sortKey: -1752653281268
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.3.0
+        authentication:
+          type: oauth2
+          grantType: authorization_code
+          authorizationUrl: "{{_.auth_url}}"
+          accessTokenUrl: "{{_.access_token_url}}"
+          clientId: "{{_.client_id}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: id
+            value: "{{_.active_organization_id}}"
+      - url: "{{_.server_url}}roles/create"
+        name: Create role
+        meta:
+          id: req_42eb34c1d558444fada4c2e53bce2885
+          created: 1752653385965
+          modified: 1752653459298
+          isPrivate: false
+          description: ""
+          sortKey: -1752653109779.5
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"organizationId":"{{ _.active_organization_id }}",
+            	"name":"User",
+            	"authorities":[
+            		{"id":"1945394617818021888"}
+            	]
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.3.0
+        authentication:
+          type: oauth2
+          grantType: authorization_code
+          authorizationUrl: "{{_.auth_url}}"
+          accessTokenUrl: "{{_.access_token_url}}"
+          clientId: "{{_.client_id}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{_.server_url}}roles/update"
+        name: Update role
+        meta:
+          id: req_568b88e429c6485b96c792391c5e1eb0
+          created: 1752653483622
+          modified: 1752653543437
+          isPrivate: false
+          description: ""
+          sortKey: -1752653024035.25
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"organizationId":"{{ _.active_organization_id }}",
+            	"name":"User",
+            	"id":"1945395731938410496"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.3.0
+        authentication:
+          type: oauth2
+          grantType: authorization_code
+          authorizationUrl: "{{_.auth_url}}"
+          accessTokenUrl: "{{_.access_token_url}}"
+          clientId: "{{_.client_id}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{_.server_url}}roles/delete/:id"
+        name: Delete role
+        meta:
+          id: req_9573894b9bad44448b833cfb7d3ee5db
+          created: 1752653560948
+          modified: 1752653576096
+          isPrivate: false
+          description: ""
+          sortKey: -1752652981163.125
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/11.3.0
+        authentication:
+          type: oauth2
+          grantType: authorization_code
+          authorizationUrl: "{{_.auth_url}}"
+          accessTokenUrl: "{{_.access_token_url}}"
+          clientId: "{{_.client_id}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: id
+            value: "1945395731938410496"
+      - url: "{{_.server_url}}roles/authority/add/:roleId/:authorityId"
+        name: Add authority to role
+        meta:
+          id: req_eb40727de0d44e8684c347df0cdb84a7
+          created: 1752653662907
+          modified: 1752653690711
+          isPrivate: false
+          description: ""
+          sortKey: -1752652959727.0625
+        method: POST
+        headers:
+          - name: User-Agent
+            value: insomnia/11.3.0
+        authentication:
+          type: oauth2
+          grantType: authorization_code
+          authorizationUrl: "{{_.auth_url}}"
+          accessTokenUrl: "{{_.access_token_url}}"
+          clientId: "{{_.client_id}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: roleId
+            value: "1945395650849931264"
+          - name: authorityId
+            value: "1945396536573689856"
+      - url: "{{_.server_url}}roles/authority/remove/:roleId/:authorityId"
+        name: Remove authority from role
+        meta:
+          id: req_dcf11825c5894183b01f158c48e02fdc
+          created: 1752653710082
+          modified: 1752653720987
+          isPrivate: false
+          description: ""
+          sortKey: -1752652949009.0312
+        method: POST
+        headers:
+          - name: User-Agent
+            value: insomnia/11.3.0
+        authentication:
+          type: oauth2
+          grantType: authorization_code
+          authorizationUrl: "{{_.auth_url}}"
+          accessTokenUrl: "{{_.access_token_url}}"
+          clientId: "{{_.client_id}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: roleId
+            value: "1945395650849931264"
+          - name: authorityId
+            value: "1945394617818021888"
 cookieJar:
   name: Default Jar
   meta:
@@ -873,11 +1140,11 @@ environments:
   meta:
     id: env_676597a9d4e9b24c6c7cf8e61c4566cefaacc897
     created: 1749035252072
-    modified: 1752505915213
+    modified: 1752653152135
     isPrivate: false
   data:
     server_url: http://localhost:8000/api/
     access_token_url: http://localhost:8080/realms/accounting/protocol/openid-connect/token
     auth_url: http://localhost:8080/realms/accounting/protocol/openid-connect/auth
     client_id: accounting-rest
-    active_organization_id: "1944776843550785536"
+    active_organization_id: "1945394416428515328"

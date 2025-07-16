@@ -7,7 +7,6 @@ import dev.mednikov.accounting.organizations.events.OrganizationCreatedEvent;
 import dev.mednikov.accounting.organizations.exceptions.OrganizationNotFoundException;
 import dev.mednikov.accounting.organizations.models.Organization;
 import dev.mednikov.accounting.organizations.repositories.OrganizationRepository;
-import dev.mednikov.accounting.roles.events.OwnerRoleEvent;
 import dev.mednikov.accounting.users.models.User;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -40,9 +39,6 @@ public class OrganizationServiceImpl implements OrganizationService {
         // Send events
         OrganizationCreatedEvent oce = new OrganizationCreatedEvent(this, result);
         eventPublisher.publishEvent(oce);
-
-        OwnerRoleEvent ore = new OwnerRoleEvent(this, owner, result);
-        eventPublisher.publishEvent(ore);
 
         return organizationDtoMapper.apply(result);
     }
