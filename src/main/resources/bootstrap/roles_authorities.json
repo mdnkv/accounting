@@ -1,0 +1,60 @@
+[
+  {
+    "name": "Owner",
+    "authorities": [
+      "authorities:create",
+      "authorities:update",
+      "authorities:delete",
+      "authorities:view",
+      "roles:create",
+      "roles:update",
+      "roles:delete",
+      "roles:view",
+      "accounts:create",
+      "accounts:update",
+      "accounts:delete",
+      "accounts:view",
+      "transactions:create",
+      "transactions:view",
+      "organizations:delete"
+    ]
+  },
+  {
+    "name": "Administrator",
+    "authorities": [
+      "authorities:create",
+      "authorities:update",
+      "authorities:delete",
+      "authorities:view",
+      "roles:create",
+      "roles:update",
+      "roles:delete",
+      "roles:view",
+      "accounts:create",
+      "accounts:update",
+      "accounts:delete",
+      "accounts:view",
+      "transactions:create",
+      "transactions:view"
+    ]
+  },
+  {
+    "name": "Accountant",
+    "authorities": [
+      "accounts:create",
+      "accounts:update",
+      "accounts:delete",
+      "accounts:view",
+      "transactions:create",
+      "transactions:view"
+    ]
+  },
+  {
+    "name": "User",
+    "authorities": [
+      "accounts:view",
+      "transactions:create",
+      "transactions:view"
+    ]
+  }
+]

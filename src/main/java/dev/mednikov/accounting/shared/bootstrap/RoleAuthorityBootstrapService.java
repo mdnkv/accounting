@@ -1,0 +1,120 @@
+package dev.mednikov.accounting.shared.bootstrap;
+
+import cn.hutool.core.lang.generator.SnowflakeGenerator;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.mednikov.accounting.authorities.models.Authority;
+import dev.mednikov.accounting.authorities.repositories.AuthorityRepository;
+import dev.mednikov.accounting.organizations.events.OrganizationCreatedEvent;
+import dev.mednikov.accounting.organizations.models.Organization;
+import dev.mednikov.accounting.roles.models.Role;
+import dev.mednikov.accounting.roles.repositories.RoleRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.event.EventListener;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
+
+@Service
+public class RoleAuthorityBootstrapService {
+
+    private final static SnowflakeGenerator snowflakeGenerator = new SnowflakeGenerator();
+    private final static Logger logger = LoggerFactory.getLogger(RoleAuthorityBootstrapService.class);
+
+    private final ResourceLoader resourceLoader;
+    private final ObjectMapper objectMapper;
+    private final RoleRepository roleRepository;
+    private final AuthorityRepository authorityRepository;
+
+    public RoleAuthorityBootstrapService(
+            RoleRepository roleRepository,
+            AuthorityRepository authorityRepository,
+            ResourceLoader resourceLoader,
+            ObjectMapper objectMapper
+    ) {
+        this.roleRepository = roleRepository;
+        this.authorityRepository = authorityRepository;
+        this.resourceLoader = resourceLoader;
+        this.objectMapper = objectMapper;
+    }
+
+    private List<Role> createRoles(Organization organization, Set<String> loaded){
+        List<Role> roles = new ArrayList<>();
+        for (String roleName: loaded){
+           Role role = new Role();
+           role.setName(roleName);
+           role.setId(snowflakeGenerator.next());
+           role.setOrganization(organization);
+           roles.add(role);
+        }
+        return this.roleRepository.saveAll(roles);
+    }
+
+
+    private List<Authority> createAuthorities(Organization organization, Set<String> loaded){
+        List<Authority> authorities = new ArrayList<>();
+        for (String authorityName: loaded){
+            Authority authority = new Authority();
+            authority.setName(authorityName);
+            authority.setOrganization(organization);
+            authority.setId(snowflakeGenerator.next());
+            authorities.add(authority);
+        }
+        return this.authorityRepository.saveAll(authorities);
+    }
+
+    private Set<String> extractAuthorities (Map<String, List<String>> data){
+        Set<String> authorities = new HashSet<>();
+        for (Map.Entry<String, List<String>> entry : data.entrySet()) {
+            authorities.addAll(entry.getValue());
+        }
+        return authorities;
+    }
+
+    private Set<String> extractRoles (Map<String, List<String>> data){
+        Set<String> roles = new HashSet<>();
+        for (Map.Entry<String, List<String>> entry : data.entrySet()) {
+            roles.add(entry.getKey());
+        }
+        return roles;
+    }
+
+    @EventListener
+    public void onOrganizationCreatedEventListener(OrganizationCreatedEvent event) {
+        Organization organization = event.getOrganization();
+        try{
+            // Load data
+            Resource resource = this.resourceLoader.getResource("classpath:bootstrap/roles_authorities.json");
+            TypeReference<List<RoleAuthorityDto>> typeReference = new TypeReference<>() {};
+            List<RoleAuthorityDto> loadedData = this.objectMapper.readValue(resource.getInputStream(), typeReference);
+            // Convert to a hash map where authority is a key
+            Map<String, List<String>> data = loadedData.stream().collect(Collectors.toMap(RoleAuthorityDto::getName, RoleAuthorityDto::getAuthorities));
+            // Extract authorities and roles
+            Set<String> loadedAuthorities = extractAuthorities(data);
+            Set<String> loadedRoles = extractRoles(data);
+            // Create authorities and persist
+            List<Authority> authorities = this.createAuthorities(organization, loadedAuthorities);
+            // Create roles and persist
+            List<Role> roles = this.createRoles(organization, loadedRoles);
+            // Assign authorities for roles
+            List<Role> assignedRoles = new ArrayList<>();
+            for (Map.Entry<String, List<String>> entry : data.entrySet()) {
+                // Get a role by name from saved roles
+                Role role = roles.stream().filter(r -> r.getName().equals(entry.getKey())).findFirst().get();
+                // Filter saved authorities
+                Set<Authority> authoritiesList = authorities.stream().filter(authority -> entry.getValue().contains(authority.getName())).collect(Collectors.toSet());
+                role.setAuthorities(authoritiesList);
+                assignedRoles.add(role);
+            }
+            List<Role> result = roleRepository.saveAll(assignedRoles);
+        } catch (Exception ex){
+            logger.error(ex.getMessage());
+        }
+    }
+
+}
