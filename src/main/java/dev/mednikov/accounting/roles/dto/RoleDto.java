@@ -1,14 +1,15 @@
 package dev.mednikov.accounting.roles.dto;
 
-import dev.mednikov.accounting.organizations.dto.OrganizationDto;
-import dev.mednikov.accounting.roles.models.RoleType;
+import dev.mednikov.accounting.authorities.dto.AuthorityDto;
+
+import java.util.List;
 
 public final class RoleDto {
 
     private String id;
-    private OrganizationDto organization;
-    private RoleType roleType;
-    private boolean active;
+    private String organizationId;
+    private String name;
+    private List<AuthorityDto> authorities;
 
     public String getId() {
         return id;
@@ -18,27 +19,27 @@ public final class RoleDto {
         this.id = id;
     }
 
-    public OrganizationDto getOrganization() {
-        return organization;
+    public String getOrganizationId() {
+        return organizationId;
     }
 
-    public void setOrganization(OrganizationDto organization) {
-        this.organization = organization;
+    public void setOrganizationId(String organizationId) {
+        this.organizationId = organizationId;
     }
 
-    public boolean isActive() {
-        return active;
+    public String getName() {
+        return name;
     }
 
-    public void setActive(boolean active) {
-        this.active = active;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public RoleType getRoleType() {
-        return roleType;
+    public List<AuthorityDto> getAuthorities() {
+        return authorities;
     }
 
-    public void setRoleType(RoleType roleType) {
-        this.roleType = roleType;
+    public void setAuthorities(List<AuthorityDto> authorities) {
+        this.authorities = authorities;
     }
 }

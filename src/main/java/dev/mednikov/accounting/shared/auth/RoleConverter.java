@@ -1,14 +1,12 @@
 package dev.mednikov.accounting.shared.auth;
 
-import dev.mednikov.accounting.roles.models.Role;
-import dev.mednikov.accounting.roles.models.RoleType;
-import dev.mednikov.accounting.roles.repositories.RoleRepository;
+import dev.mednikov.accounting.organizations.models.OrganizationUser;
+import dev.mednikov.accounting.organizations.repositories.OrganizationUserRepository;
 import dev.mednikov.accounting.users.models.User;
 import dev.mednikov.accounting.users.services.UserService;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
@@ -22,49 +20,28 @@ import java.util.Optional;
 @Profile({"dev", "prod"})
 public class RoleConverter implements Converter<Jwt, AbstractAuthenticationToken> {
 
-    private final RoleRepository roleRepository;
     private final UserService userService;
+    private final OrganizationUserRepository organizationUserRepository;
 
-    public RoleConverter(RoleRepository roleRepository, UserService userService) {
-        this.roleRepository = roleRepository;
+    public RoleConverter(UserService userService, OrganizationUserRepository organizationUserRepository) {
         this.userService = userService;
+        this.organizationUserRepository = organizationUserRepository;
     }
 
     @Override
     public AbstractAuthenticationToken convert(Jwt jwt) {
         User user = this.userService.getOrCreateUser(jwt);
-        Optional<Role> activeRole = this.roleRepository.findActiveRoleForUser(user.getId());
-        if (activeRole.isPresent()) {
-            List<GrantedAuthority> authorities = new ArrayList<>();
-            Role role = activeRole.get();
-            // add authorities for any user
-            authorities.add(new SimpleGrantedAuthority("organizations:create"));
-            authorities.add(new SimpleGrantedAuthority("accounts:view"));
-            authorities.add(new SimpleGrantedAuthority("transactions:view"));
-            authorities.add(new SimpleGrantedAuthority("transactions:create"));
-            authorities.add(new SimpleGrantedAuthority("reports:view"));
-
-            // add authorities based on the user role
-            if (role.getRoleType() == RoleType.OWNER){
-                // owner only
-                authorities.add(new SimpleGrantedAuthority("organizations:delete"));
-            }
-            if (role.getRoleType() != RoleType.USER){
-                // administrator, owner or accountant
-                authorities.add(new SimpleGrantedAuthority("accounts:create"));
-                authorities.add(new SimpleGrantedAuthority("accounts:update"));
-                authorities.add(new SimpleGrantedAuthority("accounts:delete"));
-            }
-            if (role.getRoleType() == RoleType.OWNER || role.getRoleType() == RoleType.ADMINISTRATOR){
-                // administrator or owner only
-                authorities.add(new SimpleGrantedAuthority("roles:create"));
-                authorities.add(new SimpleGrantedAuthority("roles:delete"));
-                authorities.add(new SimpleGrantedAuthority("roles:view"));
-            }
-
-            return new JwtAuthenticationToken(jwt, authorities);
+        Optional<OrganizationUser> currentActive = this.organizationUserRepository.findActiveForUser(user.getId());
+        if (currentActive.isPresent()) {
+            OrganizationUser result = currentActive.get();
+            // Map authorities to Spring GrantedAuthority objects
+            List<SimpleGrantedAuthority> grantedAuthorities = result.getRole().getAuthorities()
+                    .stream().map(a -> new SimpleGrantedAuthority(a.getName())).toList();
+            return new JwtAuthenticationToken(jwt, grantedAuthorities);
         } else {
+            // no active role is presented
             return new JwtAuthenticationToken(jwt, List.of());
         }
+
     }
 }

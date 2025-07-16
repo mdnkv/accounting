@@ -1,11 +1,11 @@
-package dev.mednikov.accounting.roles.controllers;
+package dev.mednikov.accounting.authorities.controllers;
 
 import cn.hutool.core.lang.generator.SnowflakeGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.mednikov.accounting.roles.dto.RoleDto;
-import dev.mednikov.accounting.roles.exceptions.RoleAlreadyExistsException;
-import dev.mednikov.accounting.roles.exceptions.RoleNotFoundException;
-import dev.mednikov.accounting.roles.services.RoleService;
+import dev.mednikov.accounting.authorities.dto.AuthorityDto;
+import dev.mednikov.accounting.authorities.exceptions.AuthorityAlreadyExistsException;
+import dev.mednikov.accounting.authorities.exceptions.AuthorityNotFoundException;
+import dev.mednikov.accounting.authorities.services.AuthorityService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,29 +23,27 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ActiveProfiles("test")
-@WebMvcTest(RoleRestController.class)
-class RoleRestControllerTest {
+@WebMvcTest(AuthorityRestController.class)
+class AuthorityRestControllerTest {
 
     private final static SnowflakeGenerator snowflakeGenerator = new SnowflakeGenerator();
 
+    @MockitoBean private AuthorityService authorityService;
     @Autowired private MockMvc mockMvc;
     @Autowired private ObjectMapper objectMapper;
 
-    @MockitoBean private RoleService roleService;
-
     @Test
-    void createRole_alreadyExistsTest() throws Exception {
+    void createAuthority_alreadyExistsTest() throws Exception {
         Long organizationId = snowflakeGenerator.next();
-        RoleDto payload = new RoleDto();
-        payload.setName("User");
-        payload.setAuthorities(List.of());
+        AuthorityDto payload = new AuthorityDto();
         payload.setOrganizationId(organizationId.toString());
+        payload.setName("transactions:create");
 
         String body = objectMapper.writeValueAsString(payload);
         String keycloakId = UUID.randomUUID().toString();
 
-        Mockito.when(roleService.createRole(Mockito.any())).thenThrow(RoleAlreadyExistsException.class);
-        mockMvc.perform(post("/api/roles/create")
+        Mockito.when(authorityService.createAuthority(Mockito.any())).thenThrow(AuthorityAlreadyExistsException.class);
+        mockMvc.perform(post("/api/authorities/create")
                         .with(jwt().jwt(jwt -> jwt
                                 .claim("sub", keycloakId)))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -54,24 +52,23 @@ class RoleRestControllerTest {
     }
 
     @Test
-    void createRole_successTest() throws Exception {
+    void createAuthority_successTest() throws Exception {
         Long organizationId = snowflakeGenerator.next();
-        RoleDto payload = new RoleDto();
-        payload.setName("User");
-        payload.setAuthorities(List.of());
+        AuthorityDto payload = new AuthorityDto();
         payload.setOrganizationId(organizationId.toString());
+        payload.setName("transactions:create");
 
-        RoleDto result = new RoleDto();
-        result.setName("User");
-        result.setAuthorities(List.of());
+        AuthorityDto result = new AuthorityDto();
         result.setOrganizationId(organizationId.toString());
+        result.setName("transactions:create");
         result.setId(snowflakeGenerator.next().toString());
 
         String body = objectMapper.writeValueAsString(payload);
         String keycloakId = UUID.randomUUID().toString();
 
-        Mockito.when(roleService.createRole(Mockito.any())).thenReturn(result);
-        mockMvc.perform(post("/api/roles/create")
+        Mockito.when(authorityService.createAuthority(Mockito.any())).thenReturn(result);
+
+        mockMvc.perform(post("/api/authorities/create")
                         .with(jwt().jwt(jwt -> jwt
                                 .claim("sub", keycloakId)))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -80,20 +77,19 @@ class RoleRestControllerTest {
     }
 
     @Test
-    void updateRole_successTest() throws Exception {
-        Long roleId = snowflakeGenerator.next();
+    void updateAuthority_successTest() throws Exception {
+        Long authorityId = snowflakeGenerator.next();
         Long organizationId = snowflakeGenerator.next();
-        RoleDto payload = new RoleDto();
-        payload.setName("User");
-        payload.setAuthorities(List.of());
-        payload.setId(roleId.toString());
+        AuthorityDto payload = new AuthorityDto();
         payload.setOrganizationId(organizationId.toString());
+        payload.setName("transactions:create");
+        payload.setId(authorityId.toString());
 
         String body = objectMapper.writeValueAsString(payload);
         String keycloakId = UUID.randomUUID().toString();
 
-        Mockito.when(roleService.updateRole(Mockito.any())).thenReturn(payload);
-        mockMvc.perform(put("/api/roles/update")
+        Mockito.when(authorityService.updateAuthority(Mockito.any())).thenReturn(payload);
+        mockMvc.perform(put("/api/authorities/update")
                         .with(jwt().jwt(jwt -> jwt
                                 .claim("sub", keycloakId)))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -102,20 +98,19 @@ class RoleRestControllerTest {
     }
 
     @Test
-    void updateRole_alreadyExistsTest() throws Exception {
-        Long roleId = snowflakeGenerator.next();
+    void updateAuthority_notFoundTest() throws Exception {
+        Long authorityId = snowflakeGenerator.next();
         Long organizationId = snowflakeGenerator.next();
-        RoleDto payload = new RoleDto();
-        payload.setName("User");
-        payload.setAuthorities(List.of());
-        payload.setId(roleId.toString());
+        AuthorityDto payload = new AuthorityDto();
         payload.setOrganizationId(organizationId.toString());
+        payload.setName("transactions:create");
+        payload.setId(authorityId.toString());
 
         String body = objectMapper.writeValueAsString(payload);
         String keycloakId = UUID.randomUUID().toString();
 
-        Mockito.when(roleService.updateRole(Mockito.any())).thenThrow(RoleAlreadyExistsException.class);
-        mockMvc.perform(put("/api/roles/update")
+        Mockito.when(authorityService.updateAuthority(Mockito.any())).thenThrow(AuthorityNotFoundException.class);
+        mockMvc.perform(put("/api/authorities/update")
                         .with(jwt().jwt(jwt -> jwt
                                 .claim("sub", keycloakId)))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -124,20 +119,19 @@ class RoleRestControllerTest {
     }
 
     @Test
-    void updateRole_notFoundTest() throws Exception {
-        Long roleId = snowflakeGenerator.next();
+    void updateAuthority_alreadyExistsTest() throws Exception {
+        Long authorityId = snowflakeGenerator.next();
         Long organizationId = snowflakeGenerator.next();
-        RoleDto payload = new RoleDto();
-        payload.setName("User");
-        payload.setAuthorities(List.of());
-        payload.setId(roleId.toString());
+        AuthorityDto payload = new AuthorityDto();
         payload.setOrganizationId(organizationId.toString());
+        payload.setName("transactions:create");
+        payload.setId(authorityId.toString());
 
         String body = objectMapper.writeValueAsString(payload);
         String keycloakId = UUID.randomUUID().toString();
 
-        Mockito.when(roleService.updateRole(Mockito.any())).thenThrow(RoleNotFoundException.class);
-        mockMvc.perform(put("/api/roles/update")
+        Mockito.when(authorityService.updateAuthority(Mockito.any())).thenThrow(AuthorityAlreadyExistsException.class);
+        mockMvc.perform(put("/api/authorities/update")
                         .with(jwt().jwt(jwt -> jwt
                                 .claim("sub", keycloakId)))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -146,41 +140,21 @@ class RoleRestControllerTest {
     }
 
     @Test
-    void deleteRole_successTest() throws Exception {
-        Long roleId = snowflakeGenerator.next();
+    void deleteAuthority_successTest() throws Exception {
+        Long authorityId = snowflakeGenerator.next();
         String keycloakId = UUID.randomUUID().toString();
-        Mockito.doNothing().when(roleService).deleteRole(roleId);
-        mockMvc.perform(delete("/api/roles/delete/{id}", roleId)
+        Mockito.doNothing().when(authorityService).deleteAuthority(authorityId);
+        mockMvc.perform(delete("/api/authorities/delete/{id}", authorityId)
                         .with(jwt().jwt(jwt -> jwt.claim("sub", keycloakId)))).andExpect(status().isNoContent());
     }
 
     @Test
-    void getRolesTest() throws Exception {
+    void getAuthoritiesTest() throws Exception {
         Long organizationId = snowflakeGenerator.next();
-        Mockito.when(roleService.getRoles(organizationId)).thenReturn(List.of());
         String keycloakId = UUID.randomUUID().toString();
-        mockMvc.perform(get("/api/roles/organization/{id}", organizationId)
+        Mockito.when(authorityService.getAuthorities(organizationId)).thenReturn(List.of());
+        mockMvc.perform(get("/api/authorities/organization/{id}", organizationId)
                 .with(jwt().jwt(jwt -> jwt.claim("sub", keycloakId)))).andExpect(status().isOk());
-    }
-
-    @Test
-    void addAuthorityToRoleTest() throws Exception {
-        Long roleId = snowflakeGenerator.next();
-        Long authorityId = snowflakeGenerator.next();
-        String keycloakId = UUID.randomUUID().toString();
-        Mockito.doNothing().when(roleService).addAuthorityToRole(roleId, authorityId);
-        mockMvc.perform(post("/api/roles/authority/add/{roleId}/{authorityId}", roleId, authorityId)
-                .with(jwt().jwt(jwt -> jwt.claim("sub", keycloakId)))).andExpect(status().isNoContent());
-    }
-
-    @Test
-    void removeAuthorityFromRoleTest() throws Exception {
-        Long roleId = snowflakeGenerator.next();
-        Long authorityId = snowflakeGenerator.next();
-        String keycloakId = UUID.randomUUID().toString();
-        Mockito.doNothing().when(roleService).removeAuthorityFromRole(roleId, authorityId);
-        mockMvc.perform(post("/api/roles/authority/remove/{roleId}/{authorityId}", roleId, authorityId)
-                .with(jwt().jwt(jwt -> jwt.claim("sub", keycloakId)))).andExpect(status().isNoContent());
     }
 
 }

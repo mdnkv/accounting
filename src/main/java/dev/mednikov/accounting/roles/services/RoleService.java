@@ -1,17 +1,21 @@
 package dev.mednikov.accounting.roles.services;
 
 import dev.mednikov.accounting.roles.dto.RoleDto;
-import dev.mednikov.accounting.users.models.User;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface RoleService {
 
-    List<RoleDto> getRolesForUser (User user);
+    RoleDto createRole (RoleDto payload);
 
-    RoleDto setActiveRole (User user, Long roleId);
+    RoleDto updateRole (RoleDto payload);
 
-    Optional<RoleDto> getActiveRole (User user);
+    void deleteRole (Long id);
+
+    List<RoleDto> getRoles (Long organizationId);
+
+    void addAuthorityToRole (Long roleId, Long authorityId);
+
+    void removeAuthorityFromRole (Long roleId, Long authorityId);
 
 }
