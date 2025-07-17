@@ -79,7 +79,7 @@ collection:
         meta:
           id: req_f074e6fc69fb4fb19290de9a2d3955df
           created: 1749035379556
-          modified: 1752653096363
+          modified: 1752759260717
           isPrivate: false
           description: ""
           sortKey: -1748881859977.5
@@ -88,7 +88,7 @@ collection:
           mimeType: application/json
           text: |-
             {
-            	"name":"Fleischer Paul GmbH & Co. OHG"
+            	"name":"Lang GmbH & Co. OHG"
             }
         headers:
           - name: Content-Type
@@ -158,7 +158,7 @@ collection:
         meta:
           id: req_18c2d685e6c94cb3b1aef4b6ae626c1a
           created: 1749199859282
-          modified: 1752485057850
+          modified: 1752759457294
           isPrivate: false
           description: ""
           sortKey: -1749199859282
@@ -166,7 +166,7 @@ collection:
         parameters:
           - id: pair_36aafbd234d34ecb8579334906d11f08
             name: includeDeprecated
-            value: "false"
+            value: "true"
             description: ""
             disabled: false
         headers:
@@ -194,7 +194,7 @@ collection:
         meta:
           id: req_ce5b3ef65ffc457089e0bfa42bfea5a4
           created: 1749199920140
-          modified: 1749203448344
+          modified: 1752660162462
           isPrivate: false
           description: ""
           sortKey: -1749117589266
@@ -204,8 +204,8 @@ collection:
           text: |-
             {
             	"organizationId":"{{ _.active_organization_id }}",
-            	"name":"Cash",
-            	"code":"10100",
+            	"name":"New account only for the new organization",
+            	"code":"55555",
             	"accountType":"ASSET"
             }
         headers:
@@ -232,7 +232,7 @@ collection:
         meta:
           id: req_10a0c145d2a84e878e65f473088a3611
           created: 1749200036626
-          modified: 1752484508498
+          modified: 1752759432424
           isPrivate: false
           description: ""
           sortKey: -1749076454258
@@ -241,12 +241,12 @@ collection:
           mimeType: application/json
           text: |-
             {
-            		"id": "1944686900241498112",
-            		"organizationId": "1944686900203749376",
-            		"name": "Cash",
-            		"code": "10100",
+            		"id": "1945839369449373703",
+            		"organizationId": "{{ _.active_organization_id }}",
+            		"name": "Accounts Payable",
+            		"code": "21000",
             		"deprecated": true,
-            		"accountType": "ASSET"
+            		"accountType": "LIABILITY"
             	}
         headers:
           - name: Content-Type
@@ -272,7 +272,7 @@ collection:
         meta:
           id: req_df5128a216594a22a9d2175ad17560b6
           created: 1749200075615
-          modified: 1749200087084
+          modified: 1752760191232
           isPrivate: false
           description: ""
           sortKey: -1749055886754
@@ -296,7 +296,7 @@ collection:
           rebuildPath: true
         pathParameters:
           - name: id
-            value: "1930910926215577600"
+            value: "1945839369449373703"
       - url: "{{_.server_url}}accounts/account/:id"
         name: Get account
         meta:
@@ -370,7 +370,7 @@ collection:
         meta:
           id: req_1e2527a4174049868f7b440b583177cf
           created: 1749203516335
-          modified: 1752506932244
+          modified: 1752759489609
           isPrivate: false
           description: ""
           sortKey: -1749201659953
@@ -379,20 +379,20 @@ collection:
           mimeType: application/json
           text: |-
             {
-            	"date":"2025-06-15",
-            	"currencyId":"1944779802758086656",
-            	"description":"My new transaction",
+            	"date":"2025-07-17",
+            	"currencyId":"1945839962351992832",
+            	"description":"Curabitur vestibulum urna",
             	"organizationId":"{{ _.active_organization_id }}",
             	"lines":[
             		{
-            			"accountId":"1944776843580145664",
-            			"creditAmount":500.0,
+            			"accountId":"1945839369449373698",
+            			"creditAmount":450.0,
             			"debitAmount":0.0
             		},
             		{
-            			"accountId":"1944776843580145666",
+            			"accountId":"1945839369449373703",
             			"creditAmount":0.0,
-            			"debitAmount":500.0
+            			"debitAmount":450.0
             		}
             	]
             }
@@ -415,6 +415,36 @@ collection:
             send: true
             store: true
           rebuildPath: true
+      - url: "{{_.server_url}}transactions/delete/:id"
+        name: Delete transaction
+        meta:
+          id: req_764d136228a1459eab44bc7bacb896c8
+          created: 1752760141441
+          modified: 1752760171390
+          isPrivate: false
+          description: ""
+          sortKey: -1749202560288.5
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/11.1.0
+        authentication:
+          type: oauth2
+          grantType: authorization_code
+          authorizationUrl: "{{_.auth_url}}"
+          accessTokenUrl: "{{ _.access_token_url }}"
+          clientId: "{{_.client_id}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: id
+            value: "1945840478905696256"
   - name: Reports
     meta:
       id: fld_f93e366819bd4f88b37d34ed34b6439e
@@ -659,7 +689,7 @@ collection:
         meta:
           id: req_cd38ebb861d942d3a14113e1f0ea69a7
           created: 1752506515026
-          modified: 1752507364026
+          modified: 1752661305876
           isPrivate: false
           description: ""
           sortKey: -1751372167571.5
@@ -669,8 +699,8 @@ collection:
           text: |-
             {
             	"organizationId":"{{_.active_organization_id}}",
-            	"name":"RSD - Serbian Dinar",
-            	"code":"RSD"
+            	"name":"EUR - Euro",
+            	"code":"EUR"
             }
         headers:
           - name: Content-Type
@@ -924,7 +954,7 @@ collection:
         meta:
           id: req_ec940674370141aa8d3d03383346bded
           created: 1752653281268
-          modified: 1752653327497
+          modified: 1752656578087
           isPrivate: false
           description: ""
           sortKey: -1752653281268
@@ -1119,6 +1149,98 @@ collection:
             value: "1945395650849931264"
           - name: authorityId
             value: "1945394617818021888"
+  - name: Organization users
+    meta:
+      id: fld_c8b1010e3bf84c5a8d603c5f6b8a54ed
+      created: 1752658933788
+      modified: 1752658933788
+      sortKey: -1752658933788
+      description: ""
+    children:
+      - url: "{{_.server_url}}organization-users/current/active"
+        name: Get active for current user
+        meta:
+          id: req_9690f1925f5b40228db1c270bb8504f8
+          created: 1752658935666
+          modified: 1752658973917
+          isPrivate: false
+          description: ""
+          sortKey: -1752658935666
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.3.0
+        authentication:
+          type: oauth2
+          grantType: authorization_code
+          authorizationUrl: "{{_.auth_url}}"
+          accessTokenUrl: "{{ _.access_token_url }}"
+          clientId: "{{_.client_id}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{_.server_url}}organization-users/current/all"
+        name: Get all for current user
+        meta:
+          id: req_8b9fdef7222345d0bcee5d6dd3893162
+          created: 1752659000309
+          modified: 1752659002445
+          isPrivate: false
+          description: ""
+          sortKey: -1752656108467
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.3.0
+        authentication:
+          type: oauth2
+          grantType: authorization_code
+          authorizationUrl: "{{_.auth_url}}"
+          accessTokenUrl: "{{ _.access_token_url }}"
+          clientId: "{{_.client_id}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{_.server_url}}organization-users/current/active/:activeId"
+        name: Set active for current user
+        meta:
+          id: req_e2f63781510d4594af60f1256ead3ebf
+          created: 1752659696889
+          modified: 1752661283703
+          isPrivate: false
+          description: ""
+          sortKey: -1752657522066.5
+        method: POST
+        headers:
+          - name: User-Agent
+            value: insomnia/11.3.0
+        authentication:
+          type: oauth2
+          grantType: authorization_code
+          authorizationUrl: "{{_.auth_url}}"
+          accessTokenUrl: "{{ _.access_token_url }}"
+          clientId: "{{_.client_id}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: activeId
+            value: "1945428468275609600"
 cookieJar:
   name: Default Jar
   meta:
@@ -1140,11 +1262,11 @@ environments:
   meta:
     id: env_676597a9d4e9b24c6c7cf8e61c4566cefaacc897
     created: 1749035252072
-    modified: 1752653152135
+    modified: 1752759291878
     isPrivate: false
   data:
     server_url: http://localhost:8000/api/
     access_token_url: http://localhost:8080/realms/accounting/protocol/openid-connect/token
     auth_url: http://localhost:8080/realms/accounting/protocol/openid-connect/auth
     client_id: accounting-rest
-    active_organization_id: "1945394416428515328"
+    active_organization_id: "1945839369407430656"

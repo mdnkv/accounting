@@ -30,6 +30,7 @@ public final class TransactionDtoMapper implements Function<Transaction, Transac
         result.setLines(lines);
         result.setTotalCreditAmount(totalCredit);
         result.setTotalDebitAmount(totalDebit);
+        result.setDraft(transaction.isDraft());
         return result;
     }
 

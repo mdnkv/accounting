@@ -13,6 +13,7 @@ public final class TransactionDto {
     private String description;
     private String currencyId;
     private LocalDate date;
+    private boolean draft;
     private BigDecimal totalCreditAmount;
     private BigDecimal totalDebitAmount;
     private CurrencyDto currency;
@@ -88,5 +89,13 @@ public final class TransactionDto {
 
     public void setCurrency(CurrencyDto currency) {
         this.currency = currency;
+    }
+
+    public boolean isDraft() {
+        return draft;
+    }
+
+    public void setDraft(boolean draft) {
+        this.draft = draft;
     }
 }

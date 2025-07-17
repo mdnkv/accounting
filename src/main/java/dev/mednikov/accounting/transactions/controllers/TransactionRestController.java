@@ -35,4 +35,11 @@ public class TransactionRestController {
         return this.transactionService.getTransactions(organizationId);
     }
 
+    @DeleteMapping("/delete/{transactionId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAuthority('transactions:delete')")
+    public void deleteTransaction(@PathVariable Long transactionId) {
+        this.transactionService.deleteTransaction(transactionId);
+    }
+
 }
