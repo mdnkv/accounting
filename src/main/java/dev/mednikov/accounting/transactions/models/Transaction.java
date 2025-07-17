@@ -34,6 +34,9 @@ public class Transaction {
     @Column(nullable = false, name = "transaction_date")
     private LocalDate date;
 
+    @Column(nullable = false, name = "is_draft")
+    private boolean draft;
+
     @OneToMany(mappedBy = "transaction", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<TransactionLine> lines = new HashSet<>();
 
@@ -94,6 +97,14 @@ public class Transaction {
 
     public void setCurrency(Currency currency) {
         this.currency = currency;
+    }
+
+    public boolean isDraft() {
+        return draft;
+    }
+
+    public void setDraft(boolean draft) {
+        this.draft = draft;
     }
 
     public void setLines(List<TransactionLine> lines) {

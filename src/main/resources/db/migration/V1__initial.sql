@@ -41,6 +41,7 @@ CREATE TABLE IF NOT EXISTS transactions (
     currency_id BIGINT NOT NULL,
     description TEXT NOT NULL,
     transaction_date DATE NOT NULL,
+    is_draft BOOLEAN NOT NULL DEFAULT TRUE,
     CONSTRAINT fk_transaction_organization FOREIGN KEY (organization_id)
         REFERENCES organizations(id) ON DELETE CASCADE,
     CONSTRAINT fk_transaction_currency FOREIGN KEY (currency_id)

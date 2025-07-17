@@ -1,6 +1,7 @@
 package dev.mednikov.accounting.transactions.services;
 
 import cn.hutool.core.lang.generator.SnowflakeGenerator;
+import dev.mednikov.accounting.accounts.exceptions.DeprecatedAccountException;
 import dev.mednikov.accounting.accounts.models.Account;
 import dev.mednikov.accounting.accounts.models.AccountType;
 import dev.mednikov.accounting.accounts.repositories.AccountRepository;
@@ -11,6 +12,7 @@ import dev.mednikov.accounting.organizations.repositories.OrganizationRepository
 import dev.mednikov.accounting.transactions.dto.TransactionDto;
 import dev.mednikov.accounting.transactions.dto.TransactionDtoMapper;
 import dev.mednikov.accounting.transactions.dto.TransactionLineDto;
+import dev.mednikov.accounting.transactions.exceptions.TransactionDeletionException;
 import dev.mednikov.accounting.transactions.exceptions.UnbalancedTransactionException;
 import dev.mednikov.accounting.transactions.models.Transaction;
 import dev.mednikov.accounting.transactions.models.TransactionLine;
@@ -28,6 +30,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 class TransactionServiceImplTest {
@@ -75,6 +78,81 @@ class TransactionServiceImplTest {
     }
 
     @Test
+    void createTransaction_withDeprecatedAccountTest(){
+        // Create an organization
+        Long organizationId = snowflakeGenerator.next();
+        Organization organization = new Organization();
+        organization.setId(organizationId);
+        organization.setName("Marquardt Lorenz AG");
+
+        // Create a currency
+        Long currencyId = snowflakeGenerator.next();
+        Currency currency = new Currency();
+        currency.setId(currencyId);
+        currency.setName("EUR - Euro");
+        currency.setCode("EUR");
+        currency.setOrganization(organization);
+
+        // Create a debited account
+        // this account is deprecated
+        Long debitAccountId = snowflakeGenerator.next();
+        Account debitAccount = new Account();
+        debitAccount.setId(debitAccountId);
+        debitAccount.setCode("17300");
+        debitAccount.setName("Equipment");
+        debitAccount.setAccountType(AccountType.ASSET);
+        debitAccount.setOrganization(organization);
+        debitAccount.setDeprecated(true); // deprecated
+
+        // Create a credited account
+        Long creditAccountId = snowflakeGenerator.next();
+        Account creditAccount = new Account();
+        creditAccount.setId(creditAccountId);
+        creditAccount.setCode("17300");
+        creditAccount.setName("Cash");
+        creditAccount.setAccountType(AccountType.ASSET);
+        creditAccount.setOrganization(organization);
+        creditAccount.setDeprecated(false);
+
+        // Create a transaction
+        Long transactionId = snowflakeGenerator.next();
+        Transaction transaction = new Transaction();
+        transaction.setOrganization(organization);
+        transaction.setCurrency(currency);
+        transaction.setDate(LocalDate.now().minusDays(8));
+        transaction.setDescription("Aenean dapibus pellentesque neque fringilla consectetur");
+        transaction.setId(transactionId);
+
+        // Create transaction lines
+        TransactionLine line1 = new TransactionLine();
+        line1.setAccount(debitAccount);
+        line1.setDebitAmount(BigDecimal.valueOf(2500.00));
+        line1.setCreditAmount(BigDecimal.ZERO);
+        line1.setId(snowflakeGenerator.next());
+        line1.setTransaction(transaction);
+        transaction.addTransactionLine(line1);
+
+        TransactionLine line2 = new TransactionLine();
+        line2.setAccount(creditAccount);
+        line2.setDebitAmount(BigDecimal.ZERO);
+        line2.setCreditAmount(BigDecimal.valueOf(2500.00));
+        line2.setId(snowflakeGenerator.next());
+        line2.setTransaction(transaction);
+        transaction.addTransactionLine(line2);
+
+        // Create payload
+        TransactionDtoMapper mapper = new TransactionDtoMapper();
+        TransactionDto payload = mapper.apply(transaction);
+
+        Mockito.when(organizationRepository.getReferenceById(organizationId)).thenReturn(organization);
+        Mockito.when(currencyRepository.getReferenceById(currencyId)).thenReturn(currency);
+        Mockito.when(accountRepository.findById(debitAccountId)).thenReturn(Optional.of(debitAccount));
+        Mockito.when(accountRepository.findById(creditAccountId)).thenReturn(Optional.of(creditAccount));
+
+        Assertions.assertThatThrownBy(() -> transactionService.createTransaction(payload)).isInstanceOf(DeprecatedAccountException.class);
+    }
+
+    @Test
     void createTransaction_successTest(){
         // Create an organization
         Long organizationId = snowflakeGenerator.next();
@@ -98,6 +176,7 @@ class TransactionServiceImplTest {
         debitAccount.setName("Equipment");
         debitAccount.setAccountType(AccountType.ASSET);
         debitAccount.setOrganization(organization);
+        debitAccount.setDeprecated(false);
 
         // Create a credited account
         Long creditAccountId = snowflakeGenerator.next();
@@ -107,6 +186,7 @@ class TransactionServiceImplTest {
         creditAccount.setName("Cash");
         creditAccount.setAccountType(AccountType.ASSET);
         creditAccount.setOrganization(organization);
+        creditAccount.setDeprecated(false);
 
         // Create a transaction
         Long transactionId = snowflakeGenerator.next();
@@ -140,13 +220,24 @@ class TransactionServiceImplTest {
 
         Mockito.when(organizationRepository.getReferenceById(organizationId)).thenReturn(organization);
         Mockito.when(currencyRepository.getReferenceById(currencyId)).thenReturn(currency);
-        Mockito.when(accountRepository.getReferenceById(debitAccountId)).thenReturn(debitAccount);
-        Mockito.when(accountRepository.getReferenceById(creditAccountId)).thenReturn(creditAccount);
+        Mockito.when(accountRepository.findById(debitAccountId)).thenReturn(Optional.of(debitAccount));
+        Mockito.when(accountRepository.findById(creditAccountId)).thenReturn(Optional.of(creditAccount));
         Mockito.when(transactionLineRepository.saveAll(Mockito.any())).thenReturn(List.of(line1, line2));
         Mockito.when(transactionRepository.save(transaction)).thenReturn(transaction);
 
         TransactionDto result = transactionService.createTransaction(payload);
         Assertions.assertThat(result).isNotNull();
+    }
+
+    @Test
+    void deleteTransaction_isNotDraftTest(){
+        Long transactionId = snowflakeGenerator.next();
+        Transaction transaction = new Transaction();
+        transaction.setId(transactionId);
+        transaction.setDraft(false);
+
+        Mockito.when(transactionRepository.findById(transactionId)).thenReturn(Optional.of(transaction));
+        Assertions.assertThatThrownBy(() -> transactionService.deleteTransaction(transactionId)).isInstanceOf(TransactionDeletionException.class);
     }
 
 }

@@ -11,4 +11,6 @@ public interface TransactionService {
 
     List<TransactionDto> getTransactions (Long organizationId);
 
+    void deleteTransaction(Long transactionId);
+
 }

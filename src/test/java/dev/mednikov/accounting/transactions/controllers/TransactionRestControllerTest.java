@@ -2,12 +2,12 @@ package dev.mednikov.accounting.transactions.controllers;
 
 import cn.hutool.core.lang.generator.SnowflakeGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.mednikov.accounting.accounts.exceptions.DeprecatedAccountException;
 import dev.mednikov.accounting.transactions.dto.TransactionDto;
 import dev.mednikov.accounting.transactions.dto.TransactionLineDto;
+import dev.mednikov.accounting.transactions.exceptions.TransactionDeletionException;
 import dev.mednikov.accounting.transactions.exceptions.UnbalancedTransactionException;
 import dev.mednikov.accounting.transactions.services.TransactionService;
-import dev.mednikov.accounting.users.models.User;
-import dev.mednikov.accounting.users.services.UserService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,6 +74,42 @@ class TransactionRestControllerTest {
     }
 
     @Test
+    void createTransaction_deprecatedAccountTest() throws Exception {
+        List<TransactionLineDto> lines = new ArrayList<>();
+        TransactionLineDto line1 = new TransactionLineDto();
+        line1.setAccountId(snowflakeGenerator.next().toString());
+        line1.setCreditAmount(BigDecimal.valueOf(3000.00));
+        line1.setDebitAmount(BigDecimal.ZERO);
+        lines.add(line1);
+
+        TransactionLineDto line2 = new TransactionLineDto();
+        line2.setAccountId(snowflakeGenerator.next().toString());
+        line2.setCreditAmount(BigDecimal.ZERO);
+        line2.setDebitAmount(BigDecimal.valueOf(3000.00));
+        lines.add(line2);
+
+        TransactionDto payload = new TransactionDto();
+        payload.setCurrencyId(snowflakeGenerator.next().toString());
+        payload.setDate(LocalDate.now().minusDays(5));
+        payload.setDescription("Cras odio elit, semper et consequat vitae");
+        payload.setLines(lines);
+        payload.setOrganizationId(snowflakeGenerator.next().toString());
+
+        String keycloakId = UUID.randomUUID().toString();
+        String body = objectMapper.writeValueAsString(payload);
+
+        Mockito.when(transactionService.createTransaction(Mockito.any())).thenThrow(DeprecatedAccountException.class);
+
+        mockMvc.perform(post("/api/transactions/create")
+                        .with(jwt().jwt(jwt -> jwt
+                                .claim("sub", keycloakId)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body))
+                .andExpect(status().isBadRequest());
+
+    }
+
+    @Test
     void createTransaction_successTest() throws Exception {
         List<TransactionLineDto> lines = new ArrayList<>();
         TransactionLineDto line1 = new TransactionLineDto();
@@ -120,6 +156,28 @@ class TransactionRestControllerTest {
                         .with(jwt().jwt(jwt -> jwt
                                 .claim("sub", keycloakId))))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void deleteTransaction_notDraftTest() throws Exception {
+        Long transactionId = snowflakeGenerator.next();
+        String keycloakId = UUID.randomUUID().toString();
+        Mockito.doThrow(TransactionDeletionException.class).when(transactionService).deleteTransaction(transactionId);
+        mockMvc.perform(delete("/api/transactions/delete/{organizationId}", transactionId)
+                        .with(jwt().jwt(jwt -> jwt
+                                .claim("sub", keycloakId))))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void deleteTransaction_successTest() throws Exception{
+        Long transactionId = snowflakeGenerator.next();
+        String keycloakId = UUID.randomUUID().toString();
+        Mockito.doNothing().when(transactionService).deleteTransaction(transactionId);
+        mockMvc.perform(delete("/api/transactions/delete/{organizationId}", transactionId)
+                        .with(jwt().jwt(jwt -> jwt
+                                .claim("sub", keycloakId))))
+                .andExpect(status().isNoContent());
     }
 
 }
