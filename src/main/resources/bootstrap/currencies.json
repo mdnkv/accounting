@@ -1,0 +1,17 @@
+[
+  {
+    "name": "EUR - Euro",
+    "code": "EUR",
+    "primary": true
+  },
+  {
+    "name": "CHF - Swiss Franc",
+    "code": "CHF",
+    "primary": false
+  },
+  {
+    "name": "RSD - Serbian Dinar",
+    "code": "RSD",
+    "primary": false
+  }
+]
