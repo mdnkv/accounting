@@ -1,5 +1,6 @@
 package dev.mednikov.accounting.shared.auth;
 
+import dev.mednikov.accounting.authorities.models.Authority;
 import dev.mednikov.accounting.organizations.models.OrganizationUser;
 import dev.mednikov.accounting.organizations.repositories.OrganizationUserRepository;
 import dev.mednikov.accounting.users.models.User;
@@ -34,10 +35,14 @@ public class RoleConverter implements Converter<Jwt, AbstractAuthenticationToken
         Optional<OrganizationUser> currentActive = this.organizationUserRepository.findActiveForUser(user.getId());
         if (currentActive.isPresent()) {
             OrganizationUser result = currentActive.get();
+            Long organizationId = result.getOrganization().getId();
             // Map authorities to Spring GrantedAuthority objects
-            List<SimpleGrantedAuthority> grantedAuthorities = result.getRole().getAuthorities()
-                    .stream().map(a -> new SimpleGrantedAuthority(a.getName())).toList();
-            return new JwtAuthenticationToken(jwt, grantedAuthorities);
+            List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+            for (Authority authority: result.getRole().getAuthorities()) {
+                authorities.add(new SimpleGrantedAuthority(authority.getName()));
+            }
+            authorities.add(new SimpleGrantedAuthority(organizationId.toString()));
+            return new JwtAuthenticationToken(jwt, authorities);
         } else {
             // no active role is presented
             return new JwtAuthenticationToken(jwt, List.of());

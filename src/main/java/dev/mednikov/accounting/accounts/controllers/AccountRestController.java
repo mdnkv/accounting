@@ -22,15 +22,15 @@ public class AccountRestController {
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAuthority('accounts:create')")
-    public @ResponseBody AccountDto createAccount(@RequestBody AccountDto accountDto) {
-        return this.accountService.createAccount(accountDto);
+    @PreAuthorize("hasAuthority('accounts:create') and hasAuthority(#body.organizationId)")
+    public @ResponseBody AccountDto createAccount(@RequestBody AccountDto body) {
+        return this.accountService.createAccount(body);
     }
 
     @PutMapping("/update")
-    @PreAuthorize("hasAuthority('accounts:update')")
-    public @ResponseBody AccountDto updateAccount(@RequestBody AccountDto accountDto) {
-        return this.accountService.updateAccount(accountDto);
+    @PreAuthorize("hasAuthority('accounts:update') and hasAuthority(#body.organizationId)")
+    public @ResponseBody AccountDto updateAccount(@RequestBody AccountDto body) {
+        return this.accountService.updateAccount(body);
     }
 
     @DeleteMapping("/delete/{accountId}")
@@ -41,7 +41,7 @@ public class AccountRestController {
     }
 
     @GetMapping("/organization/{organizationId}")
-    @PreAuthorize("hasAuthority('accounts:view')")
+    @PreAuthorize("hasAuthority('accounts:view') and hasAuthority(#organizationId)")
     public @ResponseBody List<AccountDto> getAccounts(
             @PathVariable Long organizationId,
             @RequestParam(defaultValue = "false", required = false) boolean includeDeprecated

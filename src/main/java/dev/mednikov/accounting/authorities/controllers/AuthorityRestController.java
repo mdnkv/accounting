@@ -20,13 +20,13 @@ public class AuthorityRestController {
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAuthority('authorities:create')")
+    @PreAuthorize("hasAuthority('authorities:create') and hasAuthority(#body.organizationId)")
     public @ResponseBody AuthorityDto createAuthority(@RequestBody AuthorityDto body) {
         return this.authorityService.createAuthority(body);
     }
 
     @PutMapping("/update")
-    @PreAuthorize("hasAuthority('authorities:update')")
+    @PreAuthorize("hasAuthority('authorities:update') and hasAuthority(#body.organizationId)")
     public @ResponseBody AuthorityDto updateAuthority(@RequestBody AuthorityDto body) {
         return this.authorityService.updateAuthority(body);
     }
@@ -39,7 +39,7 @@ public class AuthorityRestController {
     }
 
     @GetMapping("/organization/{organizationId}")
-    @PreAuthorize("hasAuthority('authorities:view')")
+    @PreAuthorize("hasAuthority('authorities:view') and hasAuthority(#organizationId)")
     public @ResponseBody List<AuthorityDto> getAuthorities(@PathVariable Long organizationId){
         return this.authorityService.getAuthorities(organizationId);
     }

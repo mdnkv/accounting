@@ -20,13 +20,13 @@ public class RoleRestController {
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAuthority('roles:create')")
+    @PreAuthorize("hasAuthority('roles:create') and hasAuthority(#body.organizationId)")
     public @ResponseBody RoleDto createRole (@RequestBody RoleDto body){
         return this.roleService.createRole(body);
     }
 
     @PutMapping("/update")
-    @PreAuthorize("hasAuthority('roles:update')")
+    @PreAuthorize("hasAuthority('roles:update') and hasAuthority(#body.organizationId)")
     public @ResponseBody RoleDto updateRole (@RequestBody RoleDto body){
         return this.roleService.updateRole(body);
     }
@@ -39,7 +39,7 @@ public class RoleRestController {
     }
 
     @GetMapping("/organization/{organizationId}")
-    @PreAuthorize("hasAuthority('roles:view')")
+    @PreAuthorize("hasAuthority('roles:view') and hasAuthority(#organizationId)")
     public @ResponseBody List<RoleDto> getRoles (@PathVariable Long organizationId){
         return this.roleService.getRoles(organizationId);
     }
