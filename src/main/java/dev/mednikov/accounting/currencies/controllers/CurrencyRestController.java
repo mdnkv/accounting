@@ -22,25 +22,25 @@ public class CurrencyRestController {
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAuthority('currencies:create')")
+    @PreAuthorize("hasAuthority('currencies:create') and hasAuthority(#body.organizationId)")
     public @ResponseBody CurrencyDto createCurrency(@RequestBody CurrencyDto body){
         return this.currencyService.createCurrency(body);
     }
 
     @PutMapping("/update")
-    @PreAuthorize("hasAuthority('currencies:update')")
+    @PreAuthorize("hasAuthority('currencies:update') and hasAuthority(#body.organizationId)")
     public @ResponseBody CurrencyDto updateCurrency(@RequestBody CurrencyDto body){
         return this.currencyService.updateCurrency(body);
     }
 
     @GetMapping("/organization/{organizationId}")
-    @PreAuthorize("hasAuthority('currencies:view')")
+    @PreAuthorize("hasAuthority('currencies:view') and hasAuthority(#organizationId)")
     public @ResponseBody List<CurrencyDto> getCurrencies(@PathVariable Long organizationId){
         return this.currencyService.getCurrencies(organizationId);
     }
 
     @GetMapping("/primary/{organizationId}")
-    @PreAuthorize("hasAuthority('currencies:view')")
+    @PreAuthorize("hasAuthority('currencies:view') and hasAuthority(#organizationId)")
     public ResponseEntity<CurrencyDto> getPrimaryCurrency(@PathVariable Long organizationId){
         Optional<CurrencyDto> result = this.currencyService.getPrimaryCurrency(organizationId);
         return ResponseEntity.of(result);

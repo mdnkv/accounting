@@ -6,6 +6,7 @@ import dev.mednikov.accounting.reports.dto.ProfitLossSummaryDto;
 import dev.mednikov.accounting.reports.services.ExpenseCategoryService;
 import dev.mednikov.accounting.reports.services.NetWorthService;
 import dev.mednikov.accounting.reports.services.ProfitLossService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,6 +29,7 @@ public class DashboardRestController {
     }
 
     @GetMapping("/profit-loss/{organizationId}")
+    @PreAuthorize("hasAuthority(#organizationId)")
     public @ResponseBody ProfitLossSummaryDto getProfitLossSummary (
             @PathVariable Long organizationId,
             @RequestParam(required = false, defaultValue = "30") int daysCount
@@ -36,6 +38,7 @@ public class DashboardRestController {
     }
 
     @GetMapping("/net-worth/{organizationId}")
+    @PreAuthorize("hasAuthority(#organizationId)")
     public @ResponseBody NetWorthSummaryDto getNetWorthSummary(
             @PathVariable Long organizationId,
             @RequestParam(required = false, defaultValue = "30") int daysCount
@@ -44,6 +47,7 @@ public class DashboardRestController {
     }
 
     @GetMapping("/expense-categories/{organizationId}")
+    @PreAuthorize("hasAuthority(#organizationId)")
     public @ResponseBody List<ExpenseCategoryDto> getExpenseCategories (
             @PathVariable Long organizationId,
             @RequestParam(required = false, defaultValue = "30") int daysCount

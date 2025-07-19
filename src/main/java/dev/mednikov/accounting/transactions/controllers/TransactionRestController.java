@@ -24,13 +24,13 @@ public class TransactionRestController {
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAuthority('transactions:create')")
-    public @ResponseBody TransactionDto createTransaction(@RequestBody TransactionDto transactionDto, @AuthenticationPrincipal Jwt jwt) {
-        return this.transactionService.createTransaction(transactionDto);
+    @PreAuthorize("hasAuthority('transactions:create') and hasAuthority(#body.organizationId)")
+    public @ResponseBody TransactionDto createTransaction(@RequestBody TransactionDto body, @AuthenticationPrincipal Jwt jwt) {
+        return this.transactionService.createTransaction(body);
     }
 
     @GetMapping("/organization/{organizationId}")
-    @PreAuthorize("hasAuthority('transactions:view')")
+    @PreAuthorize("hasAuthority('transactions:view') and hasAuthority(#organizationId)")
     public @ResponseBody List<TransactionDto> getAllTransactions(@PathVariable Long organizationId) {
         return this.transactionService.getTransactions(organizationId);
     }

@@ -5,6 +5,7 @@ import dev.mednikov.accounting.reports.dto.ProfitLossDto;
 import dev.mednikov.accounting.reports.services.BalanceSheetService;
 import dev.mednikov.accounting.reports.services.ProfitLossService;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -23,6 +24,7 @@ public class ReportRestController {
     }
 
     @GetMapping("/balance-sheet/{organizationId}")
+    @PreAuthorize("hasAuthority(#organizationId)")
     public @ResponseBody BalanceSheetDto getBalanceSheet (
             @PathVariable Long organizationId,
             @RequestParam(required = false) LocalDate date) {
@@ -31,6 +33,7 @@ public class ReportRestController {
     }
 
     @GetMapping("/profit-loss/{organizationId}")
+    @PreAuthorize("hasAuthority(#organizationId)")
     public @ResponseBody ProfitLossDto getProfitLoss (
             @PathVariable Long organizationId,
             @RequestParam LocalDate fromDate,
