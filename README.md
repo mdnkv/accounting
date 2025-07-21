@@ -31,7 +31,7 @@ This section presents a list of features supported by this project, both impleme
 - Role-based access control
 - OAuth authentication with Keycloak
 - Dashboard with widgets (profit loss, net worth, expense categories) that are based on last 30, 60, 90 days
-- Managing users in organizations [TODO]
+- Managing users in organizations
 - Transaction category auto suggestions [TODO]
 - Recurring transactions [TODO]
 - Reporting (cash flow, balance sheet etc) [TODO]

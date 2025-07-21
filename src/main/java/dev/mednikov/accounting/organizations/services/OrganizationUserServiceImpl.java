@@ -1,43 +1,69 @@
 package dev.mednikov.accounting.organizations.services;
 
 import cn.hutool.core.lang.generator.SnowflakeGenerator;
-import dev.mednikov.accounting.organizations.dto.OrganizationUserDto;
-import dev.mednikov.accounting.organizations.dto.OrganizationUserDtoMapper;
+import dev.mednikov.accounting.organizations.dto.*;
 import dev.mednikov.accounting.organizations.events.CreateOwnerEvent;
+import dev.mednikov.accounting.organizations.exceptions.OrganizationUserAlreadyExistsException;
 import dev.mednikov.accounting.organizations.exceptions.OrganizationUserNotFoundException;
+import dev.mednikov.accounting.organizations.models.Invitation;
+import dev.mednikov.accounting.organizations.models.Organization;
 import dev.mednikov.accounting.organizations.models.OrganizationUser;
+import dev.mednikov.accounting.organizations.repositories.InvitationRepository;
+import dev.mednikov.accounting.organizations.repositories.OrganizationRepository;
 import dev.mednikov.accounting.organizations.repositories.OrganizationUserRepository;
+import dev.mednikov.accounting.roles.exceptions.RoleNotFoundException;
+import dev.mednikov.accounting.roles.models.Role;
+import dev.mednikov.accounting.roles.repositories.RoleRepository;
+import dev.mednikov.accounting.users.events.UserCreatedEvent;
 import dev.mednikov.accounting.users.models.User;
+import dev.mednikov.accounting.users.repositories.UserRepository;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class OrganizationUserServiceImpl implements OrganizationUserService {
 
-    private final static OrganizationUserDtoMapper mapper = new OrganizationUserDtoMapper();
+    private final static OrganizationUserDtoMapper organizationUserDtoMapper = new OrganizationUserDtoMapper();
+    private final static UserOrganizationDtoMapper userOrganizationDtoMapper = new UserOrganizationDtoMapper();
     private final static SnowflakeGenerator snowflakeGenerator = new SnowflakeGenerator();
 
+    private final InvitationRepository invitationRepository;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final OrganizationRepository organizationRepository;
     private final OrganizationUserRepository organizationUserRepository;
 
-    public OrganizationUserServiceImpl(OrganizationUserRepository organizationUserRepository) {
+    public OrganizationUserServiceImpl(
+            UserRepository userRepository,
+            RoleRepository roleRepository,
+            OrganizationRepository organizationRepository,
+            OrganizationUserRepository organizationUserRepository,
+            InvitationRepository invitationRepository) {
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.organizationRepository = organizationRepository;
         this.organizationUserRepository = organizationUserRepository;
+        this.invitationRepository = invitationRepository;
     }
 
     @Override
-    public Optional<OrganizationUserDto> getActiveForUser(User user) {
-        return this.organizationUserRepository.findActiveForUser(user.getId()).map(mapper);
+    public Optional<UserOrganizationDto> getActiveForUser(User user) {
+        return this.organizationUserRepository.findActiveForUser(user.getId()).map(userOrganizationDtoMapper);
     }
 
     @Override
-    public List<OrganizationUserDto> getAllForUser(User user) {
-        return this.organizationUserRepository.findAllByUserId(user.getId()).stream().map(mapper).toList();
+    public List<UserOrganizationDto> getAllForUser(User user) {
+        return this.organizationUserRepository.findAllByUserId(user.getId()).stream().map(userOrganizationDtoMapper).toList();
     }
 
     @Override
-    public OrganizationUserDto setActiveForUser(User user, Long id) {
+    public UserOrganizationDto setActiveForUser(User user, Long id) {
         // Find current active
         Optional<OrganizationUser> currentActive = this.organizationUserRepository.findActiveForUser(user.getId());
         // Set current active as not active
@@ -46,7 +72,7 @@ public class OrganizationUserServiceImpl implements OrganizationUserService {
             if (current.getId().equals(id)) {
                 // User just misuses API and wants a current role to be active,
                 // then we just return it
-                return mapper.apply(current);
+                return userOrganizationDtoMapper.apply(current);
             }
             current.setActive(false);
             this.organizationUserRepository.save(current);
@@ -57,7 +83,79 @@ public class OrganizationUserServiceImpl implements OrganizationUserService {
         organizationUser.setActive(true);
         // Return result
         OrganizationUser result = this.organizationUserRepository.save(organizationUser);
-        return mapper.apply(result);
+        return userOrganizationDtoMapper.apply(result);
+    }
+
+    @Override
+    public Optional<OrganizationUserDto> createOrganizationUser(CreateOrganizationUserRequestDto payload) {
+        // Find user by email
+        String email = payload.getEmail();
+        Long organizationId = Long.parseLong(payload.getOrganizationId());
+        // Get a role
+        Long roleId = Long.parseLong(payload.getRoleId());
+        Role role = this.roleRepository.findById(roleId).orElseThrow(RoleNotFoundException::new);
+        // Get an organization
+        Organization organization = this.organizationRepository.getReferenceById(organizationId);
+
+        Optional<User> userResult = this.userRepository.findByEmail(email);
+        if (userResult.isPresent()) {
+            // Option 1: Create an organization user
+            User user = userResult.get();
+            // Check that the user does not exist in the organization yet
+            if (this.organizationUserRepository.findByOrganizationIdAndUserId(organizationId, user.getId()).isPresent()) {
+                throw new OrganizationUserAlreadyExistsException();
+            }
+            // Save
+            boolean active = this.organizationUserRepository.findAllByUserId(user.getId()).isEmpty();
+            OrganizationUser organizationUser = new OrganizationUser();
+            organizationUser.setOrganization(organization);
+            organizationUser.setRole(role);
+            organizationUser.setUser(user);
+            organizationUser.setId(snowflakeGenerator.next());
+            organizationUser.setActive(active);
+
+            OrganizationUser result = this.organizationUserRepository.save(organizationUser);
+            OrganizationUserDto dto = organizationUserDtoMapper.apply(result);
+            return Optional.of(dto);
+        } else {
+            // Option 2: Create invitation
+            if (this.invitationRepository.findByEmailAndOrganizationId(email, organizationId).isEmpty()){
+                // create an invitation and save it
+                Invitation invitation = new Invitation();
+                invitation.setEmail(email);
+                invitation.setOrganization(organization);
+                invitation.setRole(role);
+                invitation.setId(snowflakeGenerator.next());
+                this.invitationRepository.save(invitation);
+            }
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public OrganizationUserDto updateOrganizationUser(OrganizationUserDto payload) {
+        Objects.requireNonNull(payload.getId());
+        Long id = Long.parseLong(payload.getId());
+        Long roleId = Long.parseLong(payload.getRoleId());
+        OrganizationUser organizationUser = this.organizationUserRepository.findById(id).orElseThrow(OrganizationUserNotFoundException::new);
+        Role role = this.roleRepository.findById(roleId).orElseThrow(RoleNotFoundException::new);
+        organizationUser.setRole(role);
+        OrganizationUser result = this.organizationUserRepository.save(organizationUser);
+        return organizationUserDtoMapper.apply(result);
+    }
+
+    @Override
+    public void deleteOrganizationUser(Long id) {
+        this.organizationUserRepository.deleteById(id);
+    }
+
+    @Override
+    public List<OrganizationUserDto> getUsersInOrganization(Long organizationId) {
+        return this.organizationUserRepository
+                .findAllByOrganizationId(organizationId)
+                .stream()
+                .map(organizationUserDtoMapper)
+                .toList();
     }
 
     @EventListener
@@ -74,6 +172,31 @@ public class OrganizationUserServiceImpl implements OrganizationUserService {
         organizationUser.setOrganization(event.getOrganization());
         organizationUser.setId(snowflakeGenerator.next());
         this.organizationUserRepository.save(organizationUser);
+    }
+
+    @EventListener
+    public void onUserCreatedEventListener (UserCreatedEvent event) {
+        User user = event.getUser();
+        List<Invitation> invitations = this.invitationRepository.findAllByEmail(user.getEmail());
+        if (!invitations.isEmpty()) {
+            // Convert invitations to organization user
+            List<OrganizationUser> organizationUsers = new ArrayList<>();
+            for (int i = 0; i < invitations.size(); i++) {
+                Invitation invitation = invitations.get(i);
+                Role role = invitation.getRole();
+                Organization organization = invitation.getOrganization();
+                boolean active = i == 0;
+                OrganizationUser organizationUser = new OrganizationUser();
+                organizationUser.setRole(role);
+                organizationUser.setOrganization(organization);
+                organizationUser.setId(snowflakeGenerator.next());
+                organizationUser.setUser(user);
+                organizationUser.setActive(active);
+                organizationUsers.add(organizationUser);
+            }
+            this.organizationUserRepository.saveAll(organizationUsers);
+            this.invitationRepository.deleteAll(invitations);
+        }
     }
 
 }
