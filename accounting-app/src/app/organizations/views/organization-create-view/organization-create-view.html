@@ -29,15 +29,6 @@
       }
     </div>
 
-    <!-- Organization currency -->
-    <div class="field">
-      <label class="label">Currency</label>
-      <div class="select is-fullwidth">
-        <select formControlName="currency">
-          <option value="EUR">EUR - Euro</option>
-        </select>
-      </div>
-    </div>
 
     <div class="block buttons">
       <button
@@ -45,7 +36,7 @@
         type="submit"
         [disabled]="form.invalid"
       >Create</button>
-      <a [routerLink]="['/roles/list']" class="button">Back</a>
+      <a class="button">Back</a>
     </div>
   </form>
 </div>
