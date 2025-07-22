@@ -1,8 +1,10 @@
 package dev.mednikov.accounting.users.services;
 
 import cn.hutool.core.lang.generator.SnowflakeGenerator;
+import dev.mednikov.accounting.users.events.UserCreatedEvent;
 import dev.mednikov.accounting.users.models.User;
 import dev.mednikov.accounting.users.repositories.UserRepository;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
@@ -12,10 +14,13 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final static SnowflakeGenerator snowflakeGenerator = new SnowflakeGenerator();
+
+    private final ApplicationEventPublisher eventPublisher;
     private final UserRepository userRepository;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, ApplicationEventPublisher eventPublisher) {
         this.userRepository = userRepository;
+        this.eventPublisher = eventPublisher;
     }
 
     @Override
@@ -38,7 +43,12 @@ public class UserServiceImpl implements UserService {
             user.setKeycloakId(keycloakId);
             user.setId(snowflakeGenerator.next());
 
-            return this.userRepository.save(user);
+            User savedUser = this.userRepository.save(user);
+            // Also check for invitations
+            UserCreatedEvent event = new UserCreatedEvent(this, savedUser);
+            this.eventPublisher.publishEvent(event);
+
+            return savedUser;
         }
     }
 

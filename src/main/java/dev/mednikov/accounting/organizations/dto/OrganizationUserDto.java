@@ -1,13 +1,15 @@
 package dev.mednikov.accounting.organizations.dto;
 
 import dev.mednikov.accounting.roles.dto.RoleDto;
+import dev.mednikov.accounting.users.dto.UserDto;
 
 public final class OrganizationUserDto {
 
     private String id;
-    private OrganizationDto organization;
+    private String organizationId;
+    private String roleId;
     private RoleDto role;
-    private boolean active;
+    private UserDto user;
 
     public String getId() {
         return id;
@@ -15,14 +17,6 @@ public final class OrganizationUserDto {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public OrganizationDto getOrganization() {
-        return organization;
-    }
-
-    public void setOrganization(OrganizationDto organization) {
-        this.organization = organization;
     }
 
     public RoleDto getRole() {
@@ -33,12 +27,27 @@ public final class OrganizationUserDto {
         this.role = role;
     }
 
-    public boolean isActive() {
-        return active;
+    public String getOrganizationId() {
+        return organizationId;
     }
 
-    public void setActive(boolean active) {
-        this.active = active;
+    public void setOrganizationId(String organizationId) {
+        this.organizationId = organizationId;
     }
 
+    public String getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(String roleId) {
+        this.roleId = roleId;
+    }
+
+    public UserDto getUser() {
+        return user;
+    }
+
+    public void setUser(UserDto user) {
+        this.user = user;
+    }
 }

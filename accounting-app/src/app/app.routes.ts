@@ -1,11 +1,14 @@
 import { Routes } from '@angular/router';
+
 import {DashboardView} from './dashboard/views/dashboard-view/dashboard-view';
-import {RolesListView} from './roles/views/roles-list-view/roles-list-view';
 import {OrganizationCreateView} from './organizations/views/organization-create-view/organization-create-view';
 import {AccountsView} from './accounts/views/accounts-view/accounts-view';
 import {CreateTransactionView} from './transactions/views/create-transaction-view/create-transaction-view';
 import {TransactionsView} from './transactions/views/transactions-view/transactions-view';
 import {UpdateAccountView} from './accounts/views/update-account-view/update-account-view';
+import {OrganizationsView} from './organizations/views/organizations-view/organizations-view';
+import {OrganizationUpdateView} from './organizations/views/organization-update-view/organization-update-view';
+import {OrganizationUsersView} from './organizations/views/organization-users-view/organization-users-view';
 
 export const routes: Routes = [
   {
@@ -13,12 +16,20 @@ export const routes: Routes = [
     component: DashboardView
   },
   {
-    path: 'roles/list',
-    component: RolesListView
-  },
-  {
     path: 'organizations/create',
     component: OrganizationCreateView
+  },
+  {
+    path: 'organizations/update/:id',
+    component: OrganizationUpdateView
+  },
+  {
+    path: 'organizations/users/:id',
+    component: OrganizationUsersView
+  },
+  {
+    path: 'organizations',
+    component: OrganizationsView
   },
   {
     path: 'accounts',

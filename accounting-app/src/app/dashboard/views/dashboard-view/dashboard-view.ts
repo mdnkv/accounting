@@ -2,10 +2,10 @@ import {Component, inject, OnInit, signal} from '@angular/core';
 import {Router} from '@angular/router';
 import {HttpErrorResponse} from '@angular/common/http';
 
-import {RoleService} from '../../../roles/services/role';
 import {ProfitLossSummaryWidget} from '../../components/profit-loss-summary-widget/profit-loss-summary-widget';
 import {NetWorthSummaryWidget} from '../../components/net-worth-summary-widget/net-worth-summary-widget';
 import {ExpenseCategoriesWidget} from '../../components/expense-categories-widget/expense-categories-widget';
+import {OrganizationUserService} from '../../../organizations/services/organization-user';
 
 @Component({
   selector: 'app-dashboard-view',
@@ -21,10 +21,10 @@ export class DashboardView implements OnInit{
 
   loading = signal(true)
   router: Router = inject(Router)
-  roleService: RoleService = inject(RoleService)
+  organizationUserService: OrganizationUserService = inject(OrganizationUserService)
 
   ngOnInit() {
-    this.roleService.getActiveRole().subscribe({
+    this.organizationUserService.getActiveForUser().subscribe({
       next: result => {
         console.log(result)
         this.loading.set(false)

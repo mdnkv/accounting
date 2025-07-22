@@ -1,0 +1,23 @@
+<div class="block">
+  <p class="title is-2">Organizations</p>
+</div>
+
+<div class="block">
+  <a class="button is-primary" [routerLink]="['/organizations/create']">
+    <span class="icon">
+      <i class="bx bx-plus"></i>
+    </span>
+    <span>New</span>
+  </a>
+</div>
+
+<div class="block">
+  @if (organizations.length > 0){
+    @for (organization of organizations; track organization.id){
+      <app-organization-card
+        [organization]="organization"
+        (setActive)="onSetActiveOrganization($event)"
+      />
+    }
+  }
+</div>

@@ -22,7 +22,10 @@
       "currencies:create",
       "currencies:update",
       "currencies:delete",
-      "currencies:view"
+      "currencies:view",
+      "organization-users:create",
+      "organization-users:update",
+      "organization-users:delete"
     ]
   },
   {
@@ -47,7 +50,10 @@
       "currencies:update",
       "currencies:delete",
       "currencies:view",
-      "organizations:update"
+      "organizations:update",
+      "organization-users:create",
+      "organization-users:update",
+      "organization-users:delete"
     ]
   },
   {

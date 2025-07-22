@@ -100,3 +100,15 @@ CREATE TABLE IF NOT EXISTS organization_users (
     CONSTRAINT fk_organization_user_role FOREIGN KEY (role_id)
         REFERENCES roles(id) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS invitations (
+    id BIGINT PRIMARY KEY,
+    email VARCHAR(255) NOT NULL,
+    organization_id BIGINT NOT NULL,
+    role_id BIGINT NOT NULL,
+    UNIQUE (email, organization_id),
+    CONSTRAINT fk_invitation_organization FOREIGN KEY (organization_id)
+        REFERENCES organizations(id) ON DELETE CASCADE,
+    CONSTRAINT fk_invitation_role FOREIGN KEY (role_id)
+        REFERENCES roles(id) ON DELETE CASCADE
+);
