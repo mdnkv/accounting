@@ -4,7 +4,7 @@ import {HttpClient} from '@angular/common/http';
 import {map, Observable} from 'rxjs';
 
 import {environment} from '../../../environments/environment.development';
-import {UserOrganization} from '../models/organizations.models';
+import {CreateOrganizationUserRequest, OrganizationUser, UserOrganization} from '../models/organizations.models';
 
 @Injectable({
   providedIn: 'root'
@@ -34,6 +34,14 @@ export class OrganizationUserService {
 
   getAllForUser(): Observable<UserOrganization[]> {
     return this.http.get<UserOrganization[]>(`${this.serverUrl}/organization-users/current/all`)
+  }
+
+  createOrganizationUser(payload: CreateOrganizationUserRequest): Observable<OrganizationUser>{
+    return this.http.post<OrganizationUser>(`${this.serverUrl}/organization-users/create`, payload)
+  }
+
+  getUsersInOrganization(organizationId: string): Observable<OrganizationUser[]>{
+    return this.http.get<OrganizationUser[]>(`${this.serverUrl}/organization-users/organization/${organizationId}`)
   }
 
 }
