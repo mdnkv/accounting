@@ -1,13 +1,13 @@
 import {Component, inject, signal} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {Router, RouterLink} from '@angular/router';
+import {Router} from '@angular/router';
 
 import {OrganizationService} from '../../services/organization';
 import {Organization} from '../../models/organizations.models';
 
 @Component({
   selector: 'app-organization-create-view',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule],
   templateUrl: './organization-create-view.html',
   styleUrl: './organization-create-view.css'
 })
@@ -45,6 +45,16 @@ export class OrganizationCreateView {
         this.error.set('Cannot create the organization')
       }
     })
+  }
+
+  goBack () {
+    if (this.form.touched){
+      if (confirm('Do you want to quit without saving?')){
+        this.router.navigateByUrl('/organizations')
+      }
+    } else {
+      this.router.navigateByUrl('/organizations')
+    }
   }
 
 }

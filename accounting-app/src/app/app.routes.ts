@@ -6,6 +6,8 @@ import {AccountsView} from './accounts/views/accounts-view/accounts-view';
 import {CreateTransactionView} from './transactions/views/create-transaction-view/create-transaction-view';
 import {TransactionsView} from './transactions/views/transactions-view/transactions-view';
 import {UpdateAccountView} from './accounts/views/update-account-view/update-account-view';
+import {OrganizationsView} from './organizations/views/organizations-view/organizations-view';
+import {OrganizationUpdateView} from './organizations/views/organization-update-view/organization-update-view';
 
 export const routes: Routes = [
   {
@@ -15,6 +17,14 @@ export const routes: Routes = [
   {
     path: 'organizations/create',
     component: OrganizationCreateView
+  },
+  {
+    path: 'organizations/update/:id',
+    component: OrganizationUpdateView
+  },
+  {
+    path: 'organizations',
+    component: OrganizationsView
   },
   {
     path: 'accounts',

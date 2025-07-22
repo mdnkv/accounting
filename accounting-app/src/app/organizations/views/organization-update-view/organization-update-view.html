@@ -1,9 +1,9 @@
 <div class="block">
-  <p class="title is-3">Create new organization</p>
+  <p class="title is-3">Update organization</p>
 </div>
 
 <div class="block">
-  <form [formGroup]="form" (submit)="submit()">
+  <form [formGroup]="form" (submit)="formSubmit()">
 
     <!-- Organization name -->
     <div class="field">
@@ -35,7 +35,7 @@
         class="button is-primary"
         type="submit"
         [disabled]="form.invalid"
-      >Create</button>
+      >Save</button>
       <button class="button" (click)="goBack()">Back</button>
     </div>
   </form>

@@ -1,0 +1,30 @@
+<div class="card app-organization-card">
+  <div class="card-content">
+    <div class="media">
+      <div class="media-content">
+        <p class="is-5">{{organization().organization.name}}</p>
+        <p>{{organization().role.name}}</p>
+      </div>
+      <div class="media-right">
+        @if (organization().active){
+          <div class="dropdown is-right" [class.is-active]="isActive()">
+            <div class="dropdown-trigger">
+              <button class="button" type="button" (click)="toggleDropdown()">
+                <span class="icon">
+                  <i class="bx bx-dots-vertical-rounded"></i>
+                </span>
+              </button>
+            </div>
+            <div class="dropdown-menu">
+              <div class="dropdown-content">
+                <a [routerLink]="['/organizations/update', organization().organization.id]" class="dropdown-item">Edit organization</a>
+              </div>
+            </div>
+          </div>
+        } @else {
+          <button class="button" (click)="onSetActive()">Set active</button>
+        }
+      </div>
+    </div>
+  </div>
+</div>

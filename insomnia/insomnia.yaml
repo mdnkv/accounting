@@ -79,7 +79,7 @@ collection:
         meta:
           id: req_f074e6fc69fb4fb19290de9a2d3955df
           created: 1749035379556
-          modified: 1752759260717
+          modified: 1753106320254
           isPrivate: false
           description: ""
           sortKey: -1748881859977.5
@@ -88,7 +88,7 @@ collection:
           mimeType: application/json
           text: |-
             {
-            	"name":"Lang GmbH & Co. OHG"
+            	"name":"Eberhardt Bischoff GmbH & Co. KG"
             }
         headers:
           - name: Content-Type
@@ -689,7 +689,7 @@ collection:
         meta:
           id: req_cd38ebb861d942d3a14113e1f0ea69a7
           created: 1752506515026
-          modified: 1752661305876
+          modified: 1752957839022
           isPrivate: false
           description: ""
           sortKey: -1751372167571.5
@@ -699,8 +699,8 @@ collection:
           text: |-
             {
             	"organizationId":"{{_.active_organization_id}}",
-            	"name":"EUR - Euro",
-            	"code":"EUR"
+            	"name":"BAM - Marka",
+            	"code":"BAM"
             }
         headers:
           - name: Content-Type
@@ -1216,7 +1216,7 @@ collection:
         meta:
           id: req_e2f63781510d4594af60f1256ead3ebf
           created: 1752659696889
-          modified: 1752661283703
+          modified: 1752958452890
           isPrivate: false
           description: ""
           sortKey: -1752657522066.5
@@ -1240,33 +1240,90 @@ collection:
           rebuildPath: true
         pathParameters:
           - name: activeId
-            value: "1945428468275609600"
+            value: "1946670805333049344"
+      - url: "{{_.server_url}}organization-users/create"
+        name: Create new organization user
+        meta:
+          id: req_fc12c688e16142d49316440ff0d7f4b8
+          created: 1753106455441
+          modified: 1753110031838
+          isPrivate: false
+          description: ""
+          sortKey: -1752654694867.5
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"organizationId":"{{_.active_organization_id}}",
+            	"roleId":"1947301610304569347",
+            	"email":"scholz.ali@link.org"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.3.0
+        authentication:
+          type: oauth2
+          grantType: authorization_code
+          authorizationUrl: "{{_.auth_url}}"
+          accessTokenUrl: "{{ _.access_token_url }}"
+          clientId: "{{_.client_id}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{_.server_url}}organization-users/organization/:organizationId"
+        name: Get users in organization
+        meta:
+          id: req_bd77472464384f958cce21b152903aab
+          created: 1753109870161
+          modified: 1753109885408
+          isPrivate: false
+          description: ""
+          sortKey: -1752658228866.25
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.3.0
+        authentication:
+          type: oauth2
+          grantType: authorization_code
+          authorizationUrl: "{{_.auth_url}}"
+          accessTokenUrl: "{{ _.access_token_url }}"
+          clientId: "{{_.client_id}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: organizationId
+            value: "{{_.active_organization_id}}"
 cookieJar:
   name: Default Jar
   meta:
     id: jar_676597a9d4e9b24c6c7cf8e61c4566cefaacc897
     created: 1749035252073
     modified: 1751716309041
-  cookies:
-    - key: JSESSIONID
-      value: 3EF1F27423008747436001650FDA14C2
-      domain: localhost
-      path: /
-      httpOnly: true
-      hostOnly: true
-      creation: 2025-06-06T09:51:28.220Z
-      lastAccessed: 2025-07-05T11:51:49.041Z
-      id: 8486402c-f987-4ec1-aae2-4c7b1af90548
 environments:
   name: Base Environment
   meta:
     id: env_676597a9d4e9b24c6c7cf8e61c4566cefaacc897
     created: 1749035252072
-    modified: 1752759291878
+    modified: 1753108000353
     isPrivate: false
   data:
     server_url: http://localhost:8000/api/
     access_token_url: http://localhost:8080/realms/accounting/protocol/openid-connect/token
     auth_url: http://localhost:8080/realms/accounting/protocol/openid-connect/auth
     client_id: accounting-rest
-    active_organization_id: "1945839369407430656"
+    active_organization_id: "1947301609771892736"

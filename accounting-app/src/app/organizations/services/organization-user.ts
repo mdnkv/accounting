@@ -23,4 +23,17 @@ export class OrganizationUserService {
     )
   }
 
+  setActiveForUser (id: string): Observable<UserOrganization> {
+    return this.http.post<UserOrganization>(`${this.serverUrl}/organization-users/current/active/${id}`, {}).pipe(
+      map(result => {
+        localStorage.setItem('activeOrganizationId', result.organization.id!)
+        return result
+      })
+    )
+  }
+
+  getAllForUser(): Observable<UserOrganization[]> {
+    return this.http.get<UserOrganization[]>(`${this.serverUrl}/organization-users/current/all`)
+  }
+
 }
