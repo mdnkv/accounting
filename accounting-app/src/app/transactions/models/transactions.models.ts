@@ -12,7 +12,7 @@ export interface TransactionLine {
 export interface Transaction {
   date: Date
   description: string
-  organizationId: string
+  organizationId?: string
   lines: TransactionLine[]
   currencyId: string
   currency?: Currency

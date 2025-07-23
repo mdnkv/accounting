@@ -13,8 +13,7 @@ export class CurrencyService {
   http: HttpClient = inject(HttpClient)
   serverUrl: string = environment.serverUrl
 
-  getCurrencies(): Observable<Currency[]>{
-    const organizationId = localStorage.getItem('activeOrganizationId') as string
+  getCurrencies(organizationId: string): Observable<Currency[]>{
     return this.http.get<Currency[]>(`${this.serverUrl}/currencies/organization/${organizationId}`)
   }
 

@@ -1,6 +1,10 @@
 <div class="dropdown is-right" [class.is-active]="isActive">
   <div class="dropdown-trigger">
-    <button class="button" type="button" (click)="isActive = !isActive">
+    <button
+      class="button"
+      type="button"
+      [class.is-skeleton]="!transactionStore.areTransactionsLoaded()"
+      (click)="isActive = !isActive">
       <span class="icon">
         <i class="bx bx-sort-alt-2"></i>
       </span>
@@ -22,7 +26,19 @@
         </span>
         <span>By date, descending</span>
       </a>
-      <!-- -->
+      <!-- Sort by amount -->
+      <a (click)="selectSortOrder('amount-asc')" class="dropdown-item">
+        <span class="icon">
+          <i class="bx bx-sort-a-z"></i>
+        </span>
+        <span>By amount, ascending</span>
+      </a>
+      <a (click)="selectSortOrder('amount-desc')" class="dropdown-item">
+        <span class="icon">
+          <i class="bx bx-sort-a-z"></i>
+        </span>
+        <span>By amount, descending</span>
+      </a>
     </div>
   </div>
 </div>

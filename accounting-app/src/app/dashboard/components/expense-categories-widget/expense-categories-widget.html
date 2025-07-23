@@ -5,18 +5,18 @@
     <div class="media">
       <div class="media-content">
         <p class="title is-5">Expense categories</p>
-        <p class="subtitle has-text-grey is-6">Last {{days()}} days</p>
+        <p class="subtitle has-text-grey is-6">Last {{dashboardStore.expenseCategoriesDaysCount()}} days</p>
       </div>
       <div class="media-right">
-        <app-widget-range-dropdown (selectRange)="refresh($event)" [loading]="loading()"/>
+        <app-widget-range-dropdown (selectRange)="refresh($event)"/>
       </div>
     </div>
 
-    @if (data.length > 0){
+    @if (dashboardStore.expenseCategories().length > 0){
 
       <div class="columns">
         <div class="column is-full">
-          @for (category of data; track $index){
+          @for (category of dashboardStore.expenseCategories(); track $index){
             <div class="level is-mobile">
               <div class="level-left">
                 <div class="level-item">
@@ -25,7 +25,7 @@
               </div>
               <div class="level-right">
                 <div class="level-item">
-                  <p>{{category.amount|currency:'EUR'}}</p>
+                  <p>{{category.amount|currency:currency()}}</p>
                 </div>
               </div>
             </div>

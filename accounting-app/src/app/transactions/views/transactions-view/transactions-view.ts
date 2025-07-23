@@ -1,11 +1,10 @@
-import {Component, inject, OnInit} from '@angular/core';
-import {HttpErrorResponse} from '@angular/common/http';
+import {Component, effect, inject, OnInit} from '@angular/core';
 import {RouterLink} from '@angular/router';
 
 import {SortTransactionsDropdown} from '../../components/sort-transactions-dropdown/sort-transactions-dropdown';
 import {TransactionsList} from '../../components/transactions-list/transactions-list';
-import {Transaction} from '../../models/transactions.models';
-import {TransactionService} from '../../services/transaction';
+import {TransactionStore} from '../../stores/transactions.store';
+import {OrganizationStore} from '../../../organizations/stores/organizations.store';
 
 @Component({
   selector: 'app-transactions-view',
@@ -19,18 +18,17 @@ import {TransactionService} from '../../services/transaction';
 })
 export class TransactionsView implements OnInit{
 
-  transactions: Transaction[] = []
-  transactionService: TransactionService = inject(TransactionService)
-
-  onSortTransactions(order: string){}
+  readonly organizationStore = inject(OrganizationStore)
+  readonly transactionStore = inject(TransactionStore)
 
   ngOnInit() {
-    this.transactionService.getTransactions().subscribe({
-      next: result => {
-        this.transactions = result
-      },
-      error: (err: HttpErrorResponse)=> {
-        console.log(err)
+    this.organizationStore.getActiveOrganization()
+  }
+
+  constructor() {
+    effect(() => {
+      if (this.organizationStore.isActiveOrganizationLoaded()){
+        this.transactionStore.getTransactions()
       }
     })
   }

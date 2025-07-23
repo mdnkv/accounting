@@ -1,8 +1,11 @@
-<div class="block">
-  <p class="title is-2">Hello again!</p>
-</div>
+@if (organizationStore.activeOrganization() != undefined){
+  <div class="block">
+    <p class="title is-2">Hello!</p>
+    <p class="subtitle is-4 has-text-grey">
+      {{organizationStore.activeOrganization()!.name}}
+    </p>
+  </div>
 
-@if (!loading()){
   <div class="block">
     <div class="columns is-multiline">
       <!-- Profit loss widget-->

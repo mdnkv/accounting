@@ -6,22 +6,26 @@
   <div class="level">
     <div class="level-left">
       <div class="level-item">
-        <a [routerLink]="['/transactions/create']" class="button is-primary">
+        <a
+          [routerLink]="['/transactions/create']"
+          class="button is-primary"
+          [class.is-skeleton]="!transactionStore.areTransactionsLoaded()"
+        >
           <span class="icon">
             <i class="bx bx-plus"></i>
           </span>
-          <span>New entry</span>
+          <span>New</span>
         </a>
       </div>
     </div>
     <div class="level-right">
       <div class="level-item">
-        <app-sort-transactions-dropdown (selectOrder)="onSortTransactions($event)"/>
+        <app-sort-transactions-dropdown/>
       </div>
     </div>
   </div>
 </div>
 
-<div class="block">
-  <app-transactions-list [transactions]="transactions"/>
+<div class="block" [class.skeleton-block]="!transactionStore.areTransactionsLoaded()">
+  <app-transactions-list/>
 </div>

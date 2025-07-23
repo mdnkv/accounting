@@ -1,10 +1,9 @@
-import {Component, inject, OnInit, signal} from '@angular/core';
+import {Component, effect, inject, OnInit, signal} from '@angular/core';
 import {CurrencyPipe} from '@angular/common';
-import {HttpErrorResponse} from '@angular/common/http';
 
-import {ExpenseCategory} from '../../../reports/models/reports.models';
-import {ReportService} from '../../../reports/services/report';
 import {WidgetRangeDropdown} from '../widget-range-dropdown/widget-range-dropdown';
+import {DashboardStore} from '../../stores/dashboard.store';
+import {CurrencyStore} from '../../../currencies/stores/currencies.store';
 
 @Component({
   selector: 'app-expense-categories-widget',
@@ -17,28 +16,25 @@ import {WidgetRangeDropdown} from '../widget-range-dropdown/widget-range-dropdow
 })
 export class ExpenseCategoriesWidget implements OnInit{
 
-  data: ExpenseCategory[] = []
-  loading = signal(true)
-  days = signal(30)
+  readonly currencyStore = inject(CurrencyStore)
+  readonly dashboardStore = inject(DashboardStore)
 
-  reportService: ReportService = inject(ReportService)
+  currency = signal('EUR')
+
+  constructor() {
+    effect(() => {
+      if (this.currencyStore.isPrimaryCurrencyLoaded()){
+        this.currency.set(this.currencyStore.primaryCurrency()!.code)
+      }
+    })
+  }
 
   ngOnInit() {
-    this.refresh(this.days())
+    this.dashboardStore.refreshExpenseCategories(30)
   }
 
   refresh(daysCount: number){
-    this.loading.set(true)
-    this.days.set(daysCount)
-    this.reportService.getExpenseCategories(daysCount).subscribe({
-      next: result => {
-        this.loading.set(false)
-        this.data = result
-      },
-      error: (err: HttpErrorResponse) => {
-        console.log(err)
-      }
-    })
+    this.dashboardStore.refreshExpenseCategories(daysCount)
   }
 
 }

@@ -1,4 +1,5 @@
-import {Component, output, signal} from '@angular/core';
+import {Component, inject, output, signal} from '@angular/core';
+import {AccountStore} from '../../stores/accounts.store';
 
 @Component({
   selector: 'app-accounts-tabs',
@@ -7,14 +8,5 @@ import {Component, output, signal} from '@angular/core';
   styleUrl: './accounts-tabs.css'
 })
 export class AccountsTabs {
-
-  selected = signal<string|null>(null)
-
-  selectType = output<string|null>()
-
-  onSelectType (selection : string | null){
-    this.selected.set(selection)
-    this.selectType.emit(selection)
-  }
-
+  readonly accountStore = inject(AccountStore)
 }

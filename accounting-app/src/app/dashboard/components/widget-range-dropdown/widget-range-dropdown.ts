@@ -9,7 +9,7 @@ import {Component, input, output, signal} from '@angular/core';
 export class WidgetRangeDropdown {
 
   active = signal(false)
-  loading = input.required<boolean>()
+  // loading = input.required<boolean>()
   selectRange = output<number>()
 
   toggleDropdown(){

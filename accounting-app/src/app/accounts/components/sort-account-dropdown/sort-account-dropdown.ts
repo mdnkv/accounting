@@ -1,4 +1,5 @@
-import {Component, output} from '@angular/core';
+import {Component, inject, output} from '@angular/core';
+import {AccountStore} from '../../stores/accounts.store';
 
 @Component({
   selector: 'app-sort-account-dropdown',
@@ -8,13 +9,12 @@ import {Component, output} from '@angular/core';
 })
 export class SortAccountDropdown {
 
-  selectOrder = output<string>()
-
+  readonly accountStore = inject(AccountStore)
   isActive: boolean = false
 
   selectSortOrder (order: string){
-    this.selectOrder.emit(order)
     this.isActive = false
+    this.accountStore.setSortOrder(order)
   }
 
 }

@@ -13,8 +13,8 @@ export class RoleService {
   http: HttpClient = inject(HttpClient)
   serverUrl: string = environment.serverUrl
 
-  getRolesForOrganization(): Observable<Role[]>{
-    const organizationId = localStorage.getItem('activeOrganizationId') as string
+  getRolesForOrganization(organizationId: string): Observable<Role[]>{
+    // const organizationId = localStorage.getItem('activeOrganizationId') as string
     return this.http.get<Role[]>(`${this.serverUrl}/roles/organization/${organizationId}`)
 
   }

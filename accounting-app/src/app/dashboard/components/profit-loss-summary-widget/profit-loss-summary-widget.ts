@@ -1,10 +1,9 @@
-import {Component, inject, OnInit, signal} from '@angular/core';
-import {HttpErrorResponse} from '@angular/common/http';
+import {Component, effect, inject, OnInit, signal} from '@angular/core';
 import {CurrencyPipe} from '@angular/common';
 
-import {ReportService} from '../../../reports/services/report';
-import {ProfitLossSummary} from '../../../reports/models/reports.models';
 import {WidgetRangeDropdown} from '../widget-range-dropdown/widget-range-dropdown';
+import {DashboardStore} from '../../stores/dashboard.store';
+import {CurrencyStore} from '../../../currencies/stores/currencies.store';
 
 @Component({
   selector: 'app-profit-loss-summary-widget',
@@ -14,28 +13,25 @@ import {WidgetRangeDropdown} from '../widget-range-dropdown/widget-range-dropdow
 })
 export class ProfitLossSummaryWidget implements OnInit{
 
-  reportService: ReportService = inject(ReportService)
-  data = signal<ProfitLossSummary|undefined>(undefined)
-  loading = signal(true)
-  days = signal(30)
+  readonly dashboardStore = inject(DashboardStore)
+  readonly currencyStore = inject(CurrencyStore)
+
+  currency = signal('EUR')
 
   ngOnInit() {
-    this.refresh(this.days())
+    this.dashboardStore.refreshProfitLossSummary(30)
+  }
+
+  constructor() {
+    effect(() => {
+      if (this.currencyStore.isPrimaryCurrencyLoaded()){
+        this.currency.set(this.currencyStore.primaryCurrency()!.code)
+      }
+    })
   }
 
   refresh(daysCount: number){
-    this.loading.set(true)
-    this.data.set(undefined)
-    this.days.set(daysCount)
-    this.reportService.getProfitLossSummary(daysCount).subscribe({
-      next: result => {
-        this.data.set(result)
-        this.loading.set(false)
-      },
-      error: (err: HttpErrorResponse) => {
-        console.log(err)
-      }
-    })
+    this.dashboardStore.refreshProfitLossSummary(daysCount)
   }
 
 }

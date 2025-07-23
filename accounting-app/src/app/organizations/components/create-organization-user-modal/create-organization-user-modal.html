@@ -24,13 +24,13 @@
       </div>
 
       <!-- Role -->
-      <fieldset>
+      <fieldset [disabled]="!roleStore.areRolesLoaded()">
         <div class="field">
           <label class="label">Role</label>
           <div class="control">
             <div class="select is-fullwidth">
               <select formControlName="roleId">
-                @for (role of roles; track role.id!){
+                @for (role of roleStore.roles(); track role.id!){
                   <option [value]="role.id!">{{role.name}}</option>
                 }
               </select>

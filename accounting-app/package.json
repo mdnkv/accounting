@@ -16,6 +16,7 @@
     "@angular/forms": "^20.0.0",
     "@angular/platform-browser": "^20.0.0",
     "@angular/router": "^20.0.0",
+    "@ngrx/signals": "^20.0.0-rc.0",
     "boxicons": "^2.1.4",
     "bulma": "^1.0.4",
     "keycloak-angular": "^20.0.0",

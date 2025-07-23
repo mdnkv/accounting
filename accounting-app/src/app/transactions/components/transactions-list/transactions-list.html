@@ -1,4 +1,4 @@
-@if (transactions().length > 0){
+@if (transactionStore.transactions().length > 0){
   <div class="table-container">
     <table class="table is-fullwidth is-bordered is-striped">
       <thead>
@@ -9,20 +9,9 @@
         <th>Credit</th>
       </tr>
       </thead>
-      <tfoot>
-      <tr>
-        <th></th>
-        <th></th>
-        <th
-          [class.has-text-danger]="!balanced"
-          [class.has-text-success]="balanced">{{totalDebit|currency:'EUR'}}</th>
-        <th
-          [class.has-text-danger]="!balanced"
-          [class.has-text-success]="balanced">{{totalCredit|currency:'EUR'}}</th>
-      </tr>
-      </tfoot>
+
       <tbody>
-      @for (transaction of transactions(); track transaction.id!){
+      @for (transaction of transactionStore.transactions(); track transaction.id!){
         <tr>
           <td>{{transaction.date}}</td>
           <td class="has-text-weight-semibold">{{transaction.description}}</td>

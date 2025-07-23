@@ -27,13 +27,13 @@
           </div>
 
           <!-- Currency -->
-          <fieldset [disabled]="currencies.length == 0">
+          <fieldset [disabled]="currencyStore.currencies().length == 0">
             <div class="field">
               <label class="label">Currency</label>
               <div class="control">
                 <div class="select is-fullwidth">
                   <select formControlName="currencyId">
-                    @for (currency of currencies; track currency.id!){
+                    @for (currency of currencyStore.currencies(); track currency.id!){
                       <option [value]="currency.id!">{{currency.name}}</option>
                     }
                   </select>
@@ -59,7 +59,7 @@
                 formControlName="description"
                 class="textarea"></textarea>
             </div>
-            @if (form.get('date')?.touched && form.get('date')?.invalid ){
+            @if (form.get('description')?.touched && form.get('description')?.invalid ){
               <p class="help is-danger">This field cannot be empty</p>
             }
           </div>
@@ -74,7 +74,7 @@
     <!-- Transactions lines -->
     <div class="block">
       @for (line of transactionsLines; track $index){
-        <app-transaction-line-item [currency]="primaryCurrencyCode" [item]="line" (deleteTransactionLine)="onDeleteLine($index)"/>
+        <app-transaction-line-item [currency]="displayedCurrency()" [item]="line" (deleteTransactionLine)="onDeleteLine($index)"/>
       }
     </div>
     <div class="block">
@@ -89,13 +89,13 @@
         <div class="level-item">
           <div class="has-text-centered">
             <p>Debit amount</p>
-            <p class="is-size-4">{{totalDebitAmount|currency:primaryCurrencyCode}}</p>
+            <p class="is-size-4">{{totalDebitAmount|currency:displayedCurrency()}}</p>
           </div>
         </div>
         <div class="level-item has-text-centered">
           <div class="has-text-centered">
             <p>Credit amount</p>
-            <p class="is-size-4">{{totalCreditAmount|currency:primaryCurrencyCode}}</p>
+            <p class="is-size-4">{{totalCreditAmount|currency:displayedCurrency()}}</p>
           </div>
         </div>
         <div class="level-item">
@@ -104,7 +104,7 @@
             <p
               [class.has-text-success]="balanced"
               [class.has-text-danger]="!balanced"
-              class="is-size-4">{{balance|currency:primaryCurrencyCode}}</p>
+              class="is-size-4">{{balance|currency:displayedCurrency()}}</p>
           </div>
         </div>
       </div>
@@ -114,7 +114,6 @@
     <div class="block">
       <div class="buttons">
         <button
-          [class.is-loading]="loading()"
           [disabled]="form.invalid || transactionsLines.length == 0 || !balanced"
           class="button is-primary"
           type="submit">Create</button>

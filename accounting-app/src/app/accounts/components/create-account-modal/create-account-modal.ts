@@ -21,13 +21,11 @@ export class CreateAccountModal {
   })
 
   submit(){
-    const organizationId = localStorage.getItem('activeOrganizationId') as string
     const payload: Account = {
       name: this.form.get('name')?.value,
       code: this.form.get('code')?.value,
       accountType: this.accountType(),
-      deprecated: false,
-      organizationId
+      deprecated: false
     }
     this.createAccount.emit(payload)
     this.showModal.set(false)

@@ -1,4 +1,5 @@
-import {Component, output} from '@angular/core';
+import {Component, inject, output} from '@angular/core';
+import {TransactionStore} from '../../stores/transactions.store';
 
 @Component({
   selector: 'app-sort-transactions-dropdown',
@@ -8,13 +9,13 @@ import {Component, output} from '@angular/core';
 })
 export class SortTransactionsDropdown {
 
-  selectOrder = output<string>()
+  readonly transactionStore = inject(TransactionStore)
 
   isActive: boolean = false
 
   selectSortOrder (order: string){
-    this.selectOrder.emit(order)
     this.isActive = false
+    this.transactionStore.setSortOrder(order)
   }
 
 }
