@@ -1,6 +1,6 @@
-import {Component, effect, input} from '@angular/core';
+import {Component, effect, inject, input} from '@angular/core';
 import {CurrencyPipe} from '@angular/common';
-import {Transaction} from '../../models/transactions.models';
+import {TransactionStore} from '../../stores/transactions.store';
 
 @Component({
   selector: 'app-transactions-list',
@@ -10,19 +10,6 @@ import {Transaction} from '../../models/transactions.models';
 })
 export class TransactionsList {
 
-  transactions = input.required<Transaction[]>()
-  totalCredit: number = 0
-  totalDebit: number = 0
-  balanced: boolean = true
-
-  constructor() {
-    effect(() => {
-      this.transactions().forEach(tr => {
-        this.totalCredit = this.totalCredit += tr.totalCreditAmount!
-        this.totalDebit = this.totalDebit += tr.totalDebitAmount!
-        this.balanced = this.totalCredit == this.totalDebit
-      })
-    });
-  }
+  readonly transactionStore = inject(TransactionStore)
 
 }

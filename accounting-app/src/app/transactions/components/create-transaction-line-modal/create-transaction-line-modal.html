@@ -12,7 +12,7 @@
         <div class="control">
           <div class="select is-fullwidth">
             <select formControlName="accountId">
-              @for(account of accounts; track account.id!){
+              @for(account of accountStore.displayedAccounts(); track account.id!){
                 <option [value]="account.id!">{{account.code}} - {{account.name}}</option>
               }
             </select>

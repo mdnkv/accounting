@@ -11,16 +11,16 @@
     </div>
     <div class="level-right">
       <div class="level-item">
-        <app-sort-account-dropdown (selectOrder)="onSortAccounts($event)"/>
+        <app-sort-account-dropdown/>
       </div>
     </div>
   </div>
 </div>
 
 <div class="block">
-  <app-accounts-tabs (selectType)="selectAccountType($event)"/>
+  <app-accounts-tabs/>
 </div>
 
 <div class="block">
-  <app-accounts-list [accounts]="shownAccounts" (deleteAccount)="onDeleteAccount($event)"/>
+  <app-accounts-list/>
 </div>

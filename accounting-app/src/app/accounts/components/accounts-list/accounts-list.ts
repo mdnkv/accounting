@@ -1,6 +1,6 @@
-import {Component, input, output} from '@angular/core';
-import {Account} from '../../models/accounts.models';
+import {Component, inject, input, output} from '@angular/core';
 import {RouterLink} from '@angular/router';
+import {AccountStore} from '../../stores/accounts.store';
 
 @Component({
   selector: 'app-accounts-list',
@@ -10,13 +10,12 @@ import {RouterLink} from '@angular/router';
 })
 export class AccountsList {
 
-  accounts = input.required<Account[]>()
-  deleteAccount = output<string>()
+  readonly accountStore = inject(AccountStore)
 
   onDelete(id: string){
-    if (confirm('Do you want to remove this account? This cannot be undone')){
-      this.deleteAccount.emit(id)
-    }
+    // if (confirm('Do you want to remove this account? This cannot be undone')){
+    //   this.deleteAccount.emit(id)
+    // }
   }
 
 }

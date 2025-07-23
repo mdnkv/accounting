@@ -4,5 +4,5 @@ export interface Account {
   code: string
   deprecated: boolean
   accountType: string
-  organizationId: string
+  organizationId?: string
 }

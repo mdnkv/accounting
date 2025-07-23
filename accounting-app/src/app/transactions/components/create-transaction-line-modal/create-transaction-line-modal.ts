@@ -1,9 +1,8 @@
-import {Component, inject, OnInit, output, signal} from '@angular/core';
+import {Component, inject, output, signal} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 
 import {TransactionLine} from '../../models/transactions.models';
-import {AccountService} from '../../../accounts/services/account';
-import {Account} from '../../../accounts/models/accounts.models';
+import {AccountStore} from '../../../accounts/stores/accounts.store';
 
 @Component({
   selector: 'app-create-transaction-line-modal',
@@ -11,14 +10,14 @@ import {Account} from '../../../accounts/models/accounts.models';
   templateUrl: './create-transaction-line-modal.html',
   styleUrl: './create-transaction-line-modal.css'
 })
-export class CreateTransactionLineModal implements OnInit{
+export class CreateTransactionLineModal{
 
+  readonly accountStore = inject(AccountStore)
   createTransactionLine = output<TransactionLine>()
   error = signal<boolean>(false)
   isActive = signal<boolean>(false)
 
   formBuilder: FormBuilder = inject(FormBuilder)
-  accountService: AccountService = inject(AccountService)
 
   form: FormGroup = this.formBuilder.group({
     accountId: [null, [Validators.required]],
@@ -26,21 +25,8 @@ export class CreateTransactionLineModal implements OnInit{
     creditAmount: [0.0, [Validators.required, Validators.min(0.0)]]
   })
 
-  accounts: Account[] = []
-
-  ngOnInit() {
-    this.accountService.getAccounts().subscribe({
-      next: result => {
-        this.accounts = result
-      },
-      error: (err) => {
-        console.log(err)
-      }
-    })
-  }
-
   submit(){
-    const account = this.accounts.filter(a => a.id! == this.form.get('accountId')?.value)[0]
+    const account = this.accountStore.displayedAccounts().filter(a => a.id! == this.form.get('accountId')?.value)[0]
     const payload: TransactionLine = {
       debitAmount: this.form.get('debitAmount')?.value,
       creditAmount: this.form.get('creditAmount')?.value,
@@ -51,6 +37,8 @@ export class CreateTransactionLineModal implements OnInit{
     this.createTransactionLine.emit(payload)
     this.isActive.set(false)
     this.form.reset()
+    this.form.get('creditAmount')?.setValue(0.0)
+    this.form.get('debitAmount')?.setValue(0.0)
   }
 
   openModal(){

@@ -3,7 +3,7 @@
 </div>
 
 <div class="block">
-  <a class="button is-primary" [routerLink]="['/organizations/create']">
+  <a class="button is-primary" [routerLink]="['/organizations/create']" [class.is-skeleton]="!store.areUserOrganizationsLoaded()">
     <span class="icon">
       <i class="bx bx-plus"></i>
     </span>
@@ -11,9 +11,9 @@
   </a>
 </div>
 
-<div class="block">
-  @if (organizations.length > 0){
-    @for (organization of organizations; track organization.id){
+<div class="block" [class.skeleton-block]="!store.areUserOrganizationsLoaded()">
+  @if (store.organizations().length > 0){
+    @for (organization of store.organizations(); track organization.id){
       <app-organization-card
         [organization]="organization"
         (setActive)="onSetActiveOrganization($event)"

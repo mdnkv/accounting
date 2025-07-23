@@ -1,11 +1,11 @@
-import {Component, inject, OnInit, signal} from '@angular/core';
+import {Component, effect, inject, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
-import {HttpErrorResponse} from '@angular/common/http';
 
 import {ProfitLossSummaryWidget} from '../../components/profit-loss-summary-widget/profit-loss-summary-widget';
 import {NetWorthSummaryWidget} from '../../components/net-worth-summary-widget/net-worth-summary-widget';
 import {ExpenseCategoriesWidget} from '../../components/expense-categories-widget/expense-categories-widget';
-import {OrganizationUserService} from '../../../organizations/services/organization-user';
+import {OrganizationStore} from '../../../organizations/stores/organizations.store';
+import {CurrencyStore} from '../../../currencies/stores/currencies.store';
 
 @Component({
   selector: 'app-dashboard-view',
@@ -19,24 +19,23 @@ import {OrganizationUserService} from '../../../organizations/services/organizat
 })
 export class DashboardView implements OnInit{
 
-  loading = signal(true)
+  readonly organizationStore = inject(OrganizationStore)
+  readonly currencyStore = inject(CurrencyStore)
   router: Router = inject(Router)
-  organizationUserService: OrganizationUserService = inject(OrganizationUserService)
 
-  ngOnInit() {
-    this.organizationUserService.getActiveForUser().subscribe({
-      next: result => {
-        console.log(result)
-        this.loading.set(false)
-      },
-      error: (err: HttpErrorResponse)=> {
-        console.log(err)
-        if (err.status == 404){
-          // redirect to roles list view
+  constructor() {
+    effect(() => {
+      if (this.organizationStore.isActiveOrganizationLoaded()){
+        if (this.organizationStore.activeOrganization() == undefined) {
           this.router.navigateByUrl('/organizations/create')
         }
+        console.log(this.organizationStore.activeOrganization())
       }
     })
   }
 
+  ngOnInit() {
+    this.organizationStore.getActiveOrganization()
+    this.currencyStore.getCurrencies()
+  }
 }

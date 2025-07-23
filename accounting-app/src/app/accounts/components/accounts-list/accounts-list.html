@@ -1,4 +1,4 @@
-@if (accounts().length > 0){
+@if (accountStore.displayedAccounts().length > 0){
   <div class="table-container">
     <table class="table is-fullwidth is-bordered is-striped">
       <thead>
@@ -10,7 +10,7 @@
         </tr>
       </thead>
       <tbody>
-      @for (account of accounts(); track account.id!){
+      @for (account of accountStore.displayedAccounts(); track account.id!){
         <tr>
           <td>{{account.code}}</td>
           <td>{{account.name}}</td>

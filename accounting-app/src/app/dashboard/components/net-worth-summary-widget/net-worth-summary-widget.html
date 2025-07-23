@@ -5,34 +5,33 @@
     <div class="media">
       <div class="media-content">
         <p class="title is-5">Net worth summary</p>
-        <p class="subtitle has-text-grey is-6">Last {{days()}} days</p>
+        <p class="subtitle has-text-grey is-6">Last {{dashboardStore.netWorthDaysCount()}} days</p>
       </div>
       <div class="media-right">
-        <app-widget-range-dropdown (selectRange)="refresh($event)" [loading]="loading()"/>
+        <app-widget-range-dropdown (selectRange)="refresh($event)"/>
       </div>
     </div>
 
-    @if (data() != undefined){
-      <div class="level">
-        <div class="level-item">
-          <div class="has-text-centered">
-            <p class="is-size-5 has-text-weight-semibold">{{data()!.totalAssets|currency:'EUR'}}</p>
-            <p>Total assets</p>
-          </div>
-        </div>
-        <div class="level-item">
-          <div class="has-text-centered">
-            <p class="is-size-5 has-text-weight-semibold">{{data()!.totalLiabilities|currency:'EUR'}}</p>
-            <p>Total liabilities</p>
-          </div>
-        </div>
-        <div class="level-item">
-          <div class="has-text-centered">
-            <p class="is-size-5 has-text-weight-bold">{{data()!.netWorth|currency:'EUR'}}</p>
-            <p>Net worth</p>
-          </div>
+    <div class="level">
+      <div class="level-item">
+        <div class="has-text-centered">
+          <p class="is-size-5 has-text-weight-semibold">{{dashboardStore.netWorthSummary()!.totalAssets|currency:currency()}}</p>
+          <p>Total assets</p>
         </div>
       </div>
-    }
+      <div class="level-item">
+        <div class="has-text-centered">
+          <p class="is-size-5 has-text-weight-semibold">{{dashboardStore.netWorthSummary()!.totalLiabilities|currency:currency()}}</p>
+          <p>Total liabilities</p>
+        </div>
+      </div>
+      <div class="level-item">
+        <div class="has-text-centered">
+          <p class="is-size-5 has-text-weight-bold">{{dashboardStore.netWorthSummary()!.netWorth|currency:currency()}}</p>
+          <p>Net worth</p>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>

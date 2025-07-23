@@ -1,10 +1,8 @@
-import {Component, inject, OnInit} from '@angular/core';
-import {HttpErrorResponse} from '@angular/common/http';
+import {Component, effect, inject, OnInit} from '@angular/core';
 import {RouterLink} from '@angular/router';
 
-import {OrganizationUserService} from '../../services/organization-user';
-import {UserOrganization} from '../../models/organizations.models';
 import {OrganizationCard} from '../../components/organization-card/organization-card';
+import {OrganizationStore} from '../../stores/organizations.store';
 
 @Component({
   selector: 'app-organizations-view',
@@ -17,39 +15,14 @@ import {OrganizationCard} from '../../components/organization-card/organization-
 })
 export class OrganizationsView implements OnInit{
 
-  organizations: UserOrganization[] = []
-
-  organizationUserService: OrganizationUserService = inject(OrganizationUserService)
+  readonly store = inject(OrganizationStore)
 
   ngOnInit() {
-    this.organizationUserService.getAllForUser().subscribe({
-      next: result => {
-        console.log(result)
-        this.organizations = result
-      },
-      error: (err: HttpErrorResponse) => {
-        console.log(err)
-      }
-    })
+    this.store.getOrganizationsForUser()
   }
 
   onSetActiveOrganization(id: string){
-    this.organizationUserService.setActiveForUser(id).subscribe({
-      next: result => {
-        console.log(result)
-        this.organizations = this.organizations.map(organization => {
-          if (organization.id == id){
-            organization.active = true
-          } else {
-            organization.active = false
-          }
-          return organization
-        })
-      },
-      error: (err: HttpErrorResponse) => {
-        console.log(err)
-      }
-    })
+    this.store.setActiveOrganization(id)
   }
 
 }

@@ -1,16 +1,16 @@
-import {Component, inject, OnInit, signal} from '@angular/core';
+import {Component, effect, inject, OnInit, signal} from '@angular/core';
 import {CurrencyPipe} from '@angular/common';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {HttpErrorResponse} from '@angular/common/http';
 import {Router} from '@angular/router';
 
 import {Transaction, TransactionLine} from '../../models/transactions.models';
 import {CreateTransactionLineModal} from '../../components/create-transaction-line-modal/create-transaction-line-modal';
 import {TransactionLineItem} from '../../components/transaction-line-item/transaction-line-item';
 
-import {TransactionService} from '../../services/transaction';
-import {CurrencyService} from '../../../currencies/services/currency';
-import {Currency} from '../../../currencies/models/currencies.models';
+import {CurrencyStore} from '../../../currencies/stores/currencies.store';
+import {TransactionStore} from '../../stores/transactions.store';
+import {OrganizationStore} from '../../../organizations/stores/organizations.store';
+import {AccountStore} from '../../../accounts/stores/accounts.store';
 
 @Component({
   selector: 'app-create-transaction-view',
@@ -25,9 +25,12 @@ import {Currency} from '../../../currencies/models/currencies.models';
 })
 export class CreateTransactionView implements OnInit{
 
+  readonly accountStore = inject(AccountStore)
+  readonly organizationStore = inject(OrganizationStore)
+  readonly currencyStore = inject(CurrencyStore)
+  readonly transactionStore = inject(TransactionStore)
+
   formBuilder: FormBuilder = inject(FormBuilder)
-  transactionService: TransactionService = inject(TransactionService)
-  currencyService: CurrencyService = inject(CurrencyService)
   router: Router = inject(Router)
 
   form: FormGroup = this.formBuilder.group({
@@ -36,26 +39,37 @@ export class CreateTransactionView implements OnInit{
     currencyId: [null, [Validators.required]]
   })
 
-  loading = signal(false)
   transactionsLines: TransactionLine[] = []
-  currencies: Currency[] = []
-  primaryCurrencyCode: string = 'EUR'
   totalCreditAmount: number = 0
   totalDebitAmount: number = 0
   balance: number = 0
   balanced: boolean = true
+  displayedCurrency = signal<string>('EUR')
 
-  ngOnInit() {
-    this.currencyService.getCurrencies().subscribe({
-      next: result => {
-        this.currencies = result
-        if (this.currencies.length > 0){
-          const primaryCurrency = this.currencies.filter(e=>e.primary)[0]
-          this.primaryCurrencyCode = primaryCurrency.code
-          this.form.get('currencyId')?.setValue(primaryCurrency.id!)
-        }
+  constructor() {
+    effect(() => {
+      if (this.organizationStore.isActiveOrganizationLoaded()){
+        this.currencyStore.getCurrencies()
+        this.accountStore.getAccounts()
       }
     })
+    effect(() => {
+      if (this.currencyStore.primaryCurrency() != undefined){
+        const currencyId = this.currencyStore.primaryCurrency()!.id!
+        this.form.get('currencyId')?.setValue(currencyId)
+        this.displayedCurrency.set(this.currencyStore.primaryCurrency()!.code)
+      }
+    })
+
+    this.form.get('currencyId')?.valueChanges.subscribe((value) => {
+      const currency = this.currencyStore.currencies().filter(e => e.id == value)[0]
+      this.displayedCurrency.set(currency.code)
+    })
+
+  }
+
+  ngOnInit() {
+    this.organizationStore.getActiveOrganization()
   }
 
   onCreateLine (payload: TransactionLine) {
@@ -66,31 +80,19 @@ export class CreateTransactionView implements OnInit{
     this.balance = Math.abs( this.totalCreditAmount - this.totalDebitAmount)
   }
 
-  onDeleteLine (index: number){}
+  onDeleteLine (index: number){
+
+  }
 
   submit(){
-    this.loading.set(true)
-    const organizationId = localStorage.getItem('activeOrganizationId') as string
     const payload: Transaction = {
-      organizationId: organizationId,
       lines: this.transactionsLines,
       date: this.form.get('date')?.value,
       description: this.form.get('description')?.value,
       currencyId: this.form.get('currencyId')?.value
     }
 
-    this.transactionService.createTransaction(payload).subscribe({
-      next: result => {
-        console.log(result)
-        this.loading.set(false)
-        this.router.navigateByUrl('/transactions')
-      },
-      error: (err: HttpErrorResponse) => {
-        console.log(err)
-        this.loading.set(false)
-      }
-    })
-
+    this.transactionStore.createTransaction(payload)
   }
 
   onCancel() {

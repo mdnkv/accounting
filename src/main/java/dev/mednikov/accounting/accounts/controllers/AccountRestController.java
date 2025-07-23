@@ -44,7 +44,7 @@ public class AccountRestController {
     @PreAuthorize("hasAuthority('accounts:view') and hasAuthority(#organizationId)")
     public @ResponseBody List<AccountDto> getAccounts(
             @PathVariable Long organizationId,
-            @RequestParam(defaultValue = "false", required = false) boolean includeDeprecated
+            @RequestParam(defaultValue = "true", required = false) boolean includeDeprecated
     ) {
         return this.accountService.getAccounts(organizationId, includeDeprecated);
     }

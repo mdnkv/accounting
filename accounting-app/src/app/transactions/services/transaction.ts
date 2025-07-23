@@ -13,8 +13,8 @@ export class TransactionService {
   http: HttpClient = inject(HttpClient)
   serverUrl: string = environment.serverUrl
 
-  getTransactions(): Observable<Transaction[]> {
-    const organizationId = localStorage.getItem('activeOrganizationId') as string
+  getTransactions(organizationId: string): Observable<Transaction[]> {
+    // const organizationId = localStorage.getItem('activeOrganizationId') as string
     return this.http.get<Transaction[]>(`${this.serverUrl}/transactions/organization/${organizationId}`)
   }
 

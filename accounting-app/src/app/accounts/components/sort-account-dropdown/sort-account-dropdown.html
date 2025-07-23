@@ -1,6 +1,11 @@
 <div class="dropdown is-right" [class.is-active]="isActive">
   <div class="dropdown-trigger">
-    <button class="button" type="button" (click)="isActive = !isActive">
+    <button
+      class="button"
+      type="button"
+      [class.is-skeleton]="!accountStore.areAccountsLoaded()"
+      (click)="isActive = !isActive"
+    >
       <span class="icon">
         <i class="bx bx-sort-alt-2"></i>
       </span>
