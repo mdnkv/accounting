@@ -30,6 +30,12 @@ public class TransactionLine {
     @Column(nullable = false, name = "debit_amount")
     private BigDecimal debitAmount;
 
+    @Column(nullable = false, name = "original_credit_amount")
+    private BigDecimal originalCreditAmount;
+
+    @Column(nullable = false, name = "original_debit_amount")
+    private BigDecimal originalDebitAmount;
+
     @Override
     public final boolean equals(Object o) {
         if (!(o instanceof TransactionLine that)) return false;
@@ -87,5 +93,21 @@ public class TransactionLine {
 
     public void setDebitAmount(BigDecimal debitAmount) {
         this.debitAmount = debitAmount;
+    }
+
+    public BigDecimal getOriginalCreditAmount() {
+        return originalCreditAmount;
+    }
+
+    public void setOriginalCreditAmount(BigDecimal originalCreditAmount) {
+        this.originalCreditAmount = originalCreditAmount;
+    }
+
+    public BigDecimal getOriginalDebitAmount() {
+        return originalDebitAmount;
+    }
+
+    public void setOriginalDebitAmount(BigDecimal originalDebitAmount) {
+        this.originalDebitAmount = originalDebitAmount;
     }
 }

@@ -7,7 +7,6 @@ public record BalanceSheetDto(
         String organizationName,
         List<BalanceSheetLineDto> items,
         BigDecimal totalCreditAmount,
-        BigDecimal totalDebitAmount,
-        boolean balanced
+        BigDecimal totalDebitAmount
 ) {
 }

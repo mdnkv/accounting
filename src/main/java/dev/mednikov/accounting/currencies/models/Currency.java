@@ -24,6 +24,9 @@ public class Currency {
     @Column(nullable = false, name = "is_primary")
     private boolean primary;
 
+    @Column(nullable = false, name = "is_deprecated")
+    private boolean deprecated;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "organization_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -34,15 +37,13 @@ public class Currency {
         if (!(o instanceof Currency currency)) return false;
 
         return name.equals(currency.name)
-                && code.equals(currency.code)
-                && organization.equals(currency.organization);
+                && code.equals(currency.code);
     }
 
     @Override
     public int hashCode() {
         int result = name.hashCode();
         result = 31 * result + code.hashCode();
-        result = 31 * result + organization.hashCode();
         return result;
     }
 
@@ -84,5 +85,13 @@ public class Currency {
 
     public void setPrimary(boolean primary) {
         this.primary = primary;
+    }
+
+    public boolean isDeprecated() {
+        return deprecated;
+    }
+
+    public void setDeprecated(boolean deprecated) {
+        this.deprecated = deprecated;
     }
 }

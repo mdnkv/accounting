@@ -46,4 +46,11 @@ public class CurrencyRestController {
         return ResponseEntity.of(result);
     }
 
+    @DeleteMapping("/delete/{currencyId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAuthority('currencies:delete')")
+    public void deleteCurrency(@PathVariable Long currencyId){
+        this.currencyService.deleteCurrency(currencyId);
+    }
+
 }

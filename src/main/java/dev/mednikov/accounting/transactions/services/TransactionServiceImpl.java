@@ -5,6 +5,9 @@ import dev.mednikov.accounting.accounts.exceptions.AccountNotFoundException;
 import dev.mednikov.accounting.accounts.exceptions.DeprecatedAccountException;
 import dev.mednikov.accounting.accounts.models.Account;
 import dev.mednikov.accounting.accounts.repositories.AccountRepository;
+import dev.mednikov.accounting.currencies.events.CurrencyExchangeEvent;
+import dev.mednikov.accounting.currencies.exceptions.CurrencyNotFoundException;
+import dev.mednikov.accounting.currencies.exceptions.DeprecatedCurrencyException;
 import dev.mednikov.accounting.currencies.models.Currency;
 import dev.mednikov.accounting.currencies.repositories.CurrencyRepository;
 import dev.mednikov.accounting.organizations.models.Organization;
@@ -18,6 +21,7 @@ import dev.mednikov.accounting.transactions.models.Transaction;
 import dev.mednikov.accounting.transactions.models.TransactionLine;
 import dev.mednikov.accounting.transactions.repositories.TransactionLineRepository;
 import dev.mednikov.accounting.transactions.repositories.TransactionRepository;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -36,17 +40,20 @@ public class TransactionServiceImpl implements TransactionService {
     private final TransactionRepository transactionRepository;
     private final TransactionLineRepository transactionLineRepository;
     private final AccountRepository accountRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     public TransactionServiceImpl(OrganizationRepository organizationRepository,
                                   TransactionRepository transactionRepository,
                                   TransactionLineRepository transactionLineRepository,
                                   CurrencyRepository currencyRepository,
-                                  AccountRepository accountRepository) {
+                                  AccountRepository accountRepository,
+                                  ApplicationEventPublisher eventPublisher) {
         this.organizationRepository = organizationRepository;
         this.transactionRepository = transactionRepository;
         this.transactionLineRepository = transactionLineRepository;
         this.accountRepository = accountRepository;
         this.currencyRepository = currencyRepository;
+        this.eventPublisher = eventPublisher;
     }
 
     @Override
@@ -68,15 +75,35 @@ public class TransactionServiceImpl implements TransactionService {
         Organization organization = this.organizationRepository.getReferenceById(organizationId);
         // Get currency
         Long currencyId = Long.valueOf(payload.getCurrencyId());
-        Currency currency = this.currencyRepository.getReferenceById(currencyId);
+        Currency targetCurrency = this.currencyRepository.findById(currencyId).orElseThrow(CurrencyNotFoundException::new);
+        if (targetCurrency.isDeprecated()){
+            throw new DeprecatedCurrencyException();
+        }
+
+        Currency baseCurrency = this.currencyRepository.findPrimaryCurrency(organizationId).orElseThrow(CurrencyNotFoundException::new);
         // Create transaction
         Transaction transaction = new Transaction();
         transaction.setId(snowflakeGenerator.next());
         transaction.setOrganization(organization);
         transaction.setDescription(payload.getDescription());
         transaction.setDate(payload.getDate());
-        transaction.setCurrency(currency);
+        transaction.setBaseCurrency(baseCurrency);
+        transaction.setTargetCurrency(targetCurrency);
         transaction.setDraft(true);
+
+        // Primary currency amount
+        if (baseCurrency.equals(targetCurrency)){
+            transaction.setTotalCreditAmount(creditAmount);
+            transaction.setTotalDebitAmount(debitAmount);
+        } else {
+            transaction.setTotalCreditAmount(BigDecimal.ZERO);
+            transaction.setTotalDebitAmount(BigDecimal.ZERO);
+        }
+
+        // Target currency amount
+        transaction.setOriginalTotalCreditAmount(creditAmount);
+        transaction.setOriginalTotalDebitAmount(debitAmount);
+
         // Persist transaction to the datasource
         Transaction transactionResult = this.transactionRepository.save(transaction);
         // Process transaction lines
@@ -91,8 +118,20 @@ public class TransactionServiceImpl implements TransactionService {
             TransactionLine line = new TransactionLine();
             line.setAccount(account);
             line.setTransaction(transaction);
-            line.setCreditAmount(lineDto.getCreditAmount());
-            line.setDebitAmount(lineDto.getDebitAmount());
+            BigDecimal lineCreditAmount = lineDto.getCreditAmount();
+            BigDecimal lineDebitAmount = lineDto.getDebitAmount();
+
+            // Primary currency amount
+            if (baseCurrency.equals(targetCurrency)){
+                line.setCreditAmount(lineCreditAmount);
+                line.setDebitAmount(lineDebitAmount);
+            } else {
+                line.setCreditAmount(BigDecimal.ZERO);
+                line.setDebitAmount(BigDecimal.ZERO);
+            }
+            // Target currency amount
+            line.setOriginalCreditAmount(lineCreditAmount);
+            line.setOriginalDebitAmount(lineDebitAmount);
             line.setId(snowflakeGenerator.next());
             // Add to list
             lines.add(line);
@@ -100,9 +139,16 @@ public class TransactionServiceImpl implements TransactionService {
         // Attach lines to the transaction entity
         List<TransactionLine> linesResult = this.transactionLineRepository.saveAll(lines);
         transactionResult.setLines(linesResult);
-        transactionResult.setDraft(false);
+        transactionResult.setDraft(!baseCurrency.equals(targetCurrency));
+
         // Save transaction with lines
         Transaction result = this.transactionRepository.save(transactionResult);
+
+        if (!baseCurrency.getId().equals(targetCurrency.getId())) {
+            CurrencyExchangeEvent currencyExchangeEvent = new CurrencyExchangeEvent(this, result);
+            this.eventPublisher.publishEvent(currencyExchangeEvent);
+        }
+
         return transactionDtoMapper.apply(result);
     }
 

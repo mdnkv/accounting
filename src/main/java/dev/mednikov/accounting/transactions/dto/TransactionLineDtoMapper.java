@@ -16,8 +16,8 @@ public final class TransactionLineDtoMapper implements Function<TransactionLine,
         TransactionLineDto result = new TransactionLineDto();
         result.setId(transactionLine.getId().toString());
         result.setAccountId(accountDto.getId());
-        result.setCreditAmount(transactionLine.getCreditAmount());
-        result.setDebitAmount(transactionLine.getDebitAmount());
+        result.setCreditAmount(transactionLine.getOriginalCreditAmount());
+        result.setDebitAmount(transactionLine.getOriginalDebitAmount());
         result.setAccount(accountDto);
         return result;
     }

@@ -4,10 +4,12 @@ import cn.hutool.core.lang.generator.SnowflakeGenerator;
 import dev.mednikov.accounting.currencies.dto.CurrencyDto;
 import dev.mednikov.accounting.currencies.exceptions.CurrencyAlreadyExistsException;
 import dev.mednikov.accounting.currencies.exceptions.CurrencyNotFoundException;
+import dev.mednikov.accounting.currencies.exceptions.CurrencyDeletionException;
 import dev.mednikov.accounting.currencies.models.Currency;
 import dev.mednikov.accounting.currencies.repositories.CurrencyRepository;
 import dev.mednikov.accounting.organizations.models.Organization;
 import dev.mednikov.accounting.organizations.repositories.OrganizationRepository;
+import dev.mednikov.accounting.transactions.repositories.TransactionRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,6 +28,7 @@ class CurrencyServiceImplTest {
 
     @Mock private OrganizationRepository organizationRepository;
     @Mock private CurrencyRepository currencyRepository;
+    @Mock private TransactionRepository transactionRepository;
 
     @InjectMocks private CurrencyServiceImpl currencyService;
 
@@ -188,6 +191,47 @@ class CurrencyServiceImplTest {
         Mockito.when(currencyRepository.save(Mockito.any())).thenReturn(currency);
         CurrencyDto result = currencyService.updateCurrency(payload);
         Assertions.assertThat(result).isNotNull();
+    }
+
+    @Test
+    void deleteCurrency_primaryCurrencyTest(){
+        Long organizationId = snowflakeGenerator.next();
+        Long currencyId = snowflakeGenerator.next();
+
+        Organization organization = new Organization();
+        organization.setId(organizationId);
+        organization.setName("Heß Wagner Stiftung & Co. KGaA");
+
+        Currency currency = new Currency();
+        currency.setId(currencyId);
+        currency.setName("Euro");
+        currency.setOrganization(organization);
+        currency.setPrimary(true);
+        currency.setCode("EUR");
+
+        Mockito.when(currencyRepository.findById(currencyId)).thenReturn(Optional.of(currency));
+        Assertions.assertThatThrownBy(() -> currencyService.deleteCurrency(currencyId)).isInstanceOf(CurrencyDeletionException.class);
+    }
+
+    @Test
+    void deleteCurrency_hasTransactionsTest(){
+        Long organizationId = snowflakeGenerator.next();
+        Long currencyId = snowflakeGenerator.next();
+
+        Organization organization = new Organization();
+        organization.setId(organizationId);
+        organization.setName("Altmann AG & Co. KGaA");
+
+        Currency currency = new Currency();
+        currency.setId(currencyId);
+        currency.setName("Swiss Franc");
+        currency.setOrganization(organization);
+        currency.setPrimary(false);
+        currency.setCode("CHF");
+
+        Mockito.when(currencyRepository.findById(currencyId)).thenReturn(Optional.of(currency));
+        Mockito.when(transactionRepository.countByCurrencyId(currencyId)).thenReturn(5);
+        Assertions.assertThatThrownBy(() -> currencyService.deleteCurrency(currencyId)).isInstanceOf(CurrencyDeletionException.class);
     }
 
 
