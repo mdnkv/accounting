@@ -1,9 +1,9 @@
 package dev.mednikov.accounting.reports.services;
 
 import dev.mednikov.accounting.accounts.models.AccountType;
-import dev.mednikov.accounting.organizations.exceptions.OrganizationNotFoundException;
-import dev.mednikov.accounting.organizations.models.Organization;
-import dev.mednikov.accounting.organizations.repositories.OrganizationRepository;
+import dev.mednikov.accounting.currencies.exceptions.CurrencyNotFoundException;
+import dev.mednikov.accounting.currencies.models.Currency;
+import dev.mednikov.accounting.currencies.repositories.CurrencyRepository;
 import dev.mednikov.accounting.reports.dto.NetWorthSummaryDto;
 import dev.mednikov.accounting.transactions.models.TransactionLine;
 import dev.mednikov.accounting.transactions.repositories.TransactionLineRepository;
@@ -16,17 +16,17 @@ import java.util.List;
 @Service
 public class NetWorthServiceImpl implements NetWorthService {
 
-    private final OrganizationRepository organizationRepository;
+    private final CurrencyRepository currencyRepository;
     private final TransactionLineRepository transactionLineRepository;
 
-    public NetWorthServiceImpl(OrganizationRepository organizationRepository, TransactionLineRepository transactionLineRepository) {
-        this.organizationRepository = organizationRepository;
+    public NetWorthServiceImpl(TransactionLineRepository transactionLineRepository, CurrencyRepository currencyRepository) {
+        this.currencyRepository = currencyRepository;
         this.transactionLineRepository = transactionLineRepository;
     }
 
     @Override
     public NetWorthSummaryDto getNetWorthSummary(Long organizationId, int daysCount) {
-        Organization organization = this.organizationRepository.findById(organizationId).orElseThrow(OrganizationNotFoundException::new);
+        Currency primaryCurrency = this.currencyRepository.findPrimaryCurrency(organizationId).orElseThrow(CurrencyNotFoundException::new);
         LocalDate toDate = LocalDate.now();
         LocalDate fromDate = toDate.minusDays(daysCount);
 
@@ -35,13 +35,26 @@ public class NetWorthServiceImpl implements NetWorthService {
         BigDecimal totalLiabilities = BigDecimal.ZERO;
 
         for (TransactionLine transactionLine : transactionLines) {
-            if (transactionLine.getAccount().getAccountType() == AccountType.ASSET) {
-                BigDecimal amount = transactionLine.getDebitAmount().subtract(transactionLine.getCreditAmount());
-                totalAssets = totalAssets.add(amount);
-            } else {
-                BigDecimal amount = transactionLine.getCreditAmount().subtract(transactionLine.getDebitAmount());
-                totalLiabilities = totalLiabilities.add(amount);
+            if (!transactionLine.getTransaction().isDraft()){
+                if (transactionLine.getAccount().getAccountType() == AccountType.ASSET) {
+                    if (transactionLine.getTransaction().getTargetCurrency().equals(primaryCurrency)) {
+                        BigDecimal amount = transactionLine.getOriginalDebitAmount().subtract(transactionLine.getOriginalCreditAmount());
+                        totalAssets = totalAssets.add(amount);
+                    } else {
+                        BigDecimal amount = transactionLine.getDebitAmount().subtract(transactionLine.getCreditAmount());
+                        totalAssets = totalAssets.add(amount);
+                    }
+                } else {
+                    if (transactionLine.getTransaction().getTargetCurrency().equals(primaryCurrency)) {
+                        BigDecimal amount = transactionLine.getOriginalCreditAmount().subtract(transactionLine.getOriginalDebitAmount());
+                        totalLiabilities = totalLiabilities.add(amount);
+                    } else {
+                        BigDecimal amount = transactionLine.getCreditAmount().subtract(transactionLine.getDebitAmount());
+                        totalLiabilities = totalLiabilities.add(amount);
+                    }
+                }
             }
+
         }
         BigDecimal netWorth = totalAssets.subtract(totalLiabilities);
         return new NetWorthSummaryDto(

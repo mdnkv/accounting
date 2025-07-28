@@ -4,6 +4,9 @@ import dev.mednikov.accounting.accounts.dto.AccountDto;
 import dev.mednikov.accounting.accounts.dto.AccountDtoMapper;
 import dev.mednikov.accounting.accounts.models.Account;
 import dev.mednikov.accounting.accounts.models.AccountType;
+import dev.mednikov.accounting.currencies.exceptions.CurrencyNotFoundException;
+import dev.mednikov.accounting.currencies.models.Currency;
+import dev.mednikov.accounting.currencies.repositories.CurrencyRepository;
 import dev.mednikov.accounting.organizations.exceptions.OrganizationNotFoundException;
 import dev.mednikov.accounting.organizations.models.Organization;
 import dev.mednikov.accounting.organizations.repositories.OrganizationRepository;
@@ -29,16 +32,19 @@ public class ProfitLossServiceImpl implements ProfitLossService {
 
     private final OrganizationRepository organizationRepository;
     private final TransactionLineRepository transactionLineRepository;
+    private final CurrencyRepository currencyRepository;
 
-    public ProfitLossServiceImpl(OrganizationRepository organizationRepository, TransactionLineRepository transactionLineRepository) {
+    public ProfitLossServiceImpl(OrganizationRepository organizationRepository, TransactionLineRepository transactionLineRepository, CurrencyRepository currencyRepository) {
         this.organizationRepository = organizationRepository;
         this.transactionLineRepository = transactionLineRepository;
+        this.currencyRepository = currencyRepository;
     }
 
     @Override
     public ProfitLossDto getProfitLoss(Long organizationId, LocalDate fromDate, LocalDate toDate) {
         // Get organization
         Organization organization = this.organizationRepository.findById(organizationId).orElseThrow(OrganizationNotFoundException::new);
+        Currency primaryCurrency = this.currencyRepository.findPrimaryCurrency(organizationId).orElseThrow(CurrencyNotFoundException::new);
 
         // Get transaction lines
         List<TransactionLine> transactionLines = this.transactionLineRepository.getProfitLossLines(organizationId, fromDate, toDate);
@@ -54,17 +60,36 @@ public class ProfitLossServiceImpl implements ProfitLossService {
 
         for (Map.Entry<Account, List<TransactionLine>> entry : accounts.entrySet()) {
             AccountDto account = accountDtoMapper.apply(entry.getKey());
-            BigDecimal amount = BigDecimal.ZERO;
+
+            BigDecimal credit = BigDecimal.ZERO;
+            BigDecimal debit = BigDecimal.ZERO;
+
             // Calculate amount for the account
-            BigDecimal debit = entry.getValue().stream()
-                    .map(TransactionLine::getDebitAmount)
-                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+            for (TransactionLine transactionLine : entry.getValue()) {
+                if (!transactionLine.getTransaction().isDraft()) {
+                    if (transactionLine.getTransaction().getTargetCurrency().equals(primaryCurrency)) {
+                        // same currency as primary currency
+                        // add an original amount
+                        debit = debit.add(transactionLine.getOriginalDebitAmount());
+                        credit = credit.add(transactionLine.getOriginalCreditAmount());
+                    } else {
+                        // another currency
+                        // add a converted amount
+                        credit = credit.add(transactionLine.getCreditAmount());
+                        debit = debit.add(transactionLine.getDebitAmount());
+                    }
+                }
 
-            BigDecimal credit = entry.getValue().stream()
-                    .map(TransactionLine::getCreditAmount)
-                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+            }
+//            BigDecimal debit = entry.getValue().stream()
+//                    .map(TransactionLine::getDebitAmount)
+//                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+//
+//            BigDecimal credit = entry.getValue().stream()
+//                    .map(TransactionLine::getCreditAmount)
+//                    .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-            BigDecimal balance = (account.getAccountType() == AccountType.EXPENSE) ? debit.subtract(credit) : credit.subtract(amount);
+            BigDecimal balance = (account.getAccountType() == AccountType.EXPENSE) ? debit.subtract(credit) : credit.subtract(debit);
             ProfitLossLineDto dto = new ProfitLossLineDto(account, balance);
             if (account.getAccountType() == AccountType.EXPENSE) {
                 expenseItems.add(dto);
@@ -87,7 +112,7 @@ public class ProfitLossServiceImpl implements ProfitLossService {
 
     @Override
     public ProfitLossSummaryDto getProfitLossSummary(Long organizationId, int daysCount) {
-        Organization organization = this.organizationRepository.findById(organizationId).orElseThrow(OrganizationNotFoundException::new);
+        Currency primaryCurrency = this.currencyRepository.findPrimaryCurrency(organizationId).orElseThrow(CurrencyNotFoundException::new);
 
         // Calculate dates
         LocalDate toDate = LocalDate.now();
@@ -99,13 +124,26 @@ public class ProfitLossServiceImpl implements ProfitLossService {
         BigDecimal totalExpense = BigDecimal.ZERO;
 
         for (TransactionLine transactionLine : transactionLines) {
-            if (transactionLine.getAccount().getAccountType() == AccountType.INCOME) {
-                BigDecimal income = transactionLine.getCreditAmount().subtract(transactionLine.getDebitAmount());
-                totalIncome = totalIncome.add(income);
-            } else if (transactionLine.getAccount().getAccountType() == AccountType.EXPENSE) {
-                BigDecimal expense = transactionLine.getDebitAmount().subtract(transactionLine.getCreditAmount());
-                totalExpense = totalExpense.add(expense);
+            if (!transactionLine.getTransaction().isDraft()) {
+                if (transactionLine.getAccount().getAccountType() == AccountType.INCOME) {
+                    if (transactionLine.getTransaction().getTargetCurrency().equals(primaryCurrency)) {
+                        BigDecimal income = transactionLine.getOriginalCreditAmount().subtract(transactionLine.getOriginalDebitAmount());
+                        totalIncome = totalIncome.add(income);
+                    } else {
+                        BigDecimal income = transactionLine.getCreditAmount().subtract(transactionLine.getDebitAmount());
+                        totalIncome = totalIncome.add(income);
+                    }
+                } else if (transactionLine.getAccount().getAccountType() == AccountType.EXPENSE) {
+                    if (transactionLine.getTransaction().getTargetCurrency().equals(primaryCurrency)) {
+                        BigDecimal expense = transactionLine.getOriginalDebitAmount().subtract(transactionLine.getOriginalCreditAmount());
+                        totalExpense = totalExpense.add(expense);
+                    } else {
+                        BigDecimal expense = transactionLine.getDebitAmount().subtract(transactionLine.getCreditAmount());
+                        totalExpense = totalExpense.add(expense);
+                    }
+                }
             }
+
         }
 
         BigDecimal netProfit = totalIncome.subtract(totalExpense);
