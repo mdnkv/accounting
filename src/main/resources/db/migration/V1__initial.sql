@@ -39,13 +39,20 @@ CREATE TABLE IF NOT EXISTS currencies (
 CREATE TABLE IF NOT EXISTS transactions (
     id BIGINT PRIMARY KEY,
     organization_id BIGINT NOT NULL,
-    currency_id BIGINT NOT NULL,
+    base_currency_id BIGINT NOT NULL,
+    target_currency_id BIGINT NOT NULL,
     description TEXT NOT NULL,
     transaction_date DATE NOT NULL,
     is_draft BOOLEAN NOT NULL DEFAULT TRUE,
+    total_debit_amount DECIMAL(12,2) NOT NULL CHECK (total_debit_amount >= 0.0),
+    total_credit_amount DECIMAL(12,2) NOT NULL CHECK (total_credit_amount >= 0.0),
+    original_total_debit_amount DECIMAL(12,2) NOT NULL CHECK (total_debit_amount >= 0.0),
+    original_total_credit_amount DECIMAL(12,2) NOT NULL CHECK (total_credit_amount >= 0.0),
     CONSTRAINT fk_transaction_organization FOREIGN KEY (organization_id)
         REFERENCES organizations(id) ON DELETE CASCADE,
-    CONSTRAINT fk_transaction_currency FOREIGN KEY (currency_id)
+    CONSTRAINT fk_transaction_base_currency FOREIGN KEY (base_currency_id)
+        REFERENCES currencies(id) ON DELETE CASCADE,
+    CONSTRAINT fk_transaction_target_currency FOREIGN KEY (target_currency_id)
         REFERENCES currencies(id) ON DELETE CASCADE
 );
 
@@ -55,6 +62,8 @@ CREATE TABLE IF NOT EXISTS transaction_lines (
     transaction_id BIGINT NOT NULL,
     debit_amount DECIMAL(12,2) NOT NULL CHECK (debit_amount >= 0.0),
     credit_amount DECIMAL(12,2) NOT NULL CHECK (credit_amount >= 0.0),
+    original_debit_amount DECIMAL(12,2) NOT NULL CHECK (original_debit_amount >= 0.0),
+    original_credit_amount DECIMAL(12,2) NOT NULL CHECK (original_credit_amount >= 0.0),
     CONSTRAINT fk_transaction_line_account FOREIGN KEY (account_id)
         REFERENCES accounts(id) ON DELETE CASCADE,
     CONSTRAINT fk_transaction_line_transaction FOREIGN KEY (transaction_id)

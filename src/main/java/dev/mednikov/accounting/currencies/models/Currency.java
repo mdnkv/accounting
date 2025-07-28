@@ -37,15 +37,13 @@ public class Currency {
         if (!(o instanceof Currency currency)) return false;
 
         return name.equals(currency.name)
-                && code.equals(currency.code)
-                && organization.equals(currency.organization);
+                && code.equals(currency.code);
     }
 
     @Override
     public int hashCode() {
         int result = name.hashCode();
         result = 31 * result + code.hashCode();
-        result = 31 * result + organization.hashCode();
         return result;
     }
 

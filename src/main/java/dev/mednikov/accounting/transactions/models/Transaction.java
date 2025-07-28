@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
@@ -24,9 +25,14 @@ public class Transaction {
     private Organization organization;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "currency_id", nullable = false)
+    @JoinColumn(name = "base_currency_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private Currency currency;
+    private Currency baseCurrency;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "target_currency_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Currency targetCurrency;
 
     @Column(nullable = false)
     private String description;
@@ -37,6 +43,18 @@ public class Transaction {
     @Column(nullable = false, name = "is_draft")
     private boolean draft;
 
+    @Column(nullable = false, name = "total_credit_amount")
+    private BigDecimal totalCreditAmount;
+
+    @Column(nullable = false, name = "total_debit_amount")
+    private BigDecimal totalDebitAmount;
+
+    @Column(nullable = false, name = "original_total_credit_amount")
+    private BigDecimal originalTotalCreditAmount;
+
+    @Column(nullable = false, name = "original_total_debit_amount")
+    private BigDecimal originalTotalDebitAmount;
+
     @OneToMany(mappedBy = "transaction", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<TransactionLine> lines = new HashSet<>();
 
@@ -45,7 +63,7 @@ public class Transaction {
         if (!(o instanceof Transaction that)) return false;
 
         return organization.equals(that.organization)
-                && currency.equals(that.currency)
+                && baseCurrency.equals(that.baseCurrency)
                 && description.equals(that.description)
                 && date.equals(that.date);
     }
@@ -53,7 +71,7 @@ public class Transaction {
     @Override
     public int hashCode() {
         int result = organization.hashCode();
-        result = 31 * result + currency.hashCode();
+        result = 31 * result + baseCurrency.hashCode();
         result = 31 * result + description.hashCode();
         result = 31 * result + date.hashCode();
         return result;
@@ -91,20 +109,60 @@ public class Transaction {
         this.date = date;
     }
 
-    public Currency getCurrency() {
-        return currency;
-    }
-
-    public void setCurrency(Currency currency) {
-        this.currency = currency;
-    }
-
     public boolean isDraft() {
         return draft;
     }
 
     public void setDraft(boolean draft) {
         this.draft = draft;
+    }
+
+    public BigDecimal getTotalCreditAmount() {
+        return totalCreditAmount;
+    }
+
+    public void setTotalCreditAmount(BigDecimal totalCreditAmount) {
+        this.totalCreditAmount = totalCreditAmount;
+    }
+
+    public BigDecimal getTotalDebitAmount() {
+        return totalDebitAmount;
+    }
+
+    public void setTotalDebitAmount(BigDecimal totalDebitAmount) {
+        this.totalDebitAmount = totalDebitAmount;
+    }
+
+    public Currency getBaseCurrency() {
+        return baseCurrency;
+    }
+
+    public void setBaseCurrency(Currency baseCurrency) {
+        this.baseCurrency = baseCurrency;
+    }
+
+    public BigDecimal getOriginalTotalDebitAmount() {
+        return originalTotalDebitAmount;
+    }
+
+    public void setOriginalTotalDebitAmount(BigDecimal originalTotalDebitAmount) {
+        this.originalTotalDebitAmount = originalTotalDebitAmount;
+    }
+
+    public BigDecimal getOriginalTotalCreditAmount() {
+        return originalTotalCreditAmount;
+    }
+
+    public void setOriginalTotalCreditAmount(BigDecimal originalTotalCreditAmount) {
+        this.originalTotalCreditAmount = originalTotalCreditAmount;
+    }
+
+    public Currency getTargetCurrency() {
+        return targetCurrency;
+    }
+
+    public void setTargetCurrency(Currency targetCurrency) {
+        this.targetCurrency = targetCurrency;
     }
 
     public void setLines(List<TransactionLine> lines) {
