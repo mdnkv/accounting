@@ -147,7 +147,7 @@ class TransactionServiceImplTest {
         TransactionDto payload = mapper.apply(transaction);
 
         Mockito.when(organizationRepository.getReferenceById(organizationId)).thenReturn(organization);
-        Mockito.when(currencyRepository.getReferenceById(currencyId)).thenReturn(currency);
+        Mockito.when(currencyRepository.findById(currencyId)).thenReturn(Optional.of(currency));
         Mockito.when(accountRepository.findById(debitAccountId)).thenReturn(Optional.of(debitAccount));
         Mockito.when(accountRepository.findById(creditAccountId)).thenReturn(Optional.of(creditAccount));
 
@@ -221,7 +221,7 @@ class TransactionServiceImplTest {
         TransactionDto payload = mapper.apply(transaction);
 
         Mockito.when(organizationRepository.getReferenceById(organizationId)).thenReturn(organization);
-        Mockito.when(currencyRepository.getReferenceById(currencyId)).thenReturn(currency);
+        Mockito.when(currencyRepository.findById(currencyId)).thenReturn(Optional.of(currency));
         Mockito.when(accountRepository.findById(debitAccountId)).thenReturn(Optional.of(debitAccount));
         Mockito.when(accountRepository.findById(creditAccountId)).thenReturn(Optional.of(creditAccount));
         Mockito.when(transactionLineRepository.saveAll(Mockito.any())).thenReturn(List.of(line1, line2));

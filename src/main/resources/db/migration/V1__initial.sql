@@ -29,6 +29,7 @@ CREATE TABLE IF NOT EXISTS currencies (
     name VARCHAR(255) NOT NULL,
     code VARCHAR(3) NOT NULL,
     is_primary BOOLEAN NOT NULL DEFAULT FALSE,
+    is_deprecated BOOLEAN NOT NULL DEFAULT FALSE,
     organization_id BIGINT NOT NULL,
     UNIQUE (organization_id, code),
     CONSTRAINT fk_currency_organization FOREIGN KEY (organization_id)
@@ -45,7 +46,7 @@ CREATE TABLE IF NOT EXISTS transactions (
     CONSTRAINT fk_transaction_organization FOREIGN KEY (organization_id)
         REFERENCES organizations(id) ON DELETE CASCADE,
     CONSTRAINT fk_transaction_currency FOREIGN KEY (currency_id)
-        REFERENCES currencies(id) ON DELETE SET NULL
+        REFERENCES currencies(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS transaction_lines (

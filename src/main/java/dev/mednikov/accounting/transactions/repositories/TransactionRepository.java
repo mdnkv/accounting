@@ -13,4 +13,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     @Query("SELECT t FROM Transaction t WHERE t.organization.id = :organizationId ORDER BY t.date DESC")
     List<Transaction> findAllByOrganizationId (Long organizationId);
 
+    @Query("SELECT COUNT(t) FROM Transaction t WHERE t.currency.id = :currencyId")
+    int countByCurrencyId (Long currencyId);
+
 }

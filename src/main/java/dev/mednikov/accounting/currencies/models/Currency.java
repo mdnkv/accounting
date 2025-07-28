@@ -24,6 +24,9 @@ public class Currency {
     @Column(nullable = false, name = "is_primary")
     private boolean primary;
 
+    @Column(nullable = false, name = "is_deprecated")
+    private boolean deprecated;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "organization_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -84,5 +87,13 @@ public class Currency {
 
     public void setPrimary(boolean primary) {
         this.primary = primary;
+    }
+
+    public boolean isDeprecated() {
+        return deprecated;
+    }
+
+    public void setDeprecated(boolean deprecated) {
+        this.deprecated = deprecated;
     }
 }

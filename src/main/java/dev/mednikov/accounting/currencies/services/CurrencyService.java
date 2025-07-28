@@ -15,4 +15,6 @@ public interface CurrencyService {
 
     List<CurrencyDto> getCurrencies(Long organizationId);
 
+    void deleteCurrency (Long id);
+
 }

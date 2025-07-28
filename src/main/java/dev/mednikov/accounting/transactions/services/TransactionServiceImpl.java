@@ -5,6 +5,8 @@ import dev.mednikov.accounting.accounts.exceptions.AccountNotFoundException;
 import dev.mednikov.accounting.accounts.exceptions.DeprecatedAccountException;
 import dev.mednikov.accounting.accounts.models.Account;
 import dev.mednikov.accounting.accounts.repositories.AccountRepository;
+import dev.mednikov.accounting.currencies.exceptions.CurrencyNotFoundException;
+import dev.mednikov.accounting.currencies.exceptions.DeprecatedCurrencyException;
 import dev.mednikov.accounting.currencies.models.Currency;
 import dev.mednikov.accounting.currencies.repositories.CurrencyRepository;
 import dev.mednikov.accounting.organizations.models.Organization;
@@ -68,7 +70,10 @@ public class TransactionServiceImpl implements TransactionService {
         Organization organization = this.organizationRepository.getReferenceById(organizationId);
         // Get currency
         Long currencyId = Long.valueOf(payload.getCurrencyId());
-        Currency currency = this.currencyRepository.getReferenceById(currencyId);
+        Currency currency = this.currencyRepository.findById(currencyId).orElseThrow(CurrencyNotFoundException::new);
+        if (currency.isDeprecated()){
+            throw new DeprecatedCurrencyException();
+        }
         // Create transaction
         Transaction transaction = new Transaction();
         transaction.setId(snowflakeGenerator.next());

@@ -7,6 +7,7 @@ public final class CurrencyDto {
     private String name;
     private String code;
     private boolean primary;
+    private boolean deprecated;
 
     public String getId() {
         return id;
@@ -46,5 +47,13 @@ public final class CurrencyDto {
 
     public void setPrimary(boolean primary) {
         this.primary = primary;
+    }
+
+    public boolean isDeprecated() {
+        return deprecated;
+    }
+
+    public void setDeprecated(boolean deprecated) {
+        this.deprecated = deprecated;
     }
 }

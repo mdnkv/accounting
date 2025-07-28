@@ -5,11 +5,13 @@ import dev.mednikov.accounting.currencies.dto.CurrencyDto;
 import dev.mednikov.accounting.currencies.dto.CurrencyDtoMapper;
 import dev.mednikov.accounting.currencies.exceptions.CurrencyAlreadyExistsException;
 import dev.mednikov.accounting.currencies.exceptions.CurrencyNotFoundException;
+import dev.mednikov.accounting.currencies.exceptions.CurrencyDeletionException;
 import dev.mednikov.accounting.currencies.models.Currency;
 import dev.mednikov.accounting.currencies.repositories.CurrencyRepository;
 import dev.mednikov.accounting.organizations.models.Organization;
 import dev.mednikov.accounting.organizations.repositories.OrganizationRepository;
 
+import dev.mednikov.accounting.transactions.repositories.TransactionRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,12 +23,15 @@ public class CurrencyServiceImpl implements CurrencyService {
 
     private final static SnowflakeGenerator snowflakeGenerator = new SnowflakeGenerator();
     private final static CurrencyDtoMapper currencyDtoMapper = new CurrencyDtoMapper();
+
+    private final TransactionRepository transactionRepository;
     private final CurrencyRepository currencyRepository;
     private final OrganizationRepository organizationRepository;
 
-    public CurrencyServiceImpl(CurrencyRepository currencyRepository, OrganizationRepository organizationRepository) {
+    public CurrencyServiceImpl(CurrencyRepository currencyRepository, OrganizationRepository organizationRepository, TransactionRepository transactionRepository) {
         this.currencyRepository = currencyRepository;
         this.organizationRepository = organizationRepository;
+        this.transactionRepository = transactionRepository;
     }
 
     @Override
@@ -46,6 +51,7 @@ public class CurrencyServiceImpl implements CurrencyService {
         currency.setName(currencyDto.getName());
         currency.setId(snowflakeGenerator.next());
         currency.setPrimary(primary);
+        currency.setDeprecated(false);
 
         Currency result = this.currencyRepository.save(currency);
         return currencyDtoMapper.apply(result);
@@ -65,6 +71,7 @@ public class CurrencyServiceImpl implements CurrencyService {
         }
         currency.setName(currencyDto.getName());
         currency.setCode(currencyDto.getCode());
+        currency.setDeprecated(currencyDto.isDeprecated());
 
         if (!currency.isPrimary() && currencyDto.isPrimary()) {
             // update currency to primary
@@ -97,5 +104,24 @@ public class CurrencyServiceImpl implements CurrencyService {
                 .stream()
                 .map(currencyDtoMapper)
                 .toList();
+    }
+
+    @Override
+    public void deleteCurrency(Long id) {
+        Optional<Currency> result = this.currencyRepository.findById(id);
+        if (result.isPresent()) {
+            Currency currency = result.get();
+            // check that currency is not primary
+            if (currency.isPrimary()) {
+                throw new CurrencyDeletionException();
+            } else {
+               // check that currency is not associated with transactions
+                if (this.transactionRepository.countByCurrencyId(currency.getId()) > 0) {
+                    throw new CurrencyDeletionException();
+                } else {
+                    this.currencyRepository.delete(currency);
+                }
+            }
+        }
     }
 }
