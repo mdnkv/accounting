@@ -3,8 +3,12 @@ package dev.mednikov.accounting.organizations.models;
 import dev.mednikov.accounting.roles.models.Role;
 import dev.mednikov.accounting.users.models.User;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(
@@ -33,6 +37,14 @@ public class OrganizationUser {
 
     @Column(name = "is_active", nullable = false)
     private boolean active;
+
+    @Column(name = "created_at")
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 
     @Override
     public final boolean equals(Object o) {
