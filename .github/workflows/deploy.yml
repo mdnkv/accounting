@@ -1,4 +1,4 @@
-name: Build and Deploy
+name: CI/CD Deploy to VPS
 
 on:
   push:
@@ -6,61 +6,58 @@ on:
       - main
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
 
-    env:
-      REGISTRY: ghcr.io
-      IMAGE_NAME: ${{ github.repository }}
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      - name: Set up SSH
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan -H ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts
-
-      - name: Set up Java and Node
+      - name: Set up JDK
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '24'
 
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '22.16.0'
-
-      - name: Cache Maven dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-maven-
-
       - name: Inject Angular secrets
         run: |
           echo "export const environment = { production: true, serverUrl: '/api', keycloak: {server: '${{ secrets.KEYCLOAK_SERVER }}', clientId: '${{secrets.KEYCLOAK_CLIENT_ID}}', realm: '${{secrets.KEYCLOAK_REALM}}' }};" > accounting/src/environments/environment.ts
 
-      - name: Build Spring Boot + Angular App
+      - name: Build with Maven
         run: mvn clean package -DSPRING_KEYCLOAK_URL=${{ secrets.SPRING_KEYCLOAK_URL }}
 
-      - name: Log in to GitHub Container Registry
-        run: echo "${{ secrets.REGISTRY_TOKEN }}" | docker login ghcr.io -u ${{ secrets.REGISTRY_USERNAME }} --password-stdin
+      - name: Log in to GitHub Container Registry (GHCR)
+        run: echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Build Docker image
-        run: docker build -t $REGISTRY/$IMAGE_NAME:latest .
-
-      - name: Push Docker image
-        run: docker push $REGISTRY/$IMAGE_NAME:latest
-
-      - name: Deploy via SSH and Docker Compose
         run: |
-          ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << EOF
-            docker pull $REGISTRY/$IMAGE_NAME:latest
-            docker stop myapp || true && docker rm myapp || true
-            docker compose -f /opt/myapp/docker-compose.yml up -d
-          EOF
+          IMAGE_NAME=ghcr.io/${{ github.repository }}:latest
+          docker build -t $IMAGE_NAME .
+
+      - name: Push image to GHCR
+        run: |
+          IMAGE_NAME=ghcr.io/${{ github.repository }}:latest
+          docker push $IMAGE_NAME
+
+      - name: Upload docker-compose.yml to VPS
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          source: "docker-compose.yml"
+          target: "/opt/myapp"
+
+      - name: Deploy on VPS using Docker Compose
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            export IMAGE_NAME=ghcr.io/${{ github.repository }}:latest
+            docker login ghcr.io -u ${{ github.actor }} --password-stdin <<< "${{ secrets.GHCR_PAT }}"
+            cd /opt/myapp
+            docker pull $IMAGE_NAME
+            docker compose down
+            docker compose up -d
