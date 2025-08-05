@@ -1,8 +1,7 @@
 # Build
 FROM maven:3.9.11-eclipse-temurin-24 AS builder
-WORKDIR /app
-COPY pom.xml .
-COPY src ./src
+WORKDIR /app/accounting
+COPY . /app/accounting
 RUN mvn clean package -DskipTests
 
 # Run
