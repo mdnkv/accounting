@@ -133,7 +133,7 @@
                         </goals>
                         <phase>generate-resources</phase>
                         <configuration>
-                            <arguments>run build</arguments>
+                            <arguments>run build -- --configuration production</arguments>
                         </configuration>
                     </execution>
                 </executions>
