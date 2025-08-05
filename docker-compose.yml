@@ -11,7 +11,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://app-db:5432/accounting_db
       SPRING_DATASOURCE_USERNAME: accounting_user
       SPRING_DATASOURCE_PASSWORD: secret1234
-      KEYCLOAK_URL: ${SPRING_KEYCLOAK_URL}
+      SPRING_KEYCLOAK_URL: ${SPRING_KEYCLOAK_URL}
     depends_on:
       - app-db
 
