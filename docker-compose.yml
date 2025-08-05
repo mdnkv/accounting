@@ -1,0 +1,44 @@
+version: "3.8"
+
+services:
+  app:
+    image: ghcr.io/mdnkv/accounting:latest
+    container_name: spring-app
+    expose:
+      - "8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:postgresql://app-db:5432/accounting_db
+      SPRING_DATASOURCE_USERNAME: accounting_user
+      SPRING_DATASOURCE_PASSWORD: secret1234
+      KEYCLOAK_URL: ${SPRING_KEYCLOAK_URL}
+    depends_on:
+      - app-db
+
+  app-db:
+    image: postgres:17.5
+    container_name: app-db
+    environment:
+      POSTGRES_DB: accounting_db
+      POSTGRES_USER: accounting_user
+      POSTGRES_PASSWORD: secret1234
+    volumes:
+      - app-db-data:/var/lib/postgresql/data
+
+  caddy:
+    image: caddy:2.10.0
+    container_name: caddy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - app
+
+volumes:
+  app-db-data:
+  caddy_data:
+  caddy_config:
