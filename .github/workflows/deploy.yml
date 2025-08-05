@@ -1,0 +1,66 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      REGISTRY: ghcr.io
+      IMAGE_NAME: ${{ github.repository }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Set up Java and Node
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '24'
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '22.16.0'
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-maven-
+
+      - name: Inject Angular secrets
+        run: |
+          echo "export const environment = { production: true, serverUrl: '/api', keycloak: {server: '${{ secrets.KEYCLOAK_SERVER }}', clientId: '${{secrets.KEYCLOAK_CLIENT_ID}}', realm: '${{secrets.KEYCLOAK_REALM}}' }};" > accounting/src/environments/environment.prod.ts
+
+      - name: Build Spring Boot + Angular App
+        run: mvn clean package -DSPRING_KEYCLOAK_URL="${{ secrets.SPRING_KEYCLOAK_URL }}"
+
+      - name: Log in to GitHub Container Registry
+        run: echo "${{ secrets.REGISTRY_TOKEN }}" | docker login ghcr.io -u ${{ secrets.REGISTRY_USERNAME }} --password-stdin
+
+      - name: Build Docker image
+        run: docker build -t $REGISTRY/$IMAGE_NAME:latest .
+
+      - name: Push Docker image
+        run: docker push $REGISTRY/$IMAGE_NAME:latest
+
+      - name: Deploy via SSH and Docker Compose
+        run: |
+          ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << EOF
+            docker pull $REGISTRY/$IMAGE_NAME:latest
+            docker stop myapp || true && docker rm myapp || true
+            docker compose -f /opt/myapp/docker-compose.yml up -d
+          EOF
