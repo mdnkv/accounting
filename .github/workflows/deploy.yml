@@ -43,7 +43,7 @@ jobs:
 
       - name: Inject Angular secrets
         run: |
-          echo "export const environment = { production: true, serverUrl: '/api', keycloak: {server: '${{ secrets.KEYCLOAK_SERVER }}', clientId: '${{secrets.KEYCLOAK_CLIENT_ID}}', realm: '${{secrets.KEYCLOAK_REALM}}' }};" > accounting/src/environments/environment.prod.ts
+          echo "export const environment = { production: true, serverUrl: '/api', keycloak: {server: '${{ secrets.KEYCLOAK_SERVER }}', clientId: '${{secrets.KEYCLOAK_CLIENT_ID}}', realm: '${{secrets.KEYCLOAK_REALM}}' }};" > accounting/src/environments/environment.ts
 
       - name: Build Spring Boot + Angular App
         run: mvn clean package -DSPRING_KEYCLOAK_URL=${{ secrets.SPRING_KEYCLOAK_URL }}
