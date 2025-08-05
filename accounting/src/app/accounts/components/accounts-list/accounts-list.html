@@ -1,0 +1,51 @@
+@if (store.areAccountsLoaded()) {
+  @if (store.accounts().length > 0) {
+    <!-- Accounts table -->
+    <table mat-table [dataSource]="dataSource">
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let account">
+          <button type="button" matIconButton [matMenuTriggerFor]="menu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="onUpdate(account)">Update account</button>
+            <button mat-menu-item (click)="onDelete(account)">Delete account</button>
+          </mat-menu>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="code">
+        <th mat-header-cell *matHeaderCellDef>Code</th>
+        <td mat-cell *matCellDef="let account">{{account.code}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let account">{{account.name}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef>Type</th>
+        <td mat-cell *matCellDef="let account">
+          @switch (account.accountType){
+            @case('ASSET'){Asset}
+            @case('LIABILITY'){Liability}
+            @case('EQUITY'){Equity}
+            @case('INCOME'){Income}
+            @default {Expense}
+          }
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+    </table>
+  } @else {
+    <app-empty-list-placeholder/>
+  }
+} @else {
+  <app-loading-placeholder/>
+}

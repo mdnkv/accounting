@@ -1,0 +1,13 @@
+@if (store.areOrganizationsLoaded()){
+  @if (store.userOrganizations().length > 0) {
+    @for (uo of store.userOrganizations(); track uo.id) {
+      <app-organization-card
+        [userOrganization]="uo"
+      />
+    }
+  } @else {
+    <app-empty-list-placeholder/>
+  }
+} @else {
+  <app-loading-placeholder/>
+}

@@ -1,0 +1,9 @@
+<app-navbar/>
+<mat-sidenav-container>
+  <mat-sidenav opened mode="side" [style.width]="sideNavWidth()">
+    <app-side-menu/>
+  </mat-sidenav>
+  <mat-sidenav-content [style.margin-left]="sideNavWidth()" class="app-content">
+    <router-outlet/>
+  </mat-sidenav-content>
+</mat-sidenav-container>

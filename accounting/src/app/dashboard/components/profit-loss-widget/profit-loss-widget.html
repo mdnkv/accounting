@@ -1,0 +1,19 @@
+<app-dashboard-widget (refresh)="onRefresh($event)">
+  <div slot="header">
+    <h3 class="app-dashboard-widget-title">Profit loss</h3>
+    <p class="app-dashboard-widget-subtitle">Last {{ dashboardStore.profitLossDaysCount() }} days</p>
+  </div>
+  <div slot="content">
+    <div class="app-level">
+      <app-widget-column [amount]="dashboardStore.profitLossSummary()!.totalIncome" [currency]="currency()">
+        <p class="app-widget-comment">Total income</p>
+      </app-widget-column>
+      <app-widget-column [amount]="dashboardStore.profitLossSummary()!.totalExpenses" [currency]="currency()">
+        <p class="app-widget-comment">Total expenses</p>
+      </app-widget-column>
+      <app-widget-column [amount]="dashboardStore.profitLossSummary()!.netProfit" [currency]="currency()">
+        <p class="app-widget-comment">Net profit</p>
+      </app-widget-column>
+    </div>
+  </div>
+</app-dashboard-widget>
