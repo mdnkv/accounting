@@ -1,9 +1,9 @@
 export const environment = {
-  production: false,
-  serverUrl: 'http://localhost:8000/api',
+  production: true,
+  serverUrl: '/api',
   keycloak: {
-    server: 'http://localhost:8080',
-    clientId: 'accounting-angular',
-    realm: 'accounting'
+    server: 'https://keycloak.mednikov.dev',
+    clientId: 'accounting-app-frontend',
+    realm: 'accounting-app'
   }
 };

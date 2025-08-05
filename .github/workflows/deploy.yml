@@ -19,20 +19,6 @@ jobs:
           distribution: 'temurin'
           java-version: '24'
 
-      - name: Inject Angular secrets
-        run: |
-          cat <<EOF > accounting/src/environments/environment.prod.ts
-          export const environment = {
-            production: true,
-            serverUrl: '/api',
-            keycloak: {
-              server: '${{ secrets.KEYCLOAK_SERVER }}',
-              clientId: '${{ secrets.KEYCLOAK_CLIENT_ID }}',
-              realm: '${{ secrets.KEYCLOAK_REALM }}'
-            }
-          };
-          EOF
-
       - name: Build with Maven
         run: mvn clean package
 
