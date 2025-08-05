@@ -140,7 +140,7 @@
                 <configuration>
                     <nodeVersion>v22.16.0</nodeVersion>
                     <installDirectory>target</installDirectory>
-                    <workingDirectory>accounting-app</workingDirectory>
+                    <workingDirectory>accounting</workingDirectory>
                 </configuration>
             </plugin>
 
@@ -159,7 +159,7 @@
                             <outputDirectory>${project.build.directory}/classes/static/</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>accounting-app/dist/accounting-app/browser</directory>
+                                    <directory>accounting/dist/accounting/browser</directory>
                                 </resource>
                             </resources>
                         </configuration>
