@@ -21,10 +21,22 @@ jobs:
 
       - name: Inject Angular secrets
         run: |
-          echo "export const environment = { production: true, serverUrl: '/api', keycloak: {server: '${{ secrets.KEYCLOAK_SERVER }}', clientId: '${{secrets.KEYCLOAK_CLIENT_ID}}', realm: '${{secrets.KEYCLOAK_REALM}}' }};" > accounting/src/environments/environment.ts
+          cat <<EOF > accounting/src/environments/environment.ts
+          export const environment = {
+            production: true,
+            serverUrl: '/api',
+            keycloak: {
+              server: '${{ secrets.KEYCLOAK_SERVER }}',
+              clientId: '${{ secrets.KEYCLOAK_CLIENT_ID }}',
+              realm: '${{ secrets.KEYCLOAK_REALM }}'
+            }
+          };
+          EOF
 
       - name: Build with Maven
-        run: mvn clean package -DSPRING_KEYCLOAK_URL=${{ secrets.SPRING_KEYCLOAK_URL }}
+        run: mvn clean package
+        env:
+          SPRING_KEYCLOAK_URL: ${{ secrets.SPRING_KEYCLOAK_URL }}
 
       - name: Log in to GitHub Container Registry (GHCR)
         run: echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
