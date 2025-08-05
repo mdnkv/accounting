@@ -1,0 +1,13 @@
+<div class="app-block">
+  <div class="app-level">
+    <div>
+      <ng-content select="[slot=title]"></ng-content>
+    </div>
+    <div>
+      <button type="button" matButton="filled" (click)="onCreateClicked()">
+        <mat-icon>add</mat-icon>
+        Create
+      </button>
+    </div>
+  </div>
+</div>

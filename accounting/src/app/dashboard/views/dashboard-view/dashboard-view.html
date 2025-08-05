@@ -1,0 +1,26 @@
+<div class="app-block">
+  <h1 class="mat-headline-1">Hello again</h1>
+  @if (userOrganizationStore.isActiveOrganizationLoaded()){
+    <p class="mat-subtitle-1">
+      {{userOrganizationStore.activeOrganization()!.organization.name}}
+    </p>
+  }
+</div>
+
+
+@if (userOrganizationStore.isActiveOrganizationLoaded()){
+  <div class="app-dashboard-grid">
+    <div>
+      <app-profit-loss-widget/>
+    </div>
+    <div>
+      <app-net-worth-widget/>
+    </div>
+    <div>
+      <app-expense-categories-widget/>
+    </div>
+  </div>
+
+} @else {
+  <app-loading-placeholder/>
+}

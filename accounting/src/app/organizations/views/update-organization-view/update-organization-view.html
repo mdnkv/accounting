@@ -1,0 +1,10 @@
+<div class="app-block">
+  <h2 class="mat-headline-1">Update organization</h2>
+</div>
+
+<div class="app-block">
+  <app-organization-form
+    [currentOrganization]="organization()"
+    (saveOrganization)="onUpdateOrganization($event)"
+  />
+</div>

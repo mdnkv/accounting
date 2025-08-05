@@ -1,0 +1,9 @@
+<div class="app-block">
+  <h2 class="mat-headline-1">Update account</h2>
+</div>
+
+<div class="app-block">
+  <app-account-form
+    [currentAccount]="currentAccount()"
+    (saveAccount)="onUpdateAccount($event)"/>
+</div>

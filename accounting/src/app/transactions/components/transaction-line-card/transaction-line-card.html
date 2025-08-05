@@ -1,0 +1,16 @@
+<div class="app-level">
+  <div class="app-level-item">
+    <span>{{line().account!.code}} - {{line().account!.name}}</span>
+  </div>
+  <div class="app-level-item">
+    <span class="app-text-large">{{line().debitAmount|currency:currency()}}</span>
+  </div>
+  <div class="app-level-item">
+    <span class="app-text-large">{{line().creditAmount|currency:currency()}}</span>
+  </div>
+  <div class="app-level-item">
+    <button type="button" matIconButton (click)="onDelete()">
+      <mat-icon>delete</mat-icon>
+    </button>
+  </div>
+</div>

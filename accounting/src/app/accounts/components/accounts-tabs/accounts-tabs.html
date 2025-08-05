@@ -1,0 +1,10 @@
+<mat-button-toggle-group
+  [value]="store.displayedAccountsType()"
+  (valueChange)="store.setDisplayedAccountsType($event)">
+  <mat-button-toggle value="ALL">All accounts</mat-button-toggle>
+  <mat-button-toggle value="ASSET">Assets</mat-button-toggle>
+  <mat-button-toggle value="LIABILITY">Liabilities</mat-button-toggle>
+  <mat-button-toggle value="EQUITY">Equity</mat-button-toggle>
+  <mat-button-toggle value="INCOME">Income</mat-button-toggle>
+  <mat-button-toggle value="EXPENSE">Expense</mat-button-toggle>
+</mat-button-toggle-group>

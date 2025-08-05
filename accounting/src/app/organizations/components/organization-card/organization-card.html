@@ -1,0 +1,22 @@
+<mat-card appearance="outlined" class="app-block">
+  <mat-card-content>
+    <div class="app-media">
+      <div class="app-media-content">
+        <p>{{userOrganization().organization.name}}</p>
+        <p>{{userOrganization().role.name}}</p>
+      </div>
+      <div class="app-media-right">
+        @if (userOrganization().active) {
+          <button matIconButton [matMenuTriggerFor]="menu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="update()">Edit organization</button>
+          </mat-menu>
+        } @else {
+          <button type="button" matButton (click)="setActive()">Set active</button>
+        }
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>
