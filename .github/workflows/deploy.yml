@@ -21,7 +21,7 @@ jobs:
 
       - name: Inject Angular secrets
         run: |
-          cat <<EOF > accounting/src/environments/environment.prod.ts
+          cat <<EOF > accounting/src/environments/environment.ts
           export const environment = {
             production: true,
             serverUrl: '/api',
