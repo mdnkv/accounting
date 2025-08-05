@@ -2,10 +2,13 @@ package dev.mednikov.accounting.transactions.models;
 
 import dev.mednikov.accounting.accounts.models.Account;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "transaction_lines")
@@ -35,6 +38,14 @@ public class TransactionLine {
 
     @Column(nullable = false, name = "original_debit_amount")
     private BigDecimal originalDebitAmount;
+
+    @Column(name = "created_at")
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 
     @Override
     public final boolean equals(Object o) {

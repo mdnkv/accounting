@@ -3,11 +3,14 @@ package dev.mednikov.accounting.transactions.models;
 import dev.mednikov.accounting.currencies.models.Currency;
 import dev.mednikov.accounting.organizations.models.Organization;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -57,6 +60,14 @@ public class Transaction {
 
     @OneToMany(mappedBy = "transaction", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<TransactionLine> lines = new HashSet<>();
+
+    @Column(name = "created_at")
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 
     @Override
     public final boolean equals(Object o) {

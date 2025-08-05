@@ -2,8 +2,12 @@ package dev.mednikov.accounting.currencies.models;
 
 import dev.mednikov.accounting.organizations.models.Organization;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(
@@ -31,6 +35,14 @@ public class Currency {
     @JoinColumn(name = "organization_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Organization organization;
+
+    @Column(name = "created_at")
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 
     @Override
     public final boolean equals(Object o) {

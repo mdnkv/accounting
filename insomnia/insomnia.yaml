@@ -79,7 +79,7 @@ collection:
         meta:
           id: req_f074e6fc69fb4fb19290de9a2d3955df
           created: 1749035379556
-          modified: 1753106320254
+          modified: 1754378258027
           isPrivate: false
           description: ""
           sortKey: -1748881859977.5
@@ -88,7 +88,7 @@ collection:
           mimeType: application/json
           text: |-
             {
-            	"name":"Eberhardt Bischoff GmbH & Co. KG"
+            	"name":"Stumpf Stiftung & Co. KG"
             }
         headers:
           - name: Content-Type
@@ -114,7 +114,7 @@ collection:
         meta:
           id: req_ccedaa57ee1549a498305c9bbb8fa3cd
           created: 1749035456222
-          modified: 1752505921922
+          modified: 1754378298817
           isPrivate: false
           description: ""
           sortKey: -1748805130341.25
@@ -124,7 +124,7 @@ collection:
           text: |-
             {
             	"id":"{{ _.active_organization_id }}",
-            	"name":"My company"
+            	"name":"Steffens Weis GmbH & Co. KG"
             }
         headers:
           - name: Content-Type
@@ -370,7 +370,7 @@ collection:
         meta:
           id: req_1e2527a4174049868f7b440b583177cf
           created: 1749203516335
-          modified: 1752759489609
+          modified: 1753695054492
           isPrivate: false
           description: ""
           sortKey: -1749201659953
@@ -379,20 +379,20 @@ collection:
           mimeType: application/json
           text: |-
             {
-            	"date":"2025-07-17",
-            	"currencyId":"1945839962351992832",
-            	"description":"Curabitur vestibulum urna",
+            	"date":"2025-07-28",
+            	"currencyId":"1949748281273745409",
+            	"description":"Transaction in another currency 5",
             	"organizationId":"{{ _.active_organization_id }}",
             	"lines":[
             		{
-            			"accountId":"1945839369449373698",
-            			"creditAmount":450.0,
+            			"accountId":"1949748281038864384",
+            			"creditAmount":750.0,
             			"debitAmount":0.0
             		},
             		{
-            			"accountId":"1945839369449373703",
+            			"accountId":"1949748281038864390",
             			"creditAmount":0.0,
-            			"debitAmount":450.0
+            			"debitAmount":750.0
             		}
             	]
             }
@@ -494,7 +494,7 @@ collection:
         meta:
           id: req_a9de55310e3e45cabeb2f4069dcd58b2
           created: 1750066903360
-          modified: 1750066929907
+          modified: 1753697276051
           isPrivate: false
           description: ""
           sortKey: -1749764324542
@@ -507,7 +507,7 @@ collection:
             disabled: false
           - id: pair_c7375a8338f84707aa5a9502a3f0f4e3
             name: toDate
-            value: 2025-06-16
+            value: 2025-07-29
             description: ""
             disabled: false
         headers:
@@ -659,7 +659,7 @@ collection:
         meta:
           id: req_cf57833475354449b649d67ab09d665a
           created: 1752505941860
-          modified: 1752506002993
+          modified: 1753694603058
           isPrivate: false
           description: ""
           sortKey: -1752505941860
@@ -689,7 +689,7 @@ collection:
         meta:
           id: req_cd38ebb861d942d3a14113e1f0ea69a7
           created: 1752506515026
-          modified: 1752957839022
+          modified: 1753688473176
           isPrivate: false
           description: ""
           sortKey: -1751372167571.5
@@ -699,8 +699,8 @@ collection:
           text: |-
             {
             	"organizationId":"{{_.active_organization_id}}",
-            	"name":"BAM - Marka",
-            	"code":"BAM"
+            	"name":"Swiss Franc",
+            	"code":"CHF"
             }
         headers:
           - name: Content-Type
@@ -790,6 +790,36 @@ collection:
         pathParameters:
           - name: organizationId
             value: "{{ _.active_organization_id }}"
+      - url: "{{ _.server_url }}currencies/delete/:id"
+        name: Delete currency
+        meta:
+          id: req_cb13d6c9fef34d508851ef9618499755
+          created: 1753688139414
+          modified: 1753688596555
+          isPrivate: false
+          description: ""
+          sortKey: -1751655611143.625
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/11.3.0
+        authentication:
+          type: oauth2
+          grantType: authorization_code
+          authorizationUrl: "{{_.auth_url}}"
+          accessTokenUrl: "{{_.access_token_url}}"
+          clientId: "{{_.client_id}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: id
+            value: "1949736894338170880"
   - name: Authorities
     meta:
       id: fld_0efadb8783ea4c4889db30ec967be747
@@ -1319,11 +1349,11 @@ environments:
   meta:
     id: env_676597a9d4e9b24c6c7cf8e61c4566cefaacc897
     created: 1749035252072
-    modified: 1753108000353
+    modified: 1754378278825
     isPrivate: false
   data:
     server_url: http://localhost:8000/api/
     access_token_url: http://localhost:8080/realms/accounting/protocol/openid-connect/token
     auth_url: http://localhost:8080/realms/accounting/protocol/openid-connect/auth
     client_id: accounting-rest
-    active_organization_id: "1947301609771892736"
+    active_organization_id: "1952630118027362304"

@@ -1,6 +1,8 @@
 CREATE TABLE IF NOT EXISTS organizations (
     id BIGINT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL
+    name VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TYPE ACCOUNT_TYPE AS ENUM ('ASSET', 'LIABILITY', 'EQUITY', 'INCOME', 'EXPENSE');
@@ -12,6 +14,8 @@ CREATE TABLE IF NOT EXISTS accounts (
     account_type ACCOUNT_TYPE NOT NULL,
     organization_id BIGINT NOT NULL,
     is_deprecated BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE (organization_id, code),
     CONSTRAINT fk_account_organization FOREIGN KEY (organization_id)
         REFERENCES organizations(id) ON DELETE CASCADE
@@ -21,7 +25,9 @@ CREATE TABLE IF NOT EXISTS user_accounts (
     keycloak_id VARCHAR(50) NOT NULL UNIQUE,
     email VARCHAR(255) NOT NULL UNIQUE,
     first_name VARCHAR(255),
-    last_name VARCHAR(255)
+    last_name VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS currencies (
@@ -31,6 +37,8 @@ CREATE TABLE IF NOT EXISTS currencies (
     is_primary BOOLEAN NOT NULL DEFAULT FALSE,
     is_deprecated BOOLEAN NOT NULL DEFAULT FALSE,
     organization_id BIGINT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE (organization_id, code),
     CONSTRAINT fk_currency_organization FOREIGN KEY (organization_id)
         REFERENCES organizations(id) ON DELETE CASCADE
@@ -48,6 +56,8 @@ CREATE TABLE IF NOT EXISTS transactions (
     total_credit_amount DECIMAL(12,2) NOT NULL CHECK (total_credit_amount >= 0.0),
     original_total_debit_amount DECIMAL(12,2) NOT NULL CHECK (total_debit_amount >= 0.0),
     original_total_credit_amount DECIMAL(12,2) NOT NULL CHECK (total_credit_amount >= 0.0),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_transaction_organization FOREIGN KEY (organization_id)
         REFERENCES organizations(id) ON DELETE CASCADE,
     CONSTRAINT fk_transaction_base_currency FOREIGN KEY (base_currency_id)
@@ -64,6 +74,8 @@ CREATE TABLE IF NOT EXISTS transaction_lines (
     credit_amount DECIMAL(12,2) NOT NULL CHECK (credit_amount >= 0.0),
     original_debit_amount DECIMAL(12,2) NOT NULL CHECK (original_debit_amount >= 0.0),
     original_credit_amount DECIMAL(12,2) NOT NULL CHECK (original_credit_amount >= 0.0),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_transaction_line_account FOREIGN KEY (account_id)
         REFERENCES accounts(id) ON DELETE CASCADE,
     CONSTRAINT fk_transaction_line_transaction FOREIGN KEY (transaction_id)
@@ -74,6 +86,8 @@ CREATE TABLE IF NOT EXISTS roles (
     id BIGINT PRIMARY KEY,
     organization_id BIGINT NOT NULL,
     name VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE (organization_id, name),
     CONSTRAINT fk_role_organization FOREIGN KEY (organization_id)
         REFERENCES organizations(id) ON DELETE CASCADE
@@ -83,6 +97,8 @@ CREATE TABLE IF NOT EXISTS authorities (
     id BIGINT PRIMARY KEY,
     organization_id BIGINT NOT NULL,
     name VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE (organization_id, name),
     CONSTRAINT fk_authority_organization FOREIGN KEY (organization_id)
         REFERENCES organizations(id) ON DELETE CASCADE
@@ -92,6 +108,8 @@ CREATE TABLE IF NOT EXISTS roles_authorities (
     id BIGSERIAL PRIMARY KEY,
     authority_id BIGINT NOT NULL,
     role_id BIGINT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_roles_authorities_authority FOREIGN KEY (authority_id) REFERENCES authorities(id),
     CONSTRAINT fk_roles_authorities_role FOREIGN KEY (role_id) REFERENCES roles(id)
 );
@@ -102,6 +120,8 @@ CREATE TABLE IF NOT EXISTS organization_users (
     organization_id BIGINT NOT NULL,
     role_id BIGINT NOT NULL,
     is_active BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE (user_id, organization_id),
     CONSTRAINT fk_organization_user_organization FOREIGN KEY (organization_id)
         REFERENCES organizations(id) ON DELETE CASCADE,
@@ -116,6 +136,8 @@ CREATE TABLE IF NOT EXISTS invitations (
     email VARCHAR(255) NOT NULL,
     organization_id BIGINT NOT NULL,
     role_id BIGINT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE (email, organization_id),
     CONSTRAINT fk_invitation_organization FOREIGN KEY (organization_id)
         REFERENCES organizations(id) ON DELETE CASCADE,

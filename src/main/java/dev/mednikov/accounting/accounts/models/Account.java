@@ -2,10 +2,11 @@ package dev.mednikov.accounting.accounts.models;
 
 import dev.mednikov.accounting.organizations.models.Organization;
 import jakarta.persistence.*;
-import org.hibernate.annotations.JdbcType;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import jakarta.persistence.Table;
+import org.hibernate.annotations.*;
 import org.hibernate.dialect.PostgreSQLEnumJdbcType;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(
@@ -35,6 +36,14 @@ public class Account {
 
     @Column(nullable = false, name = "is_deprecated")
     private boolean deprecated;
+
+    @Column(name = "created_at")
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 
     @Override
     public final boolean equals(Object o) {
