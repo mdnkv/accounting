@@ -9,6 +9,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -25,17 +26,37 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getOrCreateUser(Jwt principal) {
-        String keycloakId = principal.getSubject();
+        UUID keycloakId = UUID.fromString(principal.getSubject());
         Optional<User> result = this.userRepository.findByKeycloakId(keycloakId);
+        String email = principal.getClaimAsString("email");
+        String firstName = principal.getClaimAsString("given_name");
+        String lastName = principal.getClaimAsString("family_name");
+
         if (result.isPresent()) {
-            // Return user
-            return result.get();
+            // Check that user was updated
+            boolean updated = false;
+            User user = result.get();
+            if (!user.getFirstName().equals(firstName)){
+                user.setFirstName(firstName);
+                updated = true;
+            }
+            if (!user.getLastName().equals(lastName)){
+                user.setLastName(lastName);
+                updated = true;
+            }
+            if (!user.getEmail().equals(email)){
+                user.setEmail(email);
+                updated = true;
+            }
+
+            // Save user to db if was changed
+            if (updated){
+                return this.userRepository.save(user);
+            } else {
+                return user;
+            }
         } else {
             // Create user
-            String email = principal.getClaimAsString("email");
-            String firstName = principal.getClaimAsString("given_name");
-            String lastName = principal.getClaimAsString("family_name");
-
             User user = new User();
             user.setEmail(email);
             user.setFirstName(firstName);
@@ -44,6 +65,7 @@ public class UserServiceImpl implements UserService {
             user.setId(snowflakeGenerator.next());
 
             User savedUser = this.userRepository.save(user);
+
             // Also check for invitations
             UserCreatedEvent event = new UserCreatedEvent(this, savedUser);
             this.eventPublisher.publishEvent(event);

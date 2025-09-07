@@ -9,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "user_accounts")
@@ -18,9 +19,9 @@ public class User {
     private Long id;
 
     @Column(name = "keycloak_id", nullable = false, unique = true)
-    private String keycloakId;
+    private UUID keycloakId;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Column(name = "first_name")
@@ -57,11 +58,11 @@ public class User {
         this.id = id;
     }
 
-    public String getKeycloakId() {
+    public UUID getKeycloakId() {
         return keycloakId;
     }
 
-    public void setKeycloakId(String keycloakId) {
+    public void setKeycloakId(UUID keycloakId) {
         this.keycloakId = keycloakId;
     }
 
