@@ -62,6 +62,7 @@ CREATE TABLE IF NOT EXISTS transactions (
     organization_id BIGINT NOT NULL,
     base_currency_id BIGINT NOT NULL,
     target_currency_id BIGINT NOT NULL,
+    journal_id BIGINT NOT NULL,
     description TEXT NOT NULL,
     transaction_date DATE NOT NULL,
     is_draft BOOLEAN NOT NULL DEFAULT TRUE,
@@ -76,7 +77,9 @@ CREATE TABLE IF NOT EXISTS transactions (
     CONSTRAINT fk_transaction_base_currency FOREIGN KEY (base_currency_id)
         REFERENCES currencies(id) ON DELETE CASCADE,
     CONSTRAINT fk_transaction_target_currency FOREIGN KEY (target_currency_id)
-        REFERENCES currencies(id) ON DELETE CASCADE
+        REFERENCES currencies(id) ON DELETE CASCADE,
+    CONSTRAINT fk_transaction_journal FOREIGN KEY (journal_id)
+        REFERENCES journals(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS transaction_lines (
