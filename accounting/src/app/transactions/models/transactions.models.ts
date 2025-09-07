@@ -15,6 +15,7 @@ export interface Transaction {
   organizationId?: string
   lines: TransactionLine[]
   currencyId: string
+  journalId: string
   currency?: Currency
   totalCreditAmount?: number
   totalDebitAmount?: number

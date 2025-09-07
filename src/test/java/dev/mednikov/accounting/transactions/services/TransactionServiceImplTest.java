@@ -6,6 +6,8 @@ import dev.mednikov.accounting.accounts.models.AccountType;
 import dev.mednikov.accounting.accounts.repositories.AccountRepository;
 import dev.mednikov.accounting.currencies.models.Currency;
 import dev.mednikov.accounting.currencies.repositories.CurrencyRepository;
+import dev.mednikov.accounting.journals.models.Journal;
+import dev.mednikov.accounting.journals.repositories.JournalRepository;
 import dev.mednikov.accounting.organizations.models.Organization;
 import dev.mednikov.accounting.organizations.repositories.OrganizationRepository;
 import dev.mednikov.accounting.transactions.dto.TransactionDto;
@@ -41,6 +43,7 @@ class TransactionServiceImplTest {
     @Mock private TransactionLineRepository transactionLineRepository;
     @Mock private CurrencyRepository currencyRepository;
     @Mock private OrganizationRepository organizationRepository;
+    @Mock private JournalRepository journalRepository;
     @Mock private ApplicationEventPublisher eventPublisher;
 
     @InjectMocks private TransactionServiceImpl transactionService;
@@ -114,6 +117,14 @@ class TransactionServiceImplTest {
         creditAccount.setOrganization(organization);
         creditAccount.setDeprecated(false);
 
+        // Create journal
+        Long journalId = snowflakeGenerator.next();
+        Journal journal = new Journal();
+        journal.setId(journalId);
+        journal.setOrganization(organization);
+        journal.setActive(true);
+        journal.setName("General");
+
         // Create a transaction
         Long transactionId = snowflakeGenerator.next();
         Transaction transaction = new Transaction();
@@ -123,6 +134,7 @@ class TransactionServiceImplTest {
         transaction.setDate(LocalDate.now().minusDays(10));
         transaction.setDescription("Aliquam mi leo, mattis a rhoncus eu, hendrerit vitae odio.");
         transaction.setId(transactionId);
+        transaction.setJournal(journal);
 
         // Create transaction lines
         TransactionLine line1 = new TransactionLine();
@@ -158,6 +170,7 @@ class TransactionServiceImplTest {
         payload.setCurrencyId(currencyId.toString());
         payload.setDate(LocalDate.now().minusDays(10));
         payload.setOrganizationId(organizationId.toString());
+        payload.setJournalId(journalId.toString());
         payload.setDescription("Aliquam mi leo, mattis a rhoncus eu, hendrerit vitae odio.");
 
         Mockito.when(organizationRepository.getReferenceById(organizationId)).thenReturn(organization);
@@ -165,6 +178,7 @@ class TransactionServiceImplTest {
         Mockito.when(currencyRepository.findPrimaryCurrency(organizationId)).thenReturn(Optional.of(currency));
         Mockito.when(accountRepository.findById(debitAccountId)).thenReturn(Optional.of(debitAccount));
         Mockito.when(accountRepository.findById(creditAccountId)).thenReturn(Optional.of(creditAccount));
+        Mockito.when(journalRepository.findById(journalId)).thenReturn(Optional.of(journal));
         Mockito.when(transactionLineRepository.saveAll(Mockito.any())).thenReturn(List.of(line1, line2));
         Mockito.when(transactionRepository.save(transaction)).thenReturn(transaction);
 

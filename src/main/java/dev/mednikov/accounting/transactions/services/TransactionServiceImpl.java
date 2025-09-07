@@ -10,6 +10,9 @@ import dev.mednikov.accounting.currencies.exceptions.CurrencyNotFoundException;
 import dev.mednikov.accounting.currencies.exceptions.DeprecatedCurrencyException;
 import dev.mednikov.accounting.currencies.models.Currency;
 import dev.mednikov.accounting.currencies.repositories.CurrencyRepository;
+import dev.mednikov.accounting.journals.exceptions.JournalNotFoundException;
+import dev.mednikov.accounting.journals.models.Journal;
+import dev.mednikov.accounting.journals.repositories.JournalRepository;
 import dev.mednikov.accounting.organizations.models.Organization;
 import dev.mednikov.accounting.organizations.repositories.OrganizationRepository;
 import dev.mednikov.accounting.transactions.dto.TransactionDto;
@@ -40,6 +43,7 @@ public class TransactionServiceImpl implements TransactionService {
     private final TransactionRepository transactionRepository;
     private final TransactionLineRepository transactionLineRepository;
     private final AccountRepository accountRepository;
+    private final JournalRepository journalRepository;
     private final ApplicationEventPublisher eventPublisher;
 
     public TransactionServiceImpl(OrganizationRepository organizationRepository,
@@ -47,12 +51,14 @@ public class TransactionServiceImpl implements TransactionService {
                                   TransactionLineRepository transactionLineRepository,
                                   CurrencyRepository currencyRepository,
                                   AccountRepository accountRepository,
+                                  JournalRepository journalRepository,
                                   ApplicationEventPublisher eventPublisher) {
         this.organizationRepository = organizationRepository;
         this.transactionRepository = transactionRepository;
         this.transactionLineRepository = transactionLineRepository;
         this.accountRepository = accountRepository;
         this.currencyRepository = currencyRepository;
+        this.journalRepository = journalRepository;
         this.eventPublisher = eventPublisher;
     }
 
@@ -79,7 +85,6 @@ public class TransactionServiceImpl implements TransactionService {
         if (targetCurrency.isDeprecated()){
             throw new DeprecatedCurrencyException();
         }
-
         Currency baseCurrency = this.currencyRepository.findPrimaryCurrency(organizationId).orElseThrow(CurrencyNotFoundException::new);
         // Create transaction
         Transaction transaction = new Transaction();
@@ -103,6 +108,11 @@ public class TransactionServiceImpl implements TransactionService {
         // Target currency amount
         transaction.setOriginalTotalCreditAmount(creditAmount);
         transaction.setOriginalTotalDebitAmount(debitAmount);
+
+        // Set journal
+        Long journalId = Long.valueOf(payload.getJournalId());
+        Journal journal = this.journalRepository.findById(journalId).orElseThrow(JournalNotFoundException::new);
+        transaction.setJournal(journal);
 
         // Persist transaction to the datasource
         Transaction transactionResult = this.transactionRepository.save(transaction);

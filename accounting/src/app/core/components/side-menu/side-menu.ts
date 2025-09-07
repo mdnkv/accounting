@@ -32,6 +32,11 @@ export class SideMenu {
       route: '/accounts'
     },
     {
+      title: 'Journals',
+      icon: 'book',
+      route: '/journals'
+    },
+    {
       title: 'Transactions',
       icon: 'receipt',
       route: '/transactions'

@@ -79,7 +79,7 @@ collection:
         meta:
           id: req_f074e6fc69fb4fb19290de9a2d3955df
           created: 1749035379556
-          modified: 1754378258027
+          modified: 1757244616828
           isPrivate: false
           description: ""
           sortKey: -1748881859977.5
@@ -88,7 +88,7 @@ collection:
           mimeType: application/json
           text: |-
             {
-            	"name":"Stumpf Stiftung & Co. KG"
+            	"name":"Wieland Ebert GmbH"
             }
         headers:
           - name: Content-Type
@@ -1338,6 +1338,149 @@ collection:
         pathParameters:
           - name: organizationId
             value: "{{_.active_organization_id}}"
+  - name: Journals
+    meta:
+      id: fld_a2ba96c040594a2cbaba0596d7caa88e
+      created: 1757244722319
+      modified: 1757244722319
+      sortKey: -1757244722319
+      description: ""
+    children:
+      - url: "{{_.server_url}}journals/organization/:organizationId"
+        name: Get journals for organization
+        meta:
+          id: req_370e7c656d3540e48905c024adce6786
+          created: 1757244724482
+          modified: 1757244771998
+          isPrivate: false
+          description: ""
+          sortKey: -1757244724482
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.5.0
+        authentication:
+          type: oauth2
+          grantType: authorization_code
+          authorizationUrl: "{{_.auth_url}}"
+          accessTokenUrl: "{{_.access_token_url}}"
+          clientId: "{{ _.client_id }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: organizationId
+            value: "{{ _.active_organization_id }}"
+      - url: "{{_.server_url}}journals/create"
+        name: Create journal
+        meta:
+          id: req_695da3aa40cb4591ae93ab4ae8d0469d
+          created: 1757244781266
+          modified: 1757244816379
+          isPrivate: false
+          description: ""
+          sortKey: -1757121727650
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"organizationId":"{{ _.active_organization_id }}",
+            	"name":"Another journal"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.5.0
+        authentication:
+          type: oauth2
+          grantType: authorization_code
+          authorizationUrl: "{{_.auth_url}}"
+          accessTokenUrl: "{{_.access_token_url}}"
+          clientId: "{{ _.client_id }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{_.server_url}}journals/update"
+        name: Update journal
+        meta:
+          id: req_37fb0b23bdce47fcaba25aae57c0f4da
+          created: 1757244830398
+          modified: 1757244854328
+          isPrivate: false
+          description: ""
+          sortKey: -1757060229234
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"id": "1964653276683042816",
+            	"organizationId": "{{ _.active_organization_id }}",
+            	"name": "Another journal",
+            	"description": "Here comes description",
+            	"active": true
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.5.0
+        authentication:
+          type: oauth2
+          grantType: authorization_code
+          authorizationUrl: "{{_.auth_url}}"
+          accessTokenUrl: "{{_.access_token_url}}"
+          clientId: "{{ _.client_id }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{_.server_url}}journals/delete/:id"
+        name: Delete journal
+        meta:
+          id: req_71ae46697b28488e81b898050327dff3
+          created: 1757244866558
+          modified: 1757244881656
+          isPrivate: false
+          description: ""
+          sortKey: -1757029480026
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/11.5.0
+        authentication:
+          type: oauth2
+          grantType: authorization_code
+          authorizationUrl: "{{_.auth_url}}"
+          accessTokenUrl: "{{_.access_token_url}}"
+          clientId: "{{ _.client_id }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: id
+            value: "1964653276683042816"
 cookieJar:
   name: Default Jar
   meta:
@@ -1349,11 +1492,12 @@ environments:
   meta:
     id: env_676597a9d4e9b24c6c7cf8e61c4566cefaacc897
     created: 1749035252072
-    modified: 1754378278825
+    modified: 1757244714630
     isPrivate: false
   data:
     server_url: http://localhost:8000/api/
-    access_token_url: http://localhost:8080/realms/accounting/protocol/openid-connect/token
-    auth_url: http://localhost:8080/realms/accounting/protocol/openid-connect/auth
+    keycloak_host: http://localhost:8080
+    access_token_url: "{{ _.keycloak_host }}/realms/accounting/protocol/openid-connect/token"
+    auth_url: "{{_.keycloak_host}}/realms/accounting/protocol/openid-connect/auth"
     client_id: accounting-rest
-    active_organization_id: "1952630118027362304"
+    active_organization_id: "1964652814969864192"

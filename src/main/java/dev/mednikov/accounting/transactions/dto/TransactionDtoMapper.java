@@ -29,6 +29,7 @@ public final class TransactionDtoMapper implements Function<Transaction, Transac
         result.setTotalCreditAmount(transaction.getOriginalTotalCreditAmount());
         result.setTotalDebitAmount(transaction.getOriginalTotalDebitAmount());
         result.setDraft(transaction.isDraft());
+        result.setJournalId(transaction.getJournal().getId().toString());
         return result;
     }
 

@@ -1,6 +1,7 @@
 package dev.mednikov.accounting.transactions.models;
 
 import dev.mednikov.accounting.currencies.models.Currency;
+import dev.mednikov.accounting.journals.models.Journal;
 import dev.mednikov.accounting.organizations.models.Organization;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -36,6 +37,11 @@ public class Transaction {
     @JoinColumn(name = "target_currency_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Currency targetCurrency;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "journal_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Journal journal;
 
     @Column(nullable = false)
     private String description;
@@ -188,4 +194,11 @@ public class Transaction {
         return lines;
     }
 
+    public Journal getJournal() {
+        return journal;
+    }
+
+    public void setJournal(Journal journal) {
+        this.journal = journal;
+    }
 }

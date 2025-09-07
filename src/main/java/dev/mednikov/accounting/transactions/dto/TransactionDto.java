@@ -12,6 +12,7 @@ public final class TransactionDto {
     private String organizationId;
     private String description;
     private String currencyId;
+    private String journalId;
     private LocalDate date;
     private boolean draft;
     private BigDecimal totalCreditAmount;
@@ -97,5 +98,13 @@ public final class TransactionDto {
 
     public void setDraft(boolean draft) {
         this.draft = draft;
+    }
+
+    public String getJournalId() {
+        return journalId;
+    }
+
+    public void setJournalId(String journalId) {
+        this.journalId = journalId;
     }
 }

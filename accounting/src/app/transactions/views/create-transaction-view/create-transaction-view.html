@@ -3,7 +3,7 @@
 </div>
 
 <form [formGroup]="form" (submit)="onSubmit()">
-  <!-- Date and currency -->
+  <!-- Date, journal and currency -->
   <div class="app-block">
     <div class="app-level">
       <div class="app-level-half">
@@ -33,6 +33,23 @@
           }
 
         </mat-form-field>
+
+        <!-- Journal -->
+        <mat-form-field appearance="outline">
+          <mat-label>Journal</mat-label>
+          <mat-select formControlName="journalId">
+            @for (journal of journalStore.journals(); track journal.id!){
+              <mat-option [value]="journal.id!">{{journal.name}}</mat-option>
+            }
+          </mat-select>
+
+          @if (form.get('journalId')?.touched && form.get('journalId')?.invalid ){
+            <mat-error>This field cannot be blank</mat-error>
+          }
+
+        </mat-form-field>
+
+
       </div>
     </div>
   </div>

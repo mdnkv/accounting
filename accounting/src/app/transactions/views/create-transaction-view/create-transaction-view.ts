@@ -18,6 +18,7 @@ import {TransactionStore} from '../../stores/transaction.store';
 import {Transaction, TransactionLine} from '../../models/transactions.models';
 import {TransactionLineCard} from '../../components/transaction-line-card/transaction-line-card';
 import {TransactionLineForm} from '../../components/transaction-line-form/transaction-line-form';
+import {JournalStore} from '../../../journals/stores/journal.store';
 
 @Component({
   selector: 'app-create-transaction-view',
@@ -41,6 +42,7 @@ export class CreateTransactionView implements OnInit{
   readonly userOrganizationStore = inject(UserOrganizationStore)
   readonly currencyStore = inject(CurrencyStore)
   readonly transactionStore = inject(TransactionStore)
+  readonly journalStore = inject(JournalStore)
 
   formBuilder: FormBuilder = inject(FormBuilder)
   router: Router = inject(Router)
@@ -49,7 +51,8 @@ export class CreateTransactionView implements OnInit{
   form: FormGroup = this.formBuilder.group({
     date: [null, [Validators.required]],
     description: ['', [Validators.required]],
-    currencyId: [null, [Validators.required]]
+    currencyId: [null, [Validators.required]],
+    journalId: [null, [Validators.required]]
   })
 
   transactionsLines = signal<TransactionLine[]>([])
@@ -74,6 +77,11 @@ export class CreateTransactionView implements OnInit{
       }
     })
 
+    if (this.journalStore.areJournalsLoaded()){
+      const defaultJournalId = this.journalStore.journals()[0].id!
+      this.form.get('journalId')?.setValue(defaultJournalId)
+    }
+
     this.form.get('currencyId')?.valueChanges.subscribe((value) => {
       const currency = this.currencyStore.currencies().filter(e => e.id == value)[0]
       this.displayedCurrency.set(currency.code)
@@ -83,6 +91,7 @@ export class CreateTransactionView implements OnInit{
 
   ngOnInit() {
     this.userOrganizationStore.loadActiveOrganization()
+    this.journalStore.getJournals()
   }
 
   onCreateLine (payload: TransactionLine) {
@@ -110,7 +119,8 @@ export class CreateTransactionView implements OnInit{
       lines: this.transactionsLines(),
       date: this.form.get('date')?.value,
       description: this.form.get('description')?.value,
-      currencyId: this.form.get('currencyId')?.value
+      currencyId: this.form.get('currencyId')?.value,
+      journalId: this.form.get('journalId')?.value
     }
 
     this.transactionStore.createTransaction(payload)
