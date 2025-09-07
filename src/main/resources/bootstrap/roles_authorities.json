@@ -25,7 +25,11 @@
       "currencies:view",
       "organization-users:create",
       "organization-users:update",
-      "organization-users:delete"
+      "organization-users:delete",
+      "journals:create",
+      "journals:update",
+      "journals:view",
+      "journals:delete"
     ]
   },
   {
@@ -53,7 +57,11 @@
       "organizations:update",
       "organization-users:create",
       "organization-users:update",
-      "organization-users:delete"
+      "organization-users:delete",
+      "journals:create",
+      "journals:update",
+      "journals:view",
+      "journals:delete"
     ]
   },
   {
@@ -65,7 +73,11 @@
       "accounts:view",
       "transactions:create",
       "transactions:view",
-      "currencies:view"
+      "currencies:view",
+      "journals:create",
+      "journals:update",
+      "journals:view",
+      "journals:delete"
     ]
   },
   {
@@ -74,7 +86,8 @@
       "accounts:view",
       "transactions:create",
       "transactions:view",
-      "currencies:view"
+      "currencies:view",
+      "journals:view"
     ]
   }
 ]
