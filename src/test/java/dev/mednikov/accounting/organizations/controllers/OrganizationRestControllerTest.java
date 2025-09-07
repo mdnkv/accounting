@@ -47,7 +47,7 @@ class OrganizationRestControllerTest {
         result.setName("Kern Urban GmbH & Co. KGaA");
 
         String body = objectMapper.writeValueAsString(payload);
-        String keycloakId = UUID.randomUUID().toString();
+        UUID keycloakId = UUID.randomUUID();
 
         User user = new User();
         user.setEmail("ilbxgj62taf@yahoo.com");

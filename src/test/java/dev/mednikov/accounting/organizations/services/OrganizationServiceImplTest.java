@@ -40,7 +40,7 @@ class OrganizationServiceImplTest {
         Long userId = snowflakeGenerator.next();
         User user = new User();
         user.setId(userId);
-        user.setKeycloakId(UUID.randomUUID().toString());
+        user.setKeycloakId(UUID.randomUUID());
         user.setEmail("vy7e5804yikk6gcq33ht@ymail.com");
 
         Mockito.when(organizationRepository.save(organization)).thenReturn(organization);

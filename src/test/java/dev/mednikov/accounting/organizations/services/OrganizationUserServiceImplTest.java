@@ -61,7 +61,7 @@ class OrganizationUserServiceImplTest {
         user.setEmail("albrecht.horstdieter@ritter.org");
         user.setFirstName("Jutta");
         user.setLastName("Fröhlich");
-        user.setKeycloakId(UUID.randomUUID().toString());
+        user.setKeycloakId(UUID.randomUUID());
 
         OrganizationUser organizationUser = new OrganizationUser();
         organizationUser.setOrganization(organization);
@@ -84,7 +84,7 @@ class OrganizationUserServiceImplTest {
         user.setEmail("ekkehard.jakob@fiedler.com");
         user.setFirstName("Katja");
         user.setLastName("Held-Schröter");
-        user.setKeycloakId(UUID.randomUUID().toString());
+        user.setKeycloakId(UUID.randomUUID());
 
         Mockito.when(organizationUserRepository.findActiveForUser(userId)).thenReturn(Optional.empty());
         Optional<UserOrganizationDto> result = organizationUserService.getActiveForUser(user);
@@ -107,7 +107,7 @@ class OrganizationUserServiceImplTest {
         user.setEmail("gudrun32@lehmann.de");
         user.setFirstName("Kunigunde");
         user.setLastName("Fleischer-Wahl");
-        user.setKeycloakId(UUID.randomUUID().toString());
+        user.setKeycloakId(UUID.randomUUID());
 
         Role role = new Role();
         role.setId(roleId);
