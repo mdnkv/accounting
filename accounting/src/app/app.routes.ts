@@ -9,6 +9,9 @@ import {UpdateAccountView} from './accounts/views/update-account-view/update-acc
 import {AccountsView} from './accounts/views/accounts-view/accounts-view';
 import {CreateTransactionView} from './transactions/views/create-transaction-view/create-transaction-view';
 import {TransactionsView} from './transactions/views/transactions-view/transactions-view';
+import {JournalsView} from './journals/views/journals-view/journals-view';
+import {CreateJournalView} from './journals/views/create-journal-view/create-journal-view';
+import {UpdateJournalView} from './journals/views/update-journal-view/update-journal-view';
 
 export const routes: Routes = [
   {path: 'dashboard', component: DashboardView},
@@ -20,5 +23,8 @@ export const routes: Routes = [
   {path: 'accounts', component: AccountsView},
   {path: 'transactions/create', component: CreateTransactionView},
   {path: 'transactions', component: TransactionsView},
+  {path: 'journals', component: JournalsView},
+  {path: 'journals/create', component: CreateJournalView},
+  {path: 'journals/update/:id', component: UpdateJournalView},
   {path: '', pathMatch: 'full', redirectTo: '/dashboard'}
 ];
