@@ -1,9 +1,9 @@
 export const environment = {
   production: true,
-  serverUrl: 'https://accounting.mednikov.dev/api',
+  serverUrl: '/api',
   keycloak: {
-    server: 'https://keycloak.mednikov.dev',
-    clientId: 'accounting-app-frontend',
-    realm: 'accounting-app'
+    server: 'https://auth.mednikov.dev',
+    clientId: 'accounting-angular',
+    realm: 'accounting'
   }
 };
