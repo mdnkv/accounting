@@ -44,7 +44,7 @@ export const appConfig: ApplicationConfig = {
     }),
     {
       provide: INCLUDE_BEARER_TOKEN_INTERCEPTOR_CONFIG,
-      useValue: [devUrlCondition]
+      useValue: [devUrlCondition, prodUrlCondition]
     },
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
