@@ -1,6 +1,8 @@
 # Accounting application
 
-Web based accounting application, that supports double entry accounting and multi tenancy. Written with Spring and Angular
+Cloud SaaS general ledger accounting platform that supports multi tenancy, multi currency and reporting. Started as a submission for "Software Engineering" course at IU University Of Applied Sciences (received 1.7 score).
+
+[LIVE DEMO](https://accounting.mednikov.dev)
 
 ![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
@@ -13,53 +15,81 @@ Web based accounting application, that supports double entry accounting and mult
 ![RxJS](https://img.shields.io/badge/rxjs-%23B7178C.svg?style=for-the-badge&logo=reactivex&logoColor=white)
 ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
 ![GitHub Actions](https://img.shields.io/badge/github%20actions-%232671E5.svg?style=for-the-badge&logo=githubactions&logoColor=white)
+![Vultr](https://img.shields.io/badge/Vultr-007BFC.svg?style=for-the-badge&logo=vultr)
 
 ## About the Project
 
-The goal of this project was to create a simple, yet complete double entry accounting application. To achieve this task, relevant academic sources were reviewed, as well as other general ledger accounting systems (such as Quickbooks or SevDesk).
+The initial goal was to implement a complete SaaS application that can handle both domain tasks (accounting) as well as all SaaS common functionality (such as multi tenancy, user management etc).
 
-The system allows to manage different payment accounts (assets, liabilities, equity, income and expenses) and organize transactions in the form of a general ledger. The dashboard includes several quick report widgets (profit loss, net worth, expense categories). Detailed customized reports are to be implemented. The application supports unlimited organizations and each user can have different roles in different organizations. Role based authentication was implemented on the backend side to protect user data.
+![](docs/dashboard_material_0_0_2.png)
+
+As the result, this project was created after thorough domain research. As for now, it has more functionality than most advanced SaaS platforms on the market. For instance, here you have multi currency support out of the box - premium feature for most accounting "giants" 😎
 
 ## Features
 
-This section presents a list of features supported by this project, both implemented and planned:
+Following functionality is already implemented. I also list here some planned features that will come in subsequent releases.
 
-- Double entry accounting
-- Transactions can have multiple transaction entries as long as the double entry accounting rule confirms
-- Payment accounts categorized by type (assets, liabilities, equity, income, expense)
-- Chart of accounts bootstraps (generates) for newly created organizations
-- Multi organization support
+- Full support for double entry accounting with custom journals (books)
+- Each transaction (journal entry) can have unlimited number of lines, as long as balance is preserved (_debits_ = _credits_)
+- Chart of accounts with accounts categorized by type (assets, liabilities, equity, income, expense)
+- Automatically generated chart of accounts, journals, and currencies for newly created organizations
+- Multi organization support with fully customized roles and authorities (_how many advanced platforms have that_?)
 - Role-based access control
-- OAuth authentication with Keycloak
-- Dashboard with widgets (profit loss, net worth, expense categories) that are based on last 30, 60, 90 days
-- Managing users in organizations
-- Transaction category auto suggestions [TODO]
-- Recurring transactions [TODO]
-- Reporting (cash flow, balance sheet etc) [TODO]
-- Export data to CSV, LibreOffice and PDF [TODO]
+- Invitation support
+- OAuth 2.0 authentication with Keycloak
+- Dashboard with widgets (profit loss, net worth, expense categories)
+- Multi-currency support with external API support to retrieve historical exchange rates
+- Financial reporting: cash flow, balance sheet
+- Support for recurring transactions [TODO]
+- Auto suggest transaction categories [TODO]
+- Export data to CSV, LibreOffice, and PDF [TODO]
 
-## Tecnhologies used
+## Tech stack
 
 This project is implemented using client server architecture. In addition, both frontend and backend code are allocated in a single code base (task requirement). Following technologies were used:
 
-- Backend: Java, Spring, Spring Security, Hibernate, PostgreSQL, JUnit, Keycloak
-- Frontend: TypeScript, Angular, RxJs, Bulma
-
-## Architecture
-
-From the practical point of view, the project makes use of layered architecture pattern and client service pattern. The system makes use of client server architecture that separates the frontend part from the backend part. Typically, the frontend application runs on client premises (browsers for web based applications and mobile devices for native mobile applications). The server part is executed on a server. This way, the same server can serve multiple client instances.
-
-The architecture of the project is presented on the C4 diagram below:
-
-![](docs/architecture.png)
+- Backend: Java, Spring, Spring Security, Hibernate, PostgreSQL, Flyway, JUnit, Keycloak
+- Frontend: TypeScript, Angular, RxJs, NgRx Signal Store, Angular Material
+- DevOps: Docker, Github Actions
 
 ## Setup
 
-The project can be run manually or using Docker [TODO].
+The project uses Docker for deployment and is deployed on VPS using Github Actions. However, you can also run it manually without Docker.
 
-### Manual setup
+### Docker (easy way)
 
-To run the application manually make sure to have following dependencies installed:
+It is easy to run this app using Docker and Docker compose. You should have following installed:
+
+- Docker or Podman
+- Docker compose
+
+Please note that Keycloak is not included in Docker compose, because the idea is that the app should be easily integrated into an existing workflow.
+
+1. Install Keycloak
+2. Create a new keycloak realm:
+- name: ```accounting```
+- email as username: ```on```
+3. Create a new keycloak client:
+- name: ```accounting-angular```
+- valid redirect URLs: ```http://localhost:8080/*```
+- web origins: ```http://localhost:8080```
+4. Clone this repository
+5. Create an ```.env``` file with:
+
+```env
+SPRING_KEYCLOAK_URL={Path to keycloak}
+```
+6. Start the app
+
+```bash
+docker compose up -d
+```
+
+7. The application runs on ```http://localhost:8080```
+
+### Manual setup (also easy, but requires more steps)
+
+To run the application without Docker make sure to have following dependencies installed:
 
 - Java 24
 - PostgreSQL 17+
@@ -68,7 +98,7 @@ To run the application manually make sure to have following dependencies install
 
 You need to complete following steps:
 
-1. Clone the source code
+1. Clone this repository
 2. Create a new database with the following credentials:
 - Username: ```accounting_user```
 - Password: ```secret```
@@ -87,22 +117,32 @@ cd accouunting-app
 npm install
 ng serve
 ```
-7. Access the application on ```http://localhost:4200```
+7. Use the application on ```http://localhost:4200```
+
+## Architecture
+
+The application utilizes a client server architecture with separate apps for backend (Spring) and frontend (Anglular). Apps can be deployed separately, although as per task requirements they are organized into a single deployment artifact.
+
+The architecture of the project is presented on the C4 diagram below:
+
+![](docs/architecture.png)
 
 ## Screenshots
 
-Current state of the project:
+The application migrated from Bulma CSS to Angular Material, so there are some things to do on frontend.
 
-![](docs/chart-of-accounts.png)
+The current state of the project (v.0.0.2):
 
-![](docs/new-account.png)
+![](docs/dashboard_material_0_0_2.png)
 
-![](docs/journal.png)
+Dashboard
 
-![](docs/transaction.png)
+![](docs/charts_of_accounts_material_0_0_2.png)
+
+Chart of Accounts
 
 ## Author
 
-(C) 2025 Iurii Mednikov iurii.mednikov@iu-study.org
+(C) 2025 Iurii Mednikov ```iurii.mednikov@iu-study.org```
 
 The code is delivered under terms of the MIT software license. For more information, check the ```LICENSE.txt``` file.

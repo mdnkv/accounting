@@ -10,7 +10,7 @@
     </parent>
     <groupId>dev.mednikov</groupId>
     <artifactId>accounting</artifactId>
-    <version>1.0</version>
+    <version>0.0.2</version>
     <name>Accounting</name>
     <description>Multi tenant cloud accounting application</description>
     <url/>
