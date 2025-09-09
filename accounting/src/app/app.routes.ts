@@ -13,18 +13,20 @@ import {JournalsView} from './journals/views/journals-view/journals-view';
 import {CreateJournalView} from './journals/views/create-journal-view/create-journal-view';
 import {UpdateJournalView} from './journals/views/update-journal-view/update-journal-view';
 
+import {HasActiveOrganizationGuard, HasAuthorityGuard} from './core/guards/organizations.guards';
+
 export const routes: Routes = [
   {path: 'dashboard', component: DashboardView},
   {path: 'organizations/create', component: CreateOrganizationView},
-  {path: 'organizations/update/:id', component: UpdateOrganizationView},
+  {path: 'organizations/update/:id', component: UpdateOrganizationView, canActivate: [HasAuthorityGuard('organizations:update')]},
   {path: 'organizations', component: OrganizationsView},
-  {path: 'accounts/create', component: CreateAccountView},
-  {path: 'accounts/update/:id', component: UpdateAccountView},
-  {path: 'accounts', component: AccountsView},
-  {path: 'transactions/create', component: CreateTransactionView},
-  {path: 'transactions', component: TransactionsView},
-  {path: 'journals', component: JournalsView},
-  {path: 'journals/create', component: CreateJournalView},
-  {path: 'journals/update/:id', component: UpdateJournalView},
+  {path: 'accounts/create', component: CreateAccountView, canActivate: [HasAuthorityGuard('accounts:create')]},
+  {path: 'accounts/update/:id', component: UpdateAccountView, canActivate: [HasAuthorityGuard('accounts:update')]},
+  {path: 'accounts', component: AccountsView, canActivate:[HasActiveOrganizationGuard()]},
+  {path: 'transactions/create', component: CreateTransactionView, canActivate: [HasAuthorityGuard('transactions:create')]},
+  {path: 'transactions', component: TransactionsView, canActivate:[HasActiveOrganizationGuard()]},
+  {path: 'journals', component: JournalsView, canActivate:[HasActiveOrganizationGuard()]},
+  {path: 'journals/create', component: CreateJournalView, canActivate: [HasAuthorityGuard('journals:create')]},
+  {path: 'journals/update/:id', component: UpdateJournalView, canActivate: [HasAuthorityGuard('journals:update')]},
   {path: '', pathMatch: 'full', redirectTo: '/dashboard'}
 ];
