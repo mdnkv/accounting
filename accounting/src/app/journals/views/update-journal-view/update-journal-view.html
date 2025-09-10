@@ -4,6 +4,7 @@
 
 <div class="app-block">
   <app-journal-form
+    (cancel)="onCancel()"
     [currentJournal]="currentJournal()"
     (saveJournal)="onUpdateJournal($event)"/>
 </div>

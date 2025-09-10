@@ -5,6 +5,7 @@ import {Account} from '../../models/accounts.models';
 import {AccountForm} from '../../components/account-form/account-form';
 import {AccountStore} from '../../stores/account.store';
 import {AccountService} from '../../services/account';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-update-account-view',
@@ -18,6 +19,7 @@ export class UpdateAccountView implements OnInit {
 
   readonly accountStore = inject(AccountStore)
   accountService: AccountService = inject(AccountService)
+  router: Router = inject(Router)
 
   id = input.required<string>()
   currentAccount = signal<Account|undefined>(undefined)
@@ -38,6 +40,10 @@ export class UpdateAccountView implements OnInit {
 
   onUpdateAccount(account: Account) {
     this.accountStore.updateAccount(account)
+  }
+
+  onCancel(){
+    this.router.navigateByUrl('/accounts')
   }
 
 }

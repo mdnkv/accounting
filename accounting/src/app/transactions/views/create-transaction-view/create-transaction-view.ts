@@ -19,6 +19,7 @@ import {Transaction, TransactionLine} from '../../models/transactions.models';
 import {TransactionLineCard} from '../../components/transaction-line-card/transaction-line-card';
 import {TransactionLineForm} from '../../components/transaction-line-form/transaction-line-form';
 import {JournalStore} from '../../../journals/stores/journal.store';
+import {CancelFormDialog} from '../../../core/components/cancel-form-dialog/cancel-form-dialog';
 
 @Component({
   selector: 'app-create-transaction-view',
@@ -127,11 +128,19 @@ export class CreateTransactionView implements OnInit{
   }
 
   onCancel() {
-    if (this.form.touched) {
-      if (confirm('Do you want to quit?')){
-        this.router.navigateByUrl('/transactions')
-      }
+    if (this.form.touched){
+      // show cancel dialog
+      let dialogRef = this.dialog.open(CancelFormDialog, {
+        width: '400px'
+      })
+      dialogRef.afterClosed().subscribe(result => {
+        // Go to the transactions' list
+        if (result == true){
+          this.router.navigateByUrl('/transactions')
+        }
+      })
     } else {
+      // Nothing was not modified
       this.router.navigateByUrl('/transactions')
     }
   }

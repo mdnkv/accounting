@@ -5,7 +5,10 @@ import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 import {MatSelectModule} from '@angular/material/select';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatDialog} from '@angular/material/dialog';
+
 import {Journal} from '../../models/journals.models';
+import {CancelFormDialog} from '../../../core/components/cancel-form-dialog/cancel-form-dialog';
 
 @Component({
   selector: 'app-journal-form',
@@ -21,6 +24,9 @@ import {Journal} from '../../models/journals.models';
   styleUrl: './journal-form.css'
 })
 export class JournalForm {
+
+  dialog: MatDialog = inject(MatDialog)
+  cancel = output()
 
   saveJournal = output<Journal>()
   currentJournal = input<Journal>()
@@ -75,6 +81,22 @@ export class JournalForm {
     }
   }
 
-  onCancel () {}
+  onCancel () {
+    if (this.form.touched){
+      // show cancel dialog
+      let dialogRef = this.dialog.open(CancelFormDialog, {
+        width: '400px'
+      })
+      dialogRef.afterClosed().subscribe(result => {
+        // Close form
+        if (result == true){
+          this.cancel.emit()
+        }
+      })
+    } else {
+      // Form was not modified
+      this.cancel.emit()
+    }
+  }
 
 }

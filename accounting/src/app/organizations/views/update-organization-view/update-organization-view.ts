@@ -2,6 +2,7 @@ import {Component, inject, input, OnInit, signal} from '@angular/core';
 import {Organization} from '../../models/organizations.models';
 import {OrganizationForm} from '../../components/organization-form/organization-form';
 import {OrganizationService} from '../../services/organization';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-update-organization-view',
@@ -13,6 +14,7 @@ import {OrganizationService} from '../../services/organization';
 })
 export class UpdateOrganizationView implements OnInit{
 
+  router: Router = inject(Router)
   organizationService: OrganizationService = inject(OrganizationService)
 
   id = input.required<string>()
@@ -44,6 +46,10 @@ export class UpdateOrganizationView implements OnInit{
         console.log(err)
       }
     })
+  }
+
+  onCancel(){
+    this.router.navigateByUrl('/organizations')
   }
 
 }

@@ -4,6 +4,7 @@
 
 <div class="app-block">
   <app-organization-form
+    (cancel)="onCancel()"
     [currentOrganization]="organization()"
     (saveOrganization)="onUpdateOrganization($event)"
   />
