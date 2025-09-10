@@ -5,6 +5,7 @@ import {JournalForm} from '../../components/journal-form/journal-form';
 import {Journal} from '../../models/journals.models';
 import {JournalService} from '../../services/journal';
 import {JournalStore} from '../../stores/journal.store';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-update-journal-view',
@@ -15,6 +16,8 @@ import {JournalStore} from '../../stores/journal.store';
   styleUrl: './update-journal-view.css'
 })
 export class UpdateJournalView implements OnInit{
+
+  router: Router = inject(Router)
 
   journalService: JournalService = inject(JournalService)
   readonly journalStore = inject(JournalStore)
@@ -35,6 +38,10 @@ export class UpdateJournalView implements OnInit{
 
   onUpdateJournal(payload: Journal) {
     this.journalStore.updateJournal(payload)
+  }
+
+  onCancel(){
+    this.router.navigateByUrl('/journals')
   }
 
 }

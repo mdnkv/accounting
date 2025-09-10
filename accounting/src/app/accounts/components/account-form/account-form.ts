@@ -6,8 +6,10 @@ import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 import {MatSelectModule} from '@angular/material/select';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatDialog} from '@angular/material/dialog';
 
 import {Account} from '../../models/accounts.models';
+import {CancelFormDialog} from '../../../core/components/cancel-form-dialog/cancel-form-dialog';
 
 @Component({
   selector: 'app-account-form',
@@ -24,7 +26,9 @@ import {Account} from '../../models/accounts.models';
 })
 export class AccountForm {
 
+  dialog: MatDialog = inject(MatDialog)
   saveAccount = output<Account>()
+  cancel = output()
   currentAccount = input<Account>()
 
   isUpdate = signal(false)
@@ -84,6 +88,22 @@ export class AccountForm {
 
   }
 
-  onCancel() {}
+  onCancel() {
+    if (this.form.touched){
+      // show cancel dialog
+      let dialogRef = this.dialog.open(CancelFormDialog, {
+        width: '400px'
+      })
+      dialogRef.afterClosed().subscribe(result => {
+        // Close form
+        if (result == true){
+          this.cancel.emit()
+        }
+      })
+    } else {
+      // Form was not modified
+      this.cancel.emit()
+    }
+  }
 
 }

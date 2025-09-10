@@ -6,6 +6,8 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 
 import {Organization} from '../../models/organizations.models';
+import {MatDialog} from '@angular/material/dialog';
+import {CancelFormDialog} from '../../../core/components/cancel-form-dialog/cancel-form-dialog';
 
 @Component({
   selector: 'app-organization-form',
@@ -19,6 +21,9 @@ import {Organization} from '../../models/organizations.models';
   styleUrl: './organization-form.css'
 })
 export class OrganizationForm {
+
+  dialog: MatDialog = inject(MatDialog)
+  cancel = output()
 
   formBuilder: FormBuilder = inject(FormBuilder)
   form: FormGroup = this.formBuilder.group({
@@ -55,6 +60,22 @@ export class OrganizationForm {
     }
   }
 
-  onCancel() {}
+  onCancel() {
+    if (this.form.touched){
+      // show cancel dialog
+      let dialogRef = this.dialog.open(CancelFormDialog, {
+        width: '400px'
+      })
+      dialogRef.afterClosed().subscribe(result => {
+        // Close form
+        if (result == true){
+          this.cancel.emit()
+        }
+      })
+    } else {
+      // Form was not modified
+      this.cancel.emit()
+    }
+  }
 
 }

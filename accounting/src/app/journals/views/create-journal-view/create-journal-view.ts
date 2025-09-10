@@ -2,6 +2,7 @@ import {Component, inject} from '@angular/core';
 import {JournalForm} from '../../components/journal-form/journal-form';
 import {Journal} from '../../models/journals.models';
 import {JournalStore} from '../../stores/journal.store';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-create-journal-view',
@@ -13,10 +14,15 @@ import {JournalStore} from '../../stores/journal.store';
 })
 export class CreateJournalView {
 
+  router: Router = inject(Router)
   readonly journalStore = inject(JournalStore)
 
   onCreateJournal(payload: Journal) {
     this.journalStore.createJournal(payload)
+  }
+
+  onCancel(){
+    this.router.navigateByUrl('/journals')
   }
 
 }

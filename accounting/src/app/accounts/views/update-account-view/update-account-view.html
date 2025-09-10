@@ -4,6 +4,7 @@
 
 <div class="app-block">
   <app-account-form
+    (cancel)="onCancel()"
     [currentAccount]="currentAccount()"
     (saveAccount)="onUpdateAccount($event)"/>
 </div>
