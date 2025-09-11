@@ -1,5 +1,6 @@
 import {patchState, signalStore, withComputed, withMethods, withState} from '@ngrx/signals';
 import {computed, inject} from '@angular/core';
+import {Router} from '@angular/router';
 
 import {Account} from '../models/accounts.models';
 import {AccountService} from '../services/account';
@@ -10,13 +11,17 @@ interface AccountState {
   accounts: Account[]
   sortOrder: string
   displayedAccountsType: string
+  createError: string | undefined
+  updateError: string | undefined
 }
 
 const initialState: AccountState = {
   areAccountsLoaded: false,
   accounts: [],
   sortOrder: 'name-asc',
-  displayedAccountsType: 'ALL'
+  displayedAccountsType: 'ALL',
+  createError: undefined,
+  updateError: undefined
 }
 
 export const AccountStore = signalStore(
@@ -25,6 +30,7 @@ export const AccountStore = signalStore(
   withMethods((store) => {
     const accountService: AccountService = inject(AccountService)
     const userOrganizationStore = inject(UserOrganizationStore)
+    const router: Router = inject(Router)
     return {
       createAccount: (payload: Account) => {
         if (userOrganizationStore.activeOrganization() != undefined) {
@@ -36,7 +42,13 @@ export const AccountStore = signalStore(
           accountService.createAccount(account).subscribe({
             next: result => {
               // add an account to accounts
-              patchState(store, {areAccountsLoaded: true, accounts: [...store.accounts(), result]})
+              patchState(store, {
+                areAccountsLoaded: true,
+                createError: undefined,
+                updateError: undefined,
+                accounts: [...store.accounts(), result]
+              })
+              router.navigateByUrl('/accounts')
             }
           })
         }
@@ -46,7 +58,12 @@ export const AccountStore = signalStore(
           next: result => {
             const currentAccounts = store.accounts().filter(e => e.id! != payload.id!)
             currentAccounts.push(result)
-            patchState(store, {accounts: currentAccounts})
+            patchState(store, {
+              accounts: currentAccounts,
+              updateError: undefined,
+              createError: undefined
+            })
+            router.navigateByUrl('/accounts')
           }
         })
       },

@@ -1,5 +1,7 @@
 import {patchState, signalStore, withMethods, withState} from '@ngrx/signals';
 import {inject} from '@angular/core';
+import {Router} from '@angular/router';
+
 import {Transaction} from '../models/transactions.models';
 import {TransactionService} from '../services/transaction';
 import {UserOrganizationStore} from '../../organizations/stores/user-organization.store';
@@ -8,12 +10,14 @@ interface TransactionState {
   transactions: Transaction[]
   sortOrder: string
   areTransactionsLoaded: boolean
+  createError: string | undefined
 }
 
 const initialState: TransactionState = {
   transactions: [],
   sortOrder: 'date-desc',
   areTransactionsLoaded: false,
+  createError: undefined
 }
 
 export const TransactionStore = signalStore(
@@ -22,6 +26,7 @@ export const TransactionStore = signalStore(
   withMethods((store) => {
     const transactionService: TransactionService = inject(TransactionService)
     const userOrganizationStore = inject(UserOrganizationStore)
+    const router: Router = inject(Router)
     return {
       setSortOrder: (order: string) => {
         const items = store.transactions().sort((transaction1, transaction2) => {
@@ -77,7 +82,11 @@ export const TransactionStore = signalStore(
         }
         transactionService.createTransaction(transaction).subscribe({
           next: result => {
-            //
+            patchState(store, {
+              transactions: [...store.transactions(), result],
+              createError: undefined
+            })
+            router.navigateByUrl('/transactions')
           }
         })
       }

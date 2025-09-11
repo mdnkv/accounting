@@ -19,8 +19,6 @@ export class UpdateOrganizationView implements OnInit{
 
   id = input.required<string>()
   organization = signal<Organization|undefined>(undefined)
-  success = signal<boolean>(false)
-  error = signal<string>('')
 
   ngOnInit() {
     // load organization
@@ -35,12 +33,10 @@ export class UpdateOrganizationView implements OnInit{
   }
 
   onUpdateOrganization(organization: Organization){
-    this.success.set(false)
-    this.error.set('')
     this.organizationService.updateOrganization(organization).subscribe({
       next: result => {
         console.log(result)
-        this.success.set(true)
+        this.router.navigateByUrl('/organizations')
       },
       error: err =>{
         console.log(err)
