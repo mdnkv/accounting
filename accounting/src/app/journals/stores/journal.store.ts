@@ -1,5 +1,7 @@
 import {patchState, signalStore, withMethods, withState} from '@ngrx/signals';
 import {inject} from '@angular/core';
+import {Router} from '@angular/router';
+
 import {UserOrganizationStore} from '../../organizations/stores/user-organization.store';
 import {JournalService} from '../services/journal';
 import {Journal} from '../models/journals.models';
@@ -7,11 +9,15 @@ import {Journal} from '../models/journals.models';
 interface JournalState {
   areJournalsLoaded: boolean
   journals: Journal[]
+  createError: string | undefined
+  updateError: string | undefined
 }
 
 const initialState: JournalState = {
   areJournalsLoaded: false,
-  journals: []
+  journals: [],
+  createError: undefined,
+  updateError: undefined
 }
 
 export const JournalStore = signalStore(
@@ -20,6 +26,7 @@ export const JournalStore = signalStore(
   withMethods((store) => {
     const userOrganizationStore = inject(UserOrganizationStore)
     const journalService: JournalService = inject(JournalService)
+    const router: Router = inject(Router)
     return {
       createJournal(payload: Journal) {
 
@@ -32,7 +39,13 @@ export const JournalStore = signalStore(
           journalService.createJournal(journal).subscribe({
             next: result => {
               // add journal to state
-              patchState(store, {areJournalsLoaded: true, journals: [...store.journals(), result]})
+              patchState(store, {
+                areJournalsLoaded: true,
+                createError: undefined,
+                updateError: undefined,
+                journals: [...store.journals(), result]
+              })
+              router.navigateByUrl('/journals')
             }
           })
         }
@@ -43,7 +56,12 @@ export const JournalStore = signalStore(
           next: result => {
             const items = store.journals().filter(e => e.id! != payload.id!)
             items.push(result)
-            patchState(store, {journals: items})
+            patchState(store, {
+              createError: undefined,
+              updateError: undefined,
+              journals: items
+            })
+            router.navigateByUrl('/journals')
           }
         })
       },
