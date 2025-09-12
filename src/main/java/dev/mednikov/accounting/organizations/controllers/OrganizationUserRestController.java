@@ -6,6 +6,7 @@ import dev.mednikov.accounting.organizations.dto.UserOrganizationDto;
 import dev.mednikov.accounting.organizations.services.OrganizationUserService;
 import dev.mednikov.accounting.users.models.User;
 import dev.mednikov.accounting.users.services.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,7 +31,7 @@ public class OrganizationUserRestController {
 
     @PostMapping("/create")
     @PreAuthorize("hasAuthority(#body.organizationId) and hasAuthority('organization-users:create')")
-    public ResponseEntity<OrganizationUserDto> createOrganizationUser (@RequestBody CreateOrganizationUserRequestDto body){
+    public ResponseEntity<OrganizationUserDto> createOrganizationUser (@RequestBody @Valid CreateOrganizationUserRequestDto body){
         Optional<OrganizationUserDto> result = this.organizationUserService.createOrganizationUser(body);
         return ResponseEntity.of(result);
     }

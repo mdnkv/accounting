@@ -130,6 +130,7 @@ class TransactionRestControllerTest {
         payload.setDate(LocalDate.now().minusDays(10));
         payload.setDescription("Pellentesque condimentum magna at iaculis consequat.");
         payload.setLines(lines);
+        payload.setJournalId(snowflakeGenerator.next().toString());
         payload.setOrganizationId(snowflakeGenerator.next().toString());
 
         String keycloakId = UUID.randomUUID().toString();

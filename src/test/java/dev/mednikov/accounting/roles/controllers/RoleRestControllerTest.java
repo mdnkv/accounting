@@ -2,6 +2,7 @@ package dev.mednikov.accounting.roles.controllers;
 
 import cn.hutool.core.lang.generator.SnowflakeGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.mednikov.accounting.authorities.dto.AuthorityDto;
 import dev.mednikov.accounting.roles.dto.RoleDto;
 import dev.mednikov.accounting.roles.exceptions.RoleAlreadyExistsException;
 import dev.mednikov.accounting.roles.exceptions.RoleNotFoundException;
@@ -56,14 +57,19 @@ class RoleRestControllerTest {
     @Test
     void createRole_successTest() throws Exception {
         Long organizationId = snowflakeGenerator.next();
+
+        AuthorityDto authority = new AuthorityDto();
+        authority.setName("User");
+        authority.setOrganizationId(organizationId.toString());
+
         RoleDto payload = new RoleDto();
         payload.setName("User");
-        payload.setAuthorities(List.of());
+        payload.setAuthorities(List.of(authority));
         payload.setOrganizationId(organizationId.toString());
 
         RoleDto result = new RoleDto();
         result.setName("User");
-        result.setAuthorities(List.of());
+        result.setAuthorities(List.of(authority));
         result.setOrganizationId(organizationId.toString());
         result.setId(snowflakeGenerator.next().toString());
 
@@ -83,9 +89,12 @@ class RoleRestControllerTest {
     void updateRole_successTest() throws Exception {
         Long roleId = snowflakeGenerator.next();
         Long organizationId = snowflakeGenerator.next();
+        AuthorityDto authority = new AuthorityDto();
+        authority.setName("User");
+        authority.setOrganizationId(organizationId.toString());
         RoleDto payload = new RoleDto();
         payload.setName("User");
-        payload.setAuthorities(List.of());
+        payload.setAuthorities(List.of(authority));
         payload.setId(roleId.toString());
         payload.setOrganizationId(organizationId.toString());
 

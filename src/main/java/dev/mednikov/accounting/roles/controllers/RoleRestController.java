@@ -2,6 +2,7 @@ package dev.mednikov.accounting.roles.controllers;
 
 import dev.mednikov.accounting.roles.dto.RoleDto;
 import dev.mednikov.accounting.roles.services.RoleService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -21,13 +22,13 @@ public class RoleRestController {
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAuthority('roles:create') and hasAuthority(#body.organizationId)")
-    public @ResponseBody RoleDto createRole (@RequestBody RoleDto body){
+    public @ResponseBody RoleDto createRole (@RequestBody @Valid RoleDto body){
         return this.roleService.createRole(body);
     }
 
     @PutMapping("/update")
     @PreAuthorize("hasAuthority('roles:update') and hasAuthority(#body.organizationId)")
-    public @ResponseBody RoleDto updateRole (@RequestBody RoleDto body){
+    public @ResponseBody RoleDto updateRole (@RequestBody @Valid RoleDto body){
         return this.roleService.updateRole(body);
     }
 

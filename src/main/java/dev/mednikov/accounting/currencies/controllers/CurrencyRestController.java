@@ -2,6 +2,7 @@ package dev.mednikov.accounting.currencies.controllers;
 
 import dev.mednikov.accounting.currencies.dto.CurrencyDto;
 import dev.mednikov.accounting.currencies.services.CurrencyService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,13 +24,13 @@ public class CurrencyRestController {
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAuthority('currencies:create') and hasAuthority(#body.organizationId)")
-    public @ResponseBody CurrencyDto createCurrency(@RequestBody CurrencyDto body){
+    public @ResponseBody CurrencyDto createCurrency(@RequestBody @Valid CurrencyDto body){
         return this.currencyService.createCurrency(body);
     }
 
     @PutMapping("/update")
     @PreAuthorize("hasAuthority('currencies:update') and hasAuthority(#body.organizationId)")
-    public @ResponseBody CurrencyDto updateCurrency(@RequestBody CurrencyDto body){
+    public @ResponseBody CurrencyDto updateCurrency(@RequestBody @Valid CurrencyDto body){
         return this.currencyService.updateCurrency(body);
     }
 

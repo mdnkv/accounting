@@ -1,11 +1,15 @@
 package dev.mednikov.accounting.currencies.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.Length;
+
 public final class CurrencyDto {
 
     private String id;
-    private String organizationId;
-    private String name;
-    private String code;
+    @NotNull @NotBlank private String organizationId;
+    @NotNull @NotBlank @Length(max=255) private String name;
+    @NotNull @NotBlank @Length(max=3) private String code;
     private boolean primary;
     private boolean deprecated;
 
