@@ -3,6 +3,12 @@
 </div>
 
 <div class="app-block">
+
+  <!-- Error message -->
+  @if (userOrganizationStore.createError() != undefined){
+    <app-error-message [message]="userOrganizationStore.createError()!"/>
+  }
+
   <app-organization-form
     (cancel)="onCancel()"
     (saveOrganization)="onCreateOrganization($event)"/>

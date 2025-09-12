@@ -2,6 +2,11 @@
   <h2 class="mat-headline-1">New transaction</h2>
 </div>
 
+<!-- Error message -->
+@if (transactionStore.createError() != undefined){
+  <app-error-message [message]="transactionStore.createError()!"/>
+}
+
 <form [formGroup]="form" (submit)="onSubmit()">
   <!-- Date, journal and currency -->
   <div class="app-block">

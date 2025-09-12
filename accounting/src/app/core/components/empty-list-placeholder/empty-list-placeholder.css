@@ -1,0 +1,11 @@
+.app-empty-list-placeholder-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.app-empty-list-placeholder-image {
+  width: 200px;
+  height: 200px;
+}

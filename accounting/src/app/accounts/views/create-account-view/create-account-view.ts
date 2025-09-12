@@ -3,11 +3,13 @@ import {Account} from '../../models/accounts.models';
 import {AccountForm} from '../../components/account-form/account-form';
 import {AccountStore} from '../../stores/account.store';
 import {Router} from '@angular/router';
+import {ErrorMessage} from '../../../core/components/error-message/error-message';
 
 @Component({
   selector: 'app-create-account-view',
   imports: [
-    AccountForm
+    AccountForm,
+    ErrorMessage
   ],
   templateUrl: './create-account-view.html',
   styleUrl: './create-account-view.css'

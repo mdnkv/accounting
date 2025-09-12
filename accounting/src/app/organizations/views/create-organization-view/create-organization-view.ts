@@ -4,11 +4,13 @@ import {Router} from '@angular/router';
 import {Organization} from '../../models/organizations.models';
 import {OrganizationForm} from '../../components/organization-form/organization-form';
 import {UserOrganizationStore} from '../../stores/user-organization.store';
+import {ErrorMessage} from '../../../core/components/error-message/error-message';
 
 @Component({
   selector: 'app-create-organization-view',
   imports: [
-    OrganizationForm
+    OrganizationForm,
+    ErrorMessage
   ],
   templateUrl: './create-organization-view.html',
   styleUrl: './create-organization-view.css'
