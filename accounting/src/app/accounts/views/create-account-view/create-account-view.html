@@ -2,6 +2,11 @@
   <h2 class="mat-headline-1">New account</h2>
 </div>
 
+<!-- Error message -->
+@if (accountStore.createError() != undefined){
+  <app-error-message [message]="accountStore.createError()!"/>
+}
+
 <div class="app-block">
   <app-account-form
     (cancel)="onCancel()"

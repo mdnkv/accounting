@@ -6,11 +6,13 @@ import {Journal} from '../../models/journals.models';
 import {JournalService} from '../../services/journal';
 import {JournalStore} from '../../stores/journal.store';
 import {Router} from '@angular/router';
+import {ErrorMessage} from '../../../core/components/error-message/error-message';
 
 @Component({
   selector: 'app-update-journal-view',
   imports: [
-    JournalForm
+    JournalForm,
+    ErrorMessage
   ],
   templateUrl: './update-journal-view.html',
   styleUrl: './update-journal-view.css'

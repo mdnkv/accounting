@@ -6,11 +6,13 @@ import {AccountForm} from '../../components/account-form/account-form';
 import {AccountStore} from '../../stores/account.store';
 import {AccountService} from '../../services/account';
 import {Router} from '@angular/router';
+import {ErrorMessage} from '../../../core/components/error-message/error-message';
 
 @Component({
   selector: 'app-update-account-view',
   imports: [
-    AccountForm
+    AccountForm,
+    ErrorMessage
   ],
   templateUrl: './update-account-view.html',
   styleUrl: './update-account-view.css'

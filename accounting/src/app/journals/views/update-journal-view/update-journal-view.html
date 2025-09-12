@@ -2,6 +2,11 @@
   <h2 class="mat-headline-1">Update journal</h2>
 </div>
 
+<!-- Error message -->
+@if (journalStore.createError() != undefined){
+  <app-error-message [message]="journalStore.createError()!"/>
+}
+
 <div class="app-block">
   <app-journal-form
     (cancel)="onCancel()"

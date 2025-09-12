@@ -20,6 +20,7 @@ import {TransactionLineCard} from '../../components/transaction-line-card/transa
 import {TransactionLineForm} from '../../components/transaction-line-form/transaction-line-form';
 import {JournalStore} from '../../../journals/stores/journal.store';
 import {CancelFormDialog} from '../../../core/components/cancel-form-dialog/cancel-form-dialog';
+import {ErrorMessage} from '../../../core/components/error-message/error-message';
 
 @Component({
   selector: 'app-create-transaction-view',
@@ -31,7 +32,8 @@ import {CancelFormDialog} from '../../../core/components/cancel-form-dialog/canc
     MatButtonModule,
     MatSelectModule,
     MatDatepickerModule,
-    TransactionLineCard
+    TransactionLineCard,
+    ErrorMessage
   ],
   templateUrl: './create-transaction-view.html',
   styleUrl: './create-transaction-view.css',

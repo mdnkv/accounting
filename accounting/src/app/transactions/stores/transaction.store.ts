@@ -1,6 +1,7 @@
 import {patchState, signalStore, withMethods, withState} from '@ngrx/signals';
 import {inject} from '@angular/core';
 import {Router} from '@angular/router';
+import {HttpErrorResponse} from '@angular/common/http';
 
 import {Transaction} from '../models/transactions.models';
 import {TransactionService} from '../services/transaction';
@@ -18,6 +19,10 @@ const initialState: TransactionState = {
   sortOrder: 'date-desc',
   areTransactionsLoaded: false,
   createError: undefined
+}
+
+function getError(err: HttpErrorResponse): string {
+  return 'Something went wrong. Please try again later'
 }
 
 export const TransactionStore = signalStore(
@@ -68,7 +73,8 @@ export const TransactionStore = signalStore(
             next: result => {
               patchState(store, {
                 areTransactionsLoaded: true,
-                transactions: result
+                transactions: result,
+                createError: undefined
               })
             }
           })
@@ -87,6 +93,11 @@ export const TransactionStore = signalStore(
               createError: undefined
             })
             router.navigateByUrl('/transactions')
+          },
+          error: (err: HttpErrorResponse) => {
+            console.log(err)
+            const message = getError(err)
+            patchState(store, {createError: message})
           }
         })
       }

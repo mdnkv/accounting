@@ -1,6 +1,7 @@
 import {patchState, signalStore, withMethods, withState} from '@ngrx/signals';
 import {inject} from '@angular/core';
 import {Router} from '@angular/router';
+import {HttpErrorResponse} from '@angular/common/http';
 
 import {UserOrganizationStore} from '../../organizations/stores/user-organization.store';
 import {JournalService} from '../services/journal';
@@ -18,6 +19,14 @@ const initialState: JournalState = {
   journals: [],
   createError: undefined,
   updateError: undefined
+}
+
+function getError(err: HttpErrorResponse): string {
+  if (err.status == 400){
+    return 'Journal with this name already exists'
+  } else {
+    return 'Something went wrong. Please try again later'
+  }
 }
 
 export const JournalStore = signalStore(
@@ -46,6 +55,11 @@ export const JournalStore = signalStore(
                 journals: [...store.journals(), result]
               })
               router.navigateByUrl('/journals')
+            },
+            error: (err: HttpErrorResponse) => {
+              console.log(err)
+              const message = getError(err)
+              patchState(store, {createError: message})
             }
           })
         }
@@ -62,6 +76,11 @@ export const JournalStore = signalStore(
               journals: items
             })
             router.navigateByUrl('/journals')
+          },
+          error: (err: HttpErrorResponse) => {
+            console.log(err)
+            const message = getError(err)
+            patchState(store, {updateError: message})
           }
         })
       },
@@ -78,7 +97,12 @@ export const JournalStore = signalStore(
           const organizationId = userOrganizationStore.activeOrganization()!.organization.id!
           journalService.getJournals(organizationId).subscribe({
             next: result => {
-              patchState(store, {journals: result, areJournalsLoaded: true})
+              patchState(store, {
+                journals: result,
+                createError: undefined,
+                updateError: undefined,
+                areJournalsLoaded: true
+              })
             }
           })
         }

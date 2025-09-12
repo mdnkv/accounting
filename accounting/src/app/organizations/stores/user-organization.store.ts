@@ -23,6 +23,10 @@ const initialState: UserOrganizationState = {
   createError: undefined
 }
 
+function getError(err: HttpErrorResponse): string {
+  return 'Something went wrong. Please try again later'
+}
+
 export const UserOrganizationStore = signalStore(
   {providedIn: 'root'},
   withState(initialState),
@@ -53,6 +57,11 @@ export const UserOrganizationStore = signalStore(
                 }
               })
             }
+          },
+          error: (err: HttpErrorResponse) => {
+            console.log(err)
+            const message = getError(err)
+            patchState(store, {createError: message})
           }
         })
       },
@@ -78,6 +87,7 @@ export const UserOrganizationStore = signalStore(
           next: result => {
             patchState(store, {
               activeOrganization: result,
+              createError: undefined,
               isActiveOrganizationLoaded: true,
               userOrganizations: store.userOrganizations().map(or => {
                 or.active = or.organization.id! == uo.organization.id!
@@ -95,6 +105,7 @@ export const UserOrganizationStore = signalStore(
           next: result => {
             patchState(store, {
               userOrganizations: result,
+              createError: undefined,
               areOrganizationsLoaded: true
             })
           }

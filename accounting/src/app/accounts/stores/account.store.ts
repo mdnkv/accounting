@@ -1,6 +1,7 @@
 import {patchState, signalStore, withComputed, withMethods, withState} from '@ngrx/signals';
 import {computed, inject} from '@angular/core';
 import {Router} from '@angular/router';
+import {HttpErrorResponse} from '@angular/common/http';
 
 import {Account} from '../models/accounts.models';
 import {AccountService} from '../services/account';
@@ -22,6 +23,15 @@ const initialState: AccountState = {
   displayedAccountsType: 'ALL',
   createError: undefined,
   updateError: undefined
+}
+
+function getError(err: HttpErrorResponse): string{
+  console.log(err)
+  if (err.status == 400){
+    return 'Account with this code already exists'
+  } else {
+    return 'Something went wrong please try again later'
+  }
 }
 
 export const AccountStore = signalStore(
@@ -49,6 +59,11 @@ export const AccountStore = signalStore(
                 accounts: [...store.accounts(), result]
               })
               router.navigateByUrl('/accounts')
+            },
+            error: (err: HttpErrorResponse) => {
+              console.log(err)
+              const message = getError(err)
+              patchState(store, {createError: message})
             }
           })
         }
@@ -64,6 +79,11 @@ export const AccountStore = signalStore(
               createError: undefined
             })
             router.navigateByUrl('/accounts')
+          },
+          error: (err: HttpErrorResponse) => {
+            console.log(err)
+            const message = getError(err)
+            patchState(store, {updateError: message})
           }
         })
       },
@@ -80,7 +100,12 @@ export const AccountStore = signalStore(
           const organizationId = userOrganizationStore.activeOrganization()!.organization.id!
           accountService.getAccounts(organizationId).subscribe({
             next: result => {
-              patchState(store, {accounts: result, areAccountsLoaded: true})
+              patchState(store, {
+                createError: undefined,
+                updateError: undefined,
+                accounts: result,
+                areAccountsLoaded: true
+              })
             }
           })
         }
