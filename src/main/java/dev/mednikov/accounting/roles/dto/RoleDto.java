@@ -1,15 +1,19 @@
 package dev.mednikov.accounting.roles.dto;
 
 import dev.mednikov.accounting.authorities.dto.AuthorityDto;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.Length;
 
 import java.util.List;
 
 public final class RoleDto {
 
     private String id;
-    private String organizationId;
-    private String name;
-    private List<AuthorityDto> authorities;
+    @NotNull @NotBlank private String organizationId;
+    @NotNull @NotBlank @Length(max=255) private String name;
+    @NotNull @NotEmpty private List<AuthorityDto> authorities;
 
     public String getId() {
         return id;

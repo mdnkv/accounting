@@ -1,15 +1,18 @@
 package dev.mednikov.accounting.accounts.dto;
 
 import dev.mednikov.accounting.accounts.models.AccountType;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.Length;
 
 public final class AccountDto {
 
     private String id;
-    private String organizationId;
-    private String name;
-    private String code;
+    @NotNull @NotBlank private String organizationId;
+    @NotNull @NotBlank @Length(max=255) private String name;
+    @NotNull @NotBlank @Length(max=20) private String code;
+    @NotNull private AccountType accountType;
     private boolean deprecated;
-    private AccountType accountType;
 
     public String getId() {
         return id;

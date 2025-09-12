@@ -1,10 +1,15 @@
 package dev.mednikov.accounting.organizations.dto;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+
 public final class CreateOrganizationUserRequestDto {
 
-    private String email;
-    private String roleId;
-    private String organizationId;
+    @NotNull @NotBlank @Email private String email;
+    @NotNull @NotBlank private String roleId;
+    @NotNull @NotBlank private String organizationId;
 
     public String getEmail() {
         return email;

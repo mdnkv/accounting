@@ -2,6 +2,7 @@ package dev.mednikov.accounting.accounts.controllers;
 
 import dev.mednikov.accounting.accounts.dto.AccountDto;
 import dev.mednikov.accounting.accounts.services.AccountService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,13 +24,13 @@ public class AccountRestController {
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAuthority('accounts:create') and hasAuthority(#body.organizationId)")
-    public @ResponseBody AccountDto createAccount(@RequestBody AccountDto body) {
+    public @ResponseBody AccountDto createAccount(@RequestBody @Valid AccountDto body) {
         return this.accountService.createAccount(body);
     }
 
     @PutMapping("/update")
     @PreAuthorize("hasAuthority('accounts:update') and hasAuthority(#body.organizationId)")
-    public @ResponseBody AccountDto updateAccount(@RequestBody AccountDto body) {
+    public @ResponseBody AccountDto updateAccount(@RequestBody @Valid AccountDto body) {
         return this.accountService.updateAccount(body);
     }
 

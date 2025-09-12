@@ -2,6 +2,7 @@ package dev.mednikov.accounting.journals.controllers;
 
 import dev.mednikov.accounting.journals.dto.JournalDto;
 import dev.mednikov.accounting.journals.services.JournalService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,13 +24,13 @@ public class JournalRestController {
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAuthority('journals:create') and hasAuthority(#body.organizationId)")
-    public @ResponseBody JournalDto createJournal(@RequestBody JournalDto body) {
+    public @ResponseBody JournalDto createJournal(@RequestBody @Valid JournalDto body) {
         return this.journalService.createJournal(body);
     }
 
     @PutMapping("/update")
     @PreAuthorize("hasAuthority('journals:update') and hasAuthority(#body.organizationId)")
-    public @ResponseBody JournalDto updateJournal(@RequestBody JournalDto body) {
+    public @ResponseBody JournalDto updateJournal(@RequestBody @Valid JournalDto body) {
         return this.journalService.updateJournal(body);
     }
 

@@ -2,6 +2,7 @@ package dev.mednikov.accounting.authorities.controllers;
 
 import dev.mednikov.accounting.authorities.dto.AuthorityDto;
 import dev.mednikov.accounting.authorities.services.AuthorityService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -21,13 +22,13 @@ public class AuthorityRestController {
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAuthority('authorities:create') and hasAuthority(#body.organizationId)")
-    public @ResponseBody AuthorityDto createAuthority(@RequestBody AuthorityDto body) {
+    public @ResponseBody AuthorityDto createAuthority(@RequestBody @Valid AuthorityDto body) {
         return this.authorityService.createAuthority(body);
     }
 
     @PutMapping("/update")
     @PreAuthorize("hasAuthority('authorities:update') and hasAuthority(#body.organizationId)")
-    public @ResponseBody AuthorityDto updateAuthority(@RequestBody AuthorityDto body) {
+    public @ResponseBody AuthorityDto updateAuthority(@RequestBody @Valid AuthorityDto body) {
         return this.authorityService.updateAuthority(body);
     }
 

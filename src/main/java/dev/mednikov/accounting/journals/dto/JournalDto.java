@@ -1,10 +1,14 @@
 package dev.mednikov.accounting.journals.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.Length;
+
 public final class JournalDto {
 
     private String id;
-    private String organizationId;
-    private String name;
+    @NotNull @NotBlank private String organizationId;
+    @NotNull @NotBlank @Length(max=255) private String name;
     private String description;
     private boolean active;
 

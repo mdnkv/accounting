@@ -4,6 +4,7 @@ import dev.mednikov.accounting.transactions.dto.TransactionDto;
 import dev.mednikov.accounting.transactions.services.TransactionService;
 import dev.mednikov.accounting.users.models.User;
 import dev.mednikov.accounting.users.services.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,7 +26,7 @@ public class TransactionRestController {
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAuthority('transactions:create') and hasAuthority(#body.organizationId)")
-    public @ResponseBody TransactionDto createTransaction(@RequestBody TransactionDto body, @AuthenticationPrincipal Jwt jwt) {
+    public @ResponseBody TransactionDto createTransaction(@RequestBody @Valid TransactionDto body, @AuthenticationPrincipal Jwt jwt) {
         return this.transactionService.createTransaction(body);
     }
 

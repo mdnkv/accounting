@@ -1,6 +1,9 @@
 package dev.mednikov.accounting.transactions.dto;
 
 import dev.mednikov.accounting.currencies.dto.CurrencyDto;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -9,16 +12,16 @@ import java.util.List;
 public final class TransactionDto {
 
     private String id;
-    private String organizationId;
-    private String description;
-    private String currencyId;
-    private String journalId;
-    private LocalDate date;
+    @NotNull @NotBlank private String organizationId;
+    @NotNull @NotBlank private String description;
+    @NotNull @NotBlank private String currencyId;
+    @NotNull @NotBlank private String journalId;
+    @NotNull private LocalDate date;
     private boolean draft;
     private BigDecimal totalCreditAmount;
     private BigDecimal totalDebitAmount;
     private CurrencyDto currency;
-    private List<TransactionLineDto> lines;
+    @NotNull @NotEmpty private List<TransactionLineDto> lines;
 
     public String getId() {
         return id;

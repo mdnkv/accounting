@@ -4,6 +4,7 @@ import dev.mednikov.accounting.organizations.dto.OrganizationDto;
 import dev.mednikov.accounting.organizations.services.OrganizationService;
 import dev.mednikov.accounting.users.models.User;
 import dev.mednikov.accounting.users.services.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,7 +29,7 @@ public class OrganizationRestController {
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     public @ResponseBody OrganizationDto createOrganization(
-            @RequestBody OrganizationDto organizationDto,
+            @RequestBody @Valid OrganizationDto organizationDto,
             @AuthenticationPrincipal Jwt jwt
             ) {
         User user = this.userService.getOrCreateUser(jwt);
@@ -37,7 +38,7 @@ public class OrganizationRestController {
 
     @PutMapping("/update")
     @PreAuthorize("hasAuthority('organizations:update')")
-    public @ResponseBody OrganizationDto updateOrganization(@RequestBody OrganizationDto organizationDto) {
+    public @ResponseBody OrganizationDto updateOrganization(@RequestBody @Valid OrganizationDto organizationDto) {
         return this.organizationService.updateOrganization(organizationDto);
     }
 
