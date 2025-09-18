@@ -24,7 +24,7 @@ public class ReportRestController {
     }
 
     @GetMapping("/balance-sheet/{organizationId}")
-    @PreAuthorize("hasAuthority(#organizationId)")
+    @PreAuthorize("hasAuthority(#organizationId) and hasAuthority('reports:view')")
     public @ResponseBody BalanceSheetDto getBalanceSheet (
             @PathVariable Long organizationId,
             @RequestParam(required = false) LocalDate date) {
@@ -33,7 +33,7 @@ public class ReportRestController {
     }
 
     @GetMapping("/profit-loss/{organizationId}")
-    @PreAuthorize("hasAuthority(#organizationId)")
+    @PreAuthorize("hasAuthority(#organizationId) and hasAuthority('reports:view')")
     public @ResponseBody ProfitLossDto getProfitLoss (
             @PathVariable Long organizationId,
             @RequestParam LocalDate fromDate,

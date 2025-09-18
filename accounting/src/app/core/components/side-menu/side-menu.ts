@@ -28,7 +28,7 @@ export class SideMenu {
     },
     {
       title: 'Accounts',
-      icon: 'book',
+      icon: 'assignment',
       route: '/accounts'
     },
     {
@@ -40,6 +40,11 @@ export class SideMenu {
       title: 'Transactions',
       icon: 'receipt',
       route: '/transactions'
+    },
+    {
+      title: 'Reports',
+      icon: 'bar_chart',
+      route: '/reports'
     }
   ]
 

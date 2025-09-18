@@ -29,7 +29,8 @@
       "journals:create",
       "journals:update",
       "journals:view",
-      "journals:delete"
+      "journals:delete",
+      "reports:view"
     ]
   },
   {
@@ -61,7 +62,8 @@
       "journals:create",
       "journals:update",
       "journals:view",
-      "journals:delete"
+      "journals:delete",
+      "reports:view"
     ]
   },
   {
@@ -77,7 +79,8 @@
       "journals:create",
       "journals:update",
       "journals:view",
-      "journals:delete"
+      "journals:delete",
+      "reports:view"
     ]
   },
   {
@@ -87,7 +90,8 @@
       "transactions:create",
       "transactions:view",
       "currencies:view",
-      "journals:view"
+      "journals:view",
+      "reports:view"
     ]
   }
 ]

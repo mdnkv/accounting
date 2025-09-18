@@ -14,6 +14,7 @@ import {CreateJournalView} from './journals/views/create-journal-view/create-jou
 import {UpdateJournalView} from './journals/views/update-journal-view/update-journal-view';
 
 import {HasActiveOrganizationGuard, HasAuthorityGuard} from './core/guards/organizations.guards';
+import {ReportsHomeView} from './reports/views/reports-home-view/reports-home-view';
 
 export const routes: Routes = [
   {path: 'dashboard', component: DashboardView},
@@ -28,5 +29,6 @@ export const routes: Routes = [
   {path: 'journals', component: JournalsView, canActivate:[HasActiveOrganizationGuard()]},
   {path: 'journals/create', component: CreateJournalView, canActivate: [HasAuthorityGuard('journals:create')]},
   {path: 'journals/update/:id', component: UpdateJournalView, canActivate: [HasAuthorityGuard('journals:update')]},
+  {path: 'reports', component: ReportsHomeView, canActivate: [HasAuthorityGuard('reports:view')]},
   {path: '', pathMatch: 'full', redirectTo: '/dashboard'}
 ];

@@ -1481,6 +1481,41 @@ collection:
         pathParameters:
           - name: id
             value: "1964653276683042816"
+  - name: Users
+    meta:
+      id: fld_e5b354901f1d45ef9dc797ecf5b060c2
+      created: 1758197530154
+      modified: 1758197530154
+      sortKey: -1758197530154
+      description: ""
+    children:
+      - url: "{{_.server_url}}users/current"
+        name: Get current user
+        meta:
+          id: req_e2645cff5ed8423684efa6cf31abf364
+          created: 1758197538547
+          modified: 1758197575109
+          isPrivate: false
+          description: ""
+          sortKey: -1758197538547
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.5.0
+        authentication:
+          type: oauth2
+          grantType: authorization_code
+          authorizationUrl: "{{_.auth_url}}"
+          accessTokenUrl: "{{_.access_token_url}}"
+          clientId: "{{_.client_id}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
 cookieJar:
   name: Default Jar
   meta:
