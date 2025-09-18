@@ -20,6 +20,7 @@
     "@angular/router": "^20.0.0",
     "@ngrx/signals": "^20.0.0",
     "@ngrx/store": "^20.0.0",
+    "bulma": "^1.0.4",
     "keycloak-angular": "^20.0.0",
     "keycloak-js": "^26.2.0",
     "rxjs": "~7.8.0",

@@ -1,5 +1,7 @@
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+@import "bulma/css/versions/bulma-no-dark-mode.css";
+
+/*html, body { height: 100%; }*/
+/*body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }*/
 
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
@@ -110,13 +112,3 @@ mat-form-field {
   margin-bottom: 0;
 }
 
-.app-dashboard-widget-title {
-  margin-top: 0;
-  margin-bottom: 0;
-  font-size: 1.5rem;
-}
-.app-dashboard-widget-subtitle {
-  margin-top: 6px;
-  margin-bottom: 0;
-  color: #78909C;
-}

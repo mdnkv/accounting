@@ -1,26 +1,26 @@
-<div class="app-block">
-  <h1 class="mat-headline-1">Hello, {{userStore.getDisplayedName()}}</h1>
+<div class="block">
+  <p class="title is-2">Hello, {{userStore.getDisplayedName()}}</p>
   @if (userOrganizationStore.isActiveOrganizationLoaded()){
-    <p class="mat-subtitle-1">
+    <p class="subtitle is-5">
       {{userOrganizationStore.activeOrganization()!.organization.name}}
     </p>
   }
 </div>
 
-
 @if (userOrganizationStore.isActiveOrganizationLoaded()){
-  <div class="app-dashboard-grid">
-    <div>
-      <app-profit-loss-widget/>
-    </div>
-    <div>
-      <app-net-worth-widget/>
-    </div>
-    <div>
-      <app-expense-categories-widget/>
+  <div class="block">
+    <div class="columns is-multiline">
+      <div class="column is-half is-full-mobile">
+        <app-profit-loss-widget/>
+      </div>
+      <div class="column is-half is-full-mobile">
+        <app-net-worth-widget/>
+      </div>
+      <div class="column is-full">
+        <app-expense-categories-widget/>
+      </div>
     </div>
   </div>
-
 } @else {
   <app-loading-placeholder/>
 }

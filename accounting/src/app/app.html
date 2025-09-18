@@ -3,7 +3,11 @@
   <mat-sidenav opened mode="side" [style.width]="sideNavWidth()">
     <app-side-menu/>
   </mat-sidenav>
-  <mat-sidenav-content [style.margin-left]="sideNavWidth()" class="app-content">
-    <router-outlet/>
+  <mat-sidenav-content [style.margin-left]="sideNavWidth()">
+    <div class="section">
+      <div class="container">
+        <router-outlet/>
+      </div>
+    </div>
   </mat-sidenav-content>
 </mat-sidenav-container>

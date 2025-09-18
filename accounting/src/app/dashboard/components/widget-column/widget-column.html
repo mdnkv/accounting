@@ -1,8 +1,6 @@
-<div class="app-widget-column">
-  <div>
-    <p class="app-widget-column-amount">{{amount()|currency:currency()}}</p>
-  </div>
-  <div>
-    <ng-content></ng-content>
-  </div>
+<div class="has-text-centered">
+  <p class="is-size-4">{{amount()|currency:currency()}}</p>
+  <p class="has-text-grey is-size-7">
+    <ng-content/>
+  </p>
 </div>

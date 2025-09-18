@@ -1,13 +1,17 @@
-<div class="app-block">
-  <div class="app-level">
-    <div>
-      <ng-content select="[slot=title]"></ng-content>
+<div class="block">
+  <div class="level">
+    <div class="level-left">
+      <div class="level-item">
+        <ng-content select="[slot=title]"></ng-content>
+      </div>
     </div>
-    <div>
-      <button type="button" matButton="filled" (click)="onCreateClicked()">
-        <mat-icon>add</mat-icon>
-        Create
-      </button>
+    <div class="level-right">
+      <div class="level-item">
+        <button type="button" matButton="filled" (click)="onCreateClicked()">
+          <mat-icon>add</mat-icon>
+          Create
+        </button>
+      </div>
     </div>
   </div>
 </div>

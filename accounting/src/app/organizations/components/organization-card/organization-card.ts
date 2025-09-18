@@ -1,4 +1,4 @@
-import {Component, inject, input, output} from '@angular/core';
+import {Component, inject, input, output, signal} from '@angular/core';
 import {Router} from '@angular/router';
 
 import {MatMenuModule} from '@angular/material/menu';
@@ -24,6 +24,11 @@ export class OrganizationCard {
 
   readonly store = inject(UserOrganizationStore)
   router: Router = inject(Router)
+
+  menuActive = signal(false)
+  toggleDropdownMenu (){
+    this.menuActive.update(v => !v)
+  }
 
   userOrganization = input.required<UserOrganization>()
 

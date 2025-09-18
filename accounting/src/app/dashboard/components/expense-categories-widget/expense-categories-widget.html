@@ -1,7 +1,7 @@
 <app-dashboard-widget (refresh)="onRefresh($event)">
   <div slot="header">
-    <h3 class="app-dashboard-widget-title">Expense categories</h3>
-    <p class="app-dashboard-widget-subtitle">Last {{ dashboardStore.expenseCategoriesDaysCount() }} days</p>
+    <p class="title is-4">Expense categories</p>
+    <p class="subtitle has-text-grey is-size-6">Last {{ dashboardStore.expenseCategoriesDaysCount() }} days</p>
   </div>
   <div slot="content">
 
