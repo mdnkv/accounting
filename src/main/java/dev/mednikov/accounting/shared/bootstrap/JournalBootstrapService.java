@@ -7,6 +7,9 @@ import dev.mednikov.accounting.organizations.events.OrganizationCreatedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class JournalBootstrapService {
 
@@ -20,13 +23,30 @@ public class JournalBootstrapService {
 
     @EventListener
     public void onOrganizationCreatedEventListener(OrganizationCreatedEvent e) {
-        Journal journal = new Journal();
-        journal.setId(snowflakeGenerator.next());
-        journal.setOrganization(e.getOrganization());
-        journal.setName("General");
-        journal.setActive(true);
+        List<Journal> journals = new ArrayList<>();
 
-        this.journalRepository.save(journal);
+        Journal generalJournal = new Journal();
+        generalJournal.setId(snowflakeGenerator.next());
+        generalJournal.setOrganization(e.getOrganization());
+        generalJournal.setName("General");
+        generalJournal.setActive(true);
+        journals.add(generalJournal);
+
+        Journal salesJournal = new Journal();
+        salesJournal.setId(snowflakeGenerator.next());
+        salesJournal.setOrganization(e.getOrganization());
+        salesJournal.setName("Sales");
+        salesJournal.setActive(true);
+        journals.add(salesJournal);
+
+        Journal purchaseJournal = new Journal();
+        purchaseJournal.setId(snowflakeGenerator.next());
+        purchaseJournal.setOrganization(e.getOrganization());
+        purchaseJournal.setName("Purchases");
+        purchaseJournal.setActive(true);
+        journals.add(purchaseJournal);
+
+        this.journalRepository.saveAll(journals);
     }
 
 

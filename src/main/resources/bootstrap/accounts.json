@@ -20,8 +20,18 @@
     "accountType": "ASSET"
   },
   {
+    "name": "Prepaid Insurance",
+    "code": "15300",
+    "accountType": "ASSET"
+  },
+  {
     "name": "Land",
     "code": "17000",
+    "accountType": "ASSET"
+  },
+  {
+    "name": "Buildings",
+    "code": "17100",
     "accountType": "ASSET"
   },
   {
@@ -30,8 +40,23 @@
     "accountType": "ASSET"
   },
   {
+    "name": "Vehicles",
+    "code": "17800",
+    "accountType": "ASSET"
+  },
+  {
+    "name": "Accumulated Depreciation - Buildings",
+    "code": "18100",
+    "accountType": "ASSET"
+  },
+  {
     "name": "Accumulated Depreciation - Equipment",
     "code": "18300",
+    "accountType": "ASSET"
+  },
+  {
+    "name": "Accumulated Depreciation - Vehicles",
+    "code": "18800",
     "accountType": "ASSET"
   },
   {
@@ -40,8 +65,28 @@
     "accountType": "LIABILITY"
   },
   {
+    "name": "Wages Payable",
+    "code": "22100",
+    "accountType": "LIABILITY"
+  },
+  {
     "name": "Interest Payable",
     "code": "23100",
+    "accountType": "LIABILITY"
+  },
+  {
+    "name": "Unearned Revenues",
+    "code": "24500",
+    "accountType": "LIABILITY"
+  },
+  {
+    "name": "Mortgage Loan Payable",
+    "code": "25100",
+    "accountType": "LIABILITY"
+  },
+  {
+    "name": "Bonds Payable",
+    "code": "25600",
     "accountType": "LIABILITY"
   },
   {
@@ -50,8 +95,23 @@
     "accountType": "EQUITY"
   },
   {
+    "name": "Retained Earnings",
+    "code": "27500",
+    "accountType": "EQUITY"
+  },
+  {
+    "name": "Treasury stock",
+    "code": "29500",
+    "accountType": "EQUITY"
+  },
+  {
     "name": "Sales",
     "code": "31010",
+    "accountType": "INCOME"
+  },
+  {
+    "name": "Interest Revenues",
+    "code": "30810",
     "accountType": "INCOME"
   },
   {
@@ -62,6 +122,21 @@
   {
     "name": "Marketing expenses",
     "code": "50100",
+    "accountType": "EXPENSE"
+  },
+  {
+    "name": "Salaries expenses",
+    "code": "50500",
+    "accountType": "EXPENSE"
+  },
+  {
+    "name": "Rent expenses",
+    "code": "50560",
+    "accountType": "EXPENSE"
+  },
+  {
+    "name": "Supplies expenses",
+    "code": "50540",
     "accountType": "EXPENSE"
   }
 ]
