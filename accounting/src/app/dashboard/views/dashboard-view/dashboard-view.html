@@ -1,5 +1,5 @@
 <div class="app-block">
-  <h1 class="mat-headline-1">Hello again</h1>
+  <h1 class="mat-headline-1">Hello, {{userStore.getDisplayedName()}}</h1>
   @if (userOrganizationStore.isActiveOrganizationLoaded()){
     <p class="mat-subtitle-1">
       {{userOrganizationStore.activeOrganization()!.organization.name}}

@@ -6,6 +6,7 @@ import {ProfitLossWidget} from '../../components/profit-loss-widget/profit-loss-
 import {NetWorthWidget} from '../../components/net-worth-widget/net-worth-widget';
 import {ExpenseCategoriesWidget} from '../../components/expense-categories-widget/expense-categories-widget';
 import {LoadingPlaceholder} from '../../../core/components/loading-placeholder/loading-placeholder';
+import {UserStore} from '../../../users/stores/user.store';
 
 @Component({
   selector: 'app-dashboard-view',
@@ -15,6 +16,7 @@ import {LoadingPlaceholder} from '../../../core/components/loading-placeholder/l
 })
 export class DashboardView implements OnInit {
 
+  readonly userStore = inject(UserStore)
   readonly userOrganizationStore = inject(UserOrganizationStore)
   router: Router = inject(Router)
 
@@ -34,6 +36,7 @@ export class DashboardView implements OnInit {
   }
 
   ngOnInit() {
+    this.userStore.loadCurrentUser()
     this.userOrganizationStore.loadActiveOrganization()
   }
 
