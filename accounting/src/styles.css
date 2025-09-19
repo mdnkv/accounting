@@ -1,5 +1,7 @@
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+@import "bulma/css/versions/bulma-no-dark-mode.css";
+
+/*html, body { height: 100%; }*/
+/*body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }*/
 
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
@@ -20,52 +22,52 @@ mat-form-field {
 }
 
 
-.app-content {
-  padding: 16px;
-  margin-bottom: 16px;
-}
+/*.app-content {*/
+/*  padding: 16px;*/
+/*  margin-bottom: 16px;*/
+/*}*/
 
-.app-block {
-  margin-bottom: 12px;
-}
+/*.app-block {*/
+/*  margin-bottom: 12px;*/
+/*}*/
 
 .app-dialog-content {
   padding: 20px;
 }
 
-.app-media {
-  display: flex;
-  align-items: flex-start;
-  gap: 1rem;
-  padding: 1rem;
-}
+/*.app-media {*/
+/*  display: flex;*/
+/*  align-items: flex-start;*/
+/*  gap: 1rem;*/
+/*  padding: 1rem;*/
+/*}*/
 
-.app-media-left,
-.app-media-right {
-  flex-shrink: 0;
-}
+/*.app-media-left,*/
+/*.app-media-right {*/
+/*  flex-shrink: 0;*/
+/*}*/
 
-.app-media-content {
-  flex-grow: 1;
-}
+/*.app-media-content {*/
+/*  flex-grow: 1;*/
+/*}*/
 
-.app-level {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  flex-wrap: wrap;
-}
+/*.app-level {*/
+/*  display: flex;*/
+/*  justify-content: space-between;*/
+/*  align-items: flex-start;*/
+/*  flex-wrap: wrap;*/
+/*}*/
 
-.app-level-left,
-.app-level-right {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
+/*.app-level-left,*/
+/*.app-level-right {*/
+/*  display: flex;*/
+/*  align-items: center;*/
+/*  gap: 1rem;*/
+/*}*/
 
-.app-level-item {
+/*.app-level-item {*/
 
-}
+/*}*/
 
 .app-level-half {
   width: calc(50% - 12px);
@@ -94,29 +96,4 @@ mat-form-field {
 
 .app-buttons button {
   margin-right: 10px;
-}
-
-.app-text-centered {
-  text-align: center;
-}
-
-.app-text-large {
-  font-size: 1.2rem;
-  margin-bottom: 0;
-}
-
-.app-text-xlarge {
-  font-size: 2rem;
-  margin-bottom: 0;
-}
-
-.app-dashboard-widget-title {
-  margin-top: 0;
-  margin-bottom: 0;
-  font-size: 1.5rem;
-}
-.app-dashboard-widget-subtitle {
-  margin-top: 6px;
-  margin-bottom: 0;
-  color: #78909C;
 }

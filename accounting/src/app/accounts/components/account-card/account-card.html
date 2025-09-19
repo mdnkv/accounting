@@ -1,0 +1,32 @@
+<div class="media">
+  <div class="media-left">
+    <p class="has-text-weight-semibold">{{account().code}}</p>
+  </div>
+  <div class="media-content">
+    <p>{{account().name}}</p>
+    <p class="has-text-grey is-size-7">
+      @switch (account().accountType){
+        @case('ASSET'){Asset}
+        @case('LIABILITY'){Liability}
+        @case('EQUITY'){Equity}
+        @case('INCOME'){Income}
+        @default {Expense}
+      }
+    </p>
+  </div>
+  <div class="media-right">
+    <div class="dropdown is-right" [class.is-active]="dropdownActive()">
+      <div class="dropdown-trigger">
+        <button type="button" matIconButton (click)="toggleDropdown()">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+      </div>
+      <div class="dropdown-menu">
+        <div class="dropdown-content">
+          <a class="dropdown-item" [routerLink]="['/accounts/update', account().id!]">Edit account</a>
+          <a class="dropdown-item" (click)="delete()">Delete account</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

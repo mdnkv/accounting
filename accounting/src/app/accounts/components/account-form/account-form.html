@@ -35,12 +35,12 @@
 
   <!-- Deprecated -->
   @if (isUpdate()){
-    <div class="app-block">
+    <div class="block">
       <mat-checkbox formControlName="deprecated">This account is deprecated</mat-checkbox>
     </div>
   }
 
-  <div class="app-buttons">
+  <div class="buttons">
     <button type="submit" [disabled]="form.invalid" matButton="filled">Save</button>
     <button type="button" (click)="onCancel()" matButton>Cancel</button>
   </div>

@@ -1,13 +1,15 @@
-<div class="app-block">
-  <h2 class="mat-headline-1">New account</h2>
+<div class="block">
+  <p class="title is-3">New account</p>
 </div>
 
 <!-- Error message -->
 @if (accountStore.createError() != undefined){
-  <app-error-message [message]="accountStore.createError()!"/>
+  <div class="block">
+    <app-error-message [message]="accountStore.createError()!"/>
+  </div>
 }
 
-<div class="app-block">
+<div class="block">
   <app-account-form
     (cancel)="onCancel()"
     (saveAccount)="onCreateAccount($event)"/>

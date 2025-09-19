@@ -1,11 +1,10 @@
 import {Component, inject} from '@angular/core';
 
 import {MatDialogRef} from '@angular/material/dialog';
-import {MatButtonModule} from '@angular/material/button';
 
 @Component({
   selector: 'app-cancel-form-dialog',
-  imports: [MatButtonModule],
+  imports: [],
   templateUrl: './cancel-form-dialog.html',
   styleUrl: './cancel-form-dialog.css'
 })

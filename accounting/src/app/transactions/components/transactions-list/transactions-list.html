@@ -1,36 +1,40 @@
 @if (store.areTransactionsLoaded()) {
   @if (store.transactions().length > 0) {
 
-    <table mat-table [dataSource]="dataSource">
+    <div class="table-container">
+      <table class="table is-fullwidth is-bordered is-striped">
+        <thead>
+          <tr>
+            <th>Transaction date</th>
+            <th>Description</th>
+            <th>Debit</th>
+            <th>Credit</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (transaction of store.transactions(); track transaction.id!){
+            <tr>
+              <td>{{transaction.date|date:'shortDate'}}</td>
+              <td>{{transaction.description}}</td>
+              <td>{{transaction.totalDebitAmount|currency:transaction.currency!.code}}</td>
+              <td>{{transaction.totalCreditAmount|currency:transaction.currency!.code}}</td>
+            </tr>
 
-      <ng-container matColumnDef="date">
-        <th mat-header-cell *matHeaderCellDef>Date</th>
-        <td mat-cell *matCellDef="let t">{{t.date|date:'shortDate'}}</td>
-      </ng-container>
+            @for (transactionLine of transaction.lines; track transactionLine.id!){
+              <tr>
+                <td></td>
+                <td>
+                  {{transactionLine.account!.code}} -  {{transactionLine.account!.name}}
+                </td>
+                <td>{{transactionLine.creditAmount|currency:transaction.currency!.code}}</td>
+                <td>{{transactionLine.debitAmount|currency:transaction.currency!.code}}</td>
+              </tr>
+            }
 
-      <ng-container matColumnDef="description">
-        <th mat-header-cell *matHeaderCellDef>Description</th>
-        <td mat-cell *matCellDef="let t">{{t.description}}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="debitAmount">
-        <th mat-header-cell *matHeaderCellDef>Debit amount</th>
-        <td mat-cell *matCellDef="let t">
-          {{t.totalDebitAmount|currency:t.currency!.code}}
-        </td>
-      </ng-container>
-
-      <ng-container matColumnDef="creditAmount">
-        <th mat-header-cell *matHeaderCellDef>Credit amount</th>
-        <td mat-cell *matCellDef="let t">
-          {{t.totalCreditAmount|currency:t.currency!.code}}
-        </td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-
-    </table>
+          }
+        </tbody>
+      </table>
+    </div>
 
   } @else {
     <app-empty-list-placeholder/>

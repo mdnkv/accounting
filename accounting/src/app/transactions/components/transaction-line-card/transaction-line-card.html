@@ -1,14 +1,18 @@
-<div class="app-level">
-  <div class="app-level-item">
-    <span>{{line().account!.code}} - {{line().account!.name}}</span>
+<div class="columns">
+  <!-- Account -->
+  <div class="column">
+    <p>{{line().account!.code}} - {{line().account!.name}}</p>
   </div>
-  <div class="app-level-item">
-    <span class="app-text-large">{{line().debitAmount|currency:currency()}}</span>
+  <!-- Debit -->
+  <div class="column is-2">
+    <p class="is-size-5">{{line().debitAmount|currency:currency()}}</p>
   </div>
-  <div class="app-level-item">
-    <span class="app-text-large">{{line().creditAmount|currency:currency()}}</span>
+  <!-- Credit -->
+  <div class="column is-2">
+    <p class="is-size-5">{{line().creditAmount|currency:currency()}}</p>
   </div>
-  <div class="app-level-item">
+  <!-- Delete -->
+  <div class="column is-1">
     <button type="button" matIconButton (click)="onDelete()">
       <mat-icon>delete</mat-icon>
     </button>

@@ -1,65 +1,64 @@
-<div class="app-block">
-  <h2 class="mat-headline-1">New transaction</h2>
+<div class="block">
+  <p class="title is-3">New transaction</p>
 </div>
 
 <!-- Error message -->
 @if (transactionStore.createError() != undefined){
-  <app-error-message [message]="transactionStore.createError()!"/>
+  <div class="block">
+    <app-error-message [message]="transactionStore.createError()!"/>
+  </div>
 }
 
 <form [formGroup]="form" (submit)="onSubmit()">
   <!-- Date, journal and currency -->
-  <div class="app-block">
-    <div class="app-level">
-      <div class="app-level-half">
-        <!-- date -->
-        <mat-form-field appearance="outline">
-          <mat-label>Transaction date</mat-label>
-          <input matInput formControlName="date" [matDatepicker]="picker">
-          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-          @if (form.get('date')?.touched && form.get('date')?.invalid ){
-            <mat-error>This field cannot be blank</mat-error>
+  <div class="columns">
+    <div class="column is-half">
+      <!-- date -->
+      <mat-form-field appearance="outline">
+        <mat-label>Transaction date</mat-label>
+        <input matInput formControlName="date" [matDatepicker]="picker">
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        @if (form.get('date')?.touched && form.get('date')?.invalid ){
+          <mat-error>This field cannot be blank</mat-error>
+        }
+      </mat-form-field>
+    </div>
+    <div class="column is-half">
+      <!--currency -->
+      <mat-form-field appearance="outline">
+        <mat-label>Currency</mat-label>
+        <mat-select formControlName="currencyId">
+          @for (currency of currencyStore.currencies(); track currency.id!){
+            <mat-option [value]="currency.id">{{currency.name}}</mat-option>
           }
-        </mat-form-field>
-      </div>
-      <div class="app-level-half">
-        <!--currency -->
-        <mat-form-field appearance="outline">
-          <mat-label>Currency</mat-label>
-          <mat-select formControlName="currencyId">
-            @for (currency of currencyStore.currencies(); track currency.id!){
-              <mat-option [value]="currency.id">{{currency.name}}</mat-option>
-            }
-          </mat-select>
+        </mat-select>
 
-          @if (form.get('currencyId')?.touched && form.get('currencyId')?.invalid ){
-            <mat-error>This field cannot be blank</mat-error>
+        @if (form.get('currencyId')?.touched && form.get('currencyId')?.invalid ){
+          <mat-error>This field cannot be blank</mat-error>
+        }
+
+      </mat-form-field>
+
+      <!-- Journal -->
+      <mat-form-field appearance="outline">
+        <mat-label>Journal</mat-label>
+        <mat-select formControlName="journalId">
+          @for (journal of journalStore.journals(); track journal.id!){
+            <mat-option [value]="journal.id!">{{journal.name}}</mat-option>
           }
+        </mat-select>
 
-        </mat-form-field>
+        @if (form.get('journalId')?.touched && form.get('journalId')?.invalid ){
+          <mat-error>This field cannot be blank</mat-error>
+        }
 
-        <!-- Journal -->
-        <mat-form-field appearance="outline">
-          <mat-label>Journal</mat-label>
-          <mat-select formControlName="journalId">
-            @for (journal of journalStore.journals(); track journal.id!){
-              <mat-option [value]="journal.id!">{{journal.name}}</mat-option>
-            }
-          </mat-select>
-
-          @if (form.get('journalId')?.touched && form.get('journalId')?.invalid ){
-            <mat-error>This field cannot be blank</mat-error>
-          }
-
-        </mat-form-field>
-
-
-      </div>
+      </mat-form-field>
     </div>
   </div>
+
   <!-- Description -->
-  <div class="app-block">
+  <div class="block">
     <mat-form-field appearance="outline">
       <mat-label>Description</mat-label>
       <textarea matInput formControlName="description"></textarea>
@@ -69,9 +68,9 @@
     </mat-form-field>
   </div>
   <!-- Transaction lines -->
-  <div class="app-block">
+  <div class="block">
     @if (transactionsLines().length > 0){
-      <h4>Items</h4>
+      <p class="title is-5">Items</p>
     }
     <!-- Lines -->
     @for (line of transactionsLines(); track $index){
@@ -82,36 +81,46 @@
     }
   </div>
   <!-- Add line component -->
-  <div class="app-block">
+  <div class="block">
     <button type="button" matButton="outlined" (click)="onOpenTransactionLineForm()">
       Add new line
     </button>
   </div>
   <!-- Summary -->
-  <div class="app-block">
-    <div class="app-level">
-      <div class="app-level-item app-text-centered">
-        <p class="app-text-xlarge">{{totalDebitAmount()|currency:displayedCurrency()}}</p>
-        <p>Debit</p>
+  <div class="block">
+    <div class="level">
+      <div class="level-item">
+        <div class="has-text-centered">
+          <p class="is-size-5">{{totalDebitAmount()|currency:displayedCurrency()}}</p>
+          <p>Debit</p>
+        </div>
       </div>
-      <div class="app-level-item app-text-centered">
-        <p class="app-text-xlarge">{{totalCreditAmount()|currency:displayedCurrency()}}</p>
-        <p>Credit</p>
+      <div class="level-item">
+        <div class="has-text-centered">
+          <p class="is-size-5">{{totalCreditAmount()|currency:displayedCurrency()}}</p>
+          <p>Credit</p>
+        </div>
       </div>
-      <div class="app-level-item app-text-centered">
-        <p class="app-text-xlarge">{{balance()|currency:displayedCurrency()}}</p>
-        <p>Balance</p>
+      <div class="level-item">
+        <div class="has-text-centered">
+          <p
+            [class.has-text-success]="balanced()"
+            [class.has-text-danger]="!balanced()"
+            class="is-size-5 has-text-weight-semibold">{{balance()|currency:displayedCurrency()}}</p>
+          <p>Balance</p>
+        </div>
       </div>
     </div>
   </div>
+
   <!-- Buttons -->
-  <div class="app-block">
-    <div class="app-buttons">
+  <div class="block">
+    <div class="buttons">
       <button
         matButton="filled"
         type="submit"
         [disabled]="form.invalid || !balanced()">Save</button>
-      <button class="button" type="button" matButton (click)="onCancel()">Cancel</button>
+      <button type="button" matButton (click)="onCancel()">Cancel</button>
     </div>
   </div>
 

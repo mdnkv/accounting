@@ -1,22 +1,33 @@
-<mat-card appearance="outlined" class="app-block">
-  <mat-card-content>
-    <div class="app-media">
-      <div class="app-media-content">
-        <p>{{userOrganization().organization.name}}</p>
+<div class="card">
+  <div class="card-content">
+    <div class="media">
+      <!-- Content -->
+      <div class="media-content">
+        <p class="is-size-5">{{userOrganization().organization.name}}</p>
         <p>{{userOrganization().role.name}}</p>
+        @if (userOrganization().active){
+          <span class="tag is-primary">Active</span>
+        }
       </div>
-      <div class="app-media-right">
+      <!-- Action -->
+      <div class="media-right">
         @if (userOrganization().active) {
-          <button matIconButton [matMenuTriggerFor]="menu">
-            <mat-icon>more_vert</mat-icon>
-          </button>
-          <mat-menu #menu="matMenu">
-            <button mat-menu-item (click)="update()">Edit organization</button>
-          </mat-menu>
+          <div class="dropdown is-right" [class.is-active]="menuActive()">
+            <div class="dropdown-trigger">
+              <button matIconButton (click)="toggleDropdownMenu()">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+            </div>
+            <div class="dropdown-menu">
+              <div class="dropdown-content">
+                <a (click)="update()" class="dropdown-item">Edit organization</a>
+              </div>
+            </div>
+          </div>
         } @else {
           <button type="button" matButton (click)="setActive()">Set active</button>
         }
       </div>
     </div>
-  </mat-card-content>
-</mat-card>
+  </div>
+</div>

@@ -1,13 +1,15 @@
-<app-header (createClicked)="onCreateClicked()">
-  <div slot="title">
-    <h2 class="app-header-title">Accounts</h2>
-  </div>
-</app-header>
+<div class="block">
+  <app-header (createClicked)="onCreateClicked()">
+    <div slot="title">
+      <p class="title is-3">Accounts</p>
+    </div>
+  </app-header>
+</div>
 
-<div class="app-block">
+<div class="block">
   <app-accounts-tabs/>
 </div>
 
-<div class="app-block">
+<div class="block">
   <app-accounts-list/>
 </div>

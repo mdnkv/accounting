@@ -1,8 +1,10 @@
 <div class="app-dialog-content">
-  <p>Do you want to exit?</p>
-  <p>All unsaved data would be lost</p>
-  <div class="app-buttons">
-    <button type="button" matButton="outlined" (click)="onConfirm()">Yes</button>
-    <button type="button" matButton="outlined" (click)="onCancel()">No</button>
+  <div class="block">
+    <p>Do you want to exit?</p>
+    <p>All unsaved data would be lost</p>
+  </div>
+  <div class="buttons">
+    <button type="button" class="button" (click)="onConfirm()">Yes</button>
+    <button type="button" class="button" (click)="onCancel()">No</button>
   </div>
 </div>

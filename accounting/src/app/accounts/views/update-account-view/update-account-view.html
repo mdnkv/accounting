@@ -1,13 +1,15 @@
-<div class="app-block">
-  <h2 class="mat-headline-1">Update account</h2>
+<div class="block">
+  <p class="title is-3">Update account</p>
 </div>
 
 <!-- Error message -->
 @if (accountStore.updateError() != undefined){
-  <app-error-message [message]="accountStore.updateError()!"/>
+  <div class="block">
+    <app-error-message [message]="accountStore.updateError()!"/>
+  </div>
 }
 
-<div class="app-block">
+<div class="block">
   <app-account-form
     (cancel)="onCancel()"
     [currentAccount]="currentAccount()"
