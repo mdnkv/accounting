@@ -1,12 +1,9 @@
 import {Component, inject} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
-import {MatButton} from '@angular/material/button';
 
 @Component({
   selector: 'app-delete-dialog',
-  imports: [
-    MatButton
-  ],
+  imports: [],
   templateUrl: './delete-dialog.html',
   styleUrl: './delete-dialog.css'
 })

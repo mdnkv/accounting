@@ -21,13 +21,13 @@
 
   <!-- Active -->
   @if (isUpdate()){
-    <div class="app-block">
+    <div class="block">
       <mat-checkbox formControlName="active">This journal is active</mat-checkbox>
     </div>
   }
 
   <!-- Actions -->
-  <div class="app-buttons">
+  <div class="buttons">
     <button type="submit" [disabled]="form.invalid" matButton="filled">Save</button>
     <button type="button" (click)="onCancel()" matButton>Cancel</button>
   </div>

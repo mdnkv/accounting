@@ -1,14 +1,16 @@
-<div class="app-block">
-  <h2 class="mat-headline-1">New organization</h2>
+<div class="block">
+  <p class="title is-3">New organization</p>
 </div>
 
-<div class="app-block">
-
-  <!-- Error message -->
-  @if (userOrganizationStore.createError() != undefined){
+<!-- Error message -->
+@if (userOrganizationStore.createError() != undefined){
+  <div class="block">
     <app-error-message [message]="userOrganizationStore.createError()!"/>
-  }
+  </div>
 
+}
+
+<div class="block">
   <app-organization-form
     (cancel)="onCancel()"
     (saveOrganization)="onCreateOrganization($event)"/>

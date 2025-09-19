@@ -1,12 +1,15 @@
-<div class="app-block">
-  <h2 class="mat-headline-1">New journal</h2>
+<div class="block">
+  <p class="title is-3">New journal</p>
 </div>
 
 <!-- Error message -->
 @if (journalStore.createError() != undefined){
-  <app-error-message [message]="journalStore.createError()!"/>
+  <div class="block">
+    <app-error-message [message]="journalStore.createError()!"/>
+  </div>
+
 }
 
-<div class="app-block">
+<div class="block">
   <app-journal-form (cancel)="onCancel()" (saveJournal)="onCreateJournal($event)"/>
 </div>

@@ -1,0 +1,25 @@
+<div class="media">
+  <div class="media-content">
+    <p>{{journal().name}}</p>
+    @if (journal().active) {
+      <span class="tag is-success">Active</span>
+    } @else {
+      <span class="tag is-warning">Inactive</span>
+    }
+  </div>
+  <div class="media-right">
+    <div class="dropdown is-right" [class.is-active]="dropdownActive()">
+      <div class="dropdown-trigger">
+        <button type="button" matIconButton (click)="toggleDropdown()">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+      </div>
+      <div class="dropdown-menu">
+        <div class="dropdown-content">
+          <a class="dropdown-item" [routerLink]="['/journals/update', journal().id!]">Edit journal</a>
+          <a class="dropdown-item" (click)="delete()">Delete journal</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
