@@ -26,7 +26,7 @@ public class NetWorthServiceImpl implements NetWorthService {
 
     @Override
     public NetWorthSummaryDto getNetWorthSummary(Long organizationId, int daysCount) {
-        Currency primaryCurrency = this.currencyRepository.findPrimaryCurrency(organizationId).orElseThrow(CurrencyNotFoundException::new);
+//        Currency primaryCurrency = this.currencyRepository.findPrimaryCurrency(organizationId).orElseThrow(CurrencyNotFoundException::new);
         LocalDate toDate = LocalDate.now();
         LocalDate fromDate = toDate.minusDays(daysCount);
 
@@ -37,21 +37,25 @@ public class NetWorthServiceImpl implements NetWorthService {
         for (TransactionLine transactionLine : transactionLines) {
             if (!transactionLine.getTransaction().isDraft()){
                 if (transactionLine.getAccount().getAccountType() == AccountType.ASSET) {
-                    if (transactionLine.getTransaction().getTargetCurrency().equals(primaryCurrency)) {
-                        BigDecimal amount = transactionLine.getOriginalDebitAmount().subtract(transactionLine.getOriginalCreditAmount());
-                        totalAssets = totalAssets.add(amount);
-                    } else {
-                        BigDecimal amount = transactionLine.getDebitAmount().subtract(transactionLine.getCreditAmount());
-                        totalAssets = totalAssets.add(amount);
-                    }
+//                    if (transactionLine.getTransaction().getTargetCurrency().equals(primaryCurrency)) {
+//                        BigDecimal amount = transactionLine.getOriginalDebitAmount().subtract(transactionLine.getOriginalCreditAmount());
+//                        totalAssets = totalAssets.add(amount);
+//                    } else {
+//                        BigDecimal amount = transactionLine.getDebitAmount().subtract(transactionLine.getCreditAmount());
+//                        totalAssets = totalAssets.add(amount);
+//                    }
+                    BigDecimal amount = transactionLine.getDebitAmount().subtract(transactionLine.getCreditAmount());
+                    totalAssets = totalAssets.add(amount);
                 } else {
-                    if (transactionLine.getTransaction().getTargetCurrency().equals(primaryCurrency)) {
-                        BigDecimal amount = transactionLine.getOriginalCreditAmount().subtract(transactionLine.getOriginalDebitAmount());
-                        totalLiabilities = totalLiabilities.add(amount);
-                    } else {
-                        BigDecimal amount = transactionLine.getCreditAmount().subtract(transactionLine.getDebitAmount());
-                        totalLiabilities = totalLiabilities.add(amount);
-                    }
+//                    if (transactionLine.getTransaction().getTargetCurrency().equals(primaryCurrency)) {
+//                        BigDecimal amount = transactionLine.getOriginalCreditAmount().subtract(transactionLine.getOriginalDebitAmount());
+//                        totalLiabilities = totalLiabilities.add(amount);
+//                    } else {
+//                        BigDecimal amount = transactionLine.getCreditAmount().subtract(transactionLine.getDebitAmount());
+//                        totalLiabilities = totalLiabilities.add(amount);
+//                    }
+                    BigDecimal amount = transactionLine.getCreditAmount().subtract(transactionLine.getDebitAmount());
+                    totalLiabilities = totalLiabilities.add(amount);
                 }
             }
 

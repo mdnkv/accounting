@@ -3,6 +3,8 @@ package dev.mednikov.accounting.reports.services;
 import dev.mednikov.accounting.accounts.dto.AccountDto;
 import dev.mednikov.accounting.accounts.dto.AccountDtoMapper;
 import dev.mednikov.accounting.accounts.models.Account;
+import dev.mednikov.accounting.currencies.dto.CurrencyDto;
+import dev.mednikov.accounting.currencies.dto.CurrencyDtoMapper;
 import dev.mednikov.accounting.currencies.exceptions.CurrencyNotFoundException;
 import dev.mednikov.accounting.currencies.models.Currency;
 import dev.mednikov.accounting.currencies.repositories.CurrencyRepository;
@@ -40,11 +42,11 @@ public class BalanceSheetServiceImpl implements BalanceSheetService {
 
     @Override
     public BalanceSheetDto getBalanceSheet(Long organizationId, LocalDate date) {
-        // Retrieve organization
-        Organization organization = organizationRepository.findById(organizationId).orElseThrow(OrganizationNotFoundException::new);
 
         // Retrieve primary currency
         Currency primaryCurrency = this.currencyRepository.findPrimaryCurrency(organizationId).orElseThrow(CurrencyNotFoundException::new);
+        CurrencyDtoMapper currencyDtoMapper = new CurrencyDtoMapper();
+        CurrencyDto currency = currencyDtoMapper.apply(primaryCurrency);
 
         // Retrieve transactions
         List<TransactionLine> transactionLines = this.transactionLineRepository.getBalanceSheetLines(organizationId, date);
@@ -62,17 +64,19 @@ public class BalanceSheetServiceImpl implements BalanceSheetService {
 
             for (TransactionLine transactionLine : accountEntry.getValue()) {
                 if (!transactionLine.getTransaction().isDraft()){
-                    if (transactionLine.getTransaction().getTargetCurrency().equals(primaryCurrency)) {
-                        // same currency as primary currency
-                        // add an original amount
-                        debit = debit.add(transactionLine.getOriginalDebitAmount());
-                        credit = credit.add(transactionLine.getOriginalCreditAmount());
-                    } else {
-                        // another currency
-                        // add a converted amount
-                        credit = credit.add(transactionLine.getCreditAmount());
-                        debit = debit.add(transactionLine.getDebitAmount());
-                    }
+//                    if (transactionLine.getTransaction().getTargetCurrency().equals(primaryCurrency)) {
+//                        // same currency as primary currency
+//                        // add an original amount
+//                        debit = debit.add(transactionLine.getOriginalDebitAmount());
+//                        credit = credit.add(transactionLine.getOriginalCreditAmount());
+//                    } else {
+//                        // another currency
+//                        // add a converted amount
+//                        credit = credit.add(transactionLine.getCreditAmount());
+//                        debit = debit.add(transactionLine.getDebitAmount());
+//                    }
+                    credit = credit.add(transactionLine.getCreditAmount());
+                    debit = debit.add(transactionLine.getDebitAmount());
                 }
 
             }
@@ -97,11 +101,13 @@ public class BalanceSheetServiceImpl implements BalanceSheetService {
         }
 
         boolean balanced = totalCreditAmount.equals(totalDebitAmount);
-        return new BalanceSheetDto(
-                organization.getName(),
-                items,
-                totalCreditAmount,
-                totalDebitAmount
-        );
+        BalanceSheetDto result = new BalanceSheetDto();
+        result.setBalanced(balanced);
+        result.setTotalDebitAmount(totalDebitAmount);
+        result.setTotalCreditAmount(totalCreditAmount);
+        result.setItems(items);
+        result.setCurrency(currency);
+        result.setDate(date);
+        return result;
     }
 }
