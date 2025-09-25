@@ -67,17 +67,19 @@ public class ProfitLossServiceImpl implements ProfitLossService {
             // Calculate amount for the account
             for (TransactionLine transactionLine : entry.getValue()) {
                 if (!transactionLine.getTransaction().isDraft()) {
-                    if (transactionLine.getTransaction().getTargetCurrency().equals(primaryCurrency)) {
-                        // same currency as primary currency
-                        // add an original amount
-                        debit = debit.add(transactionLine.getOriginalDebitAmount());
-                        credit = credit.add(transactionLine.getOriginalCreditAmount());
-                    } else {
-                        // another currency
-                        // add a converted amount
-                        credit = credit.add(transactionLine.getCreditAmount());
-                        debit = debit.add(transactionLine.getDebitAmount());
-                    }
+//                    if (transactionLine.getTransaction().getTargetCurrency().equals(primaryCurrency)) {
+//                        // same currency as primary currency
+//                        // add an original amount
+//                        debit = debit.add(transactionLine.getOriginalDebitAmount());
+//                        credit = credit.add(transactionLine.getOriginalCreditAmount());
+//                    } else {
+//                        // another currency
+//                        // add a converted amount
+//                        credit = credit.add(transactionLine.getCreditAmount());
+//                        debit = debit.add(transactionLine.getDebitAmount());
+//                    }
+                    credit = credit.add(transactionLine.getCreditAmount());
+                    debit = debit.add(transactionLine.getDebitAmount());
                 }
 
             }
@@ -112,7 +114,7 @@ public class ProfitLossServiceImpl implements ProfitLossService {
 
     @Override
     public ProfitLossSummaryDto getProfitLossSummary(Long organizationId, int daysCount) {
-        Currency primaryCurrency = this.currencyRepository.findPrimaryCurrency(organizationId).orElseThrow(CurrencyNotFoundException::new);
+//        Currency primaryCurrency = this.currencyRepository.findPrimaryCurrency(organizationId).orElseThrow(CurrencyNotFoundException::new);
 
         // Calculate dates
         LocalDate toDate = LocalDate.now();
@@ -126,21 +128,25 @@ public class ProfitLossServiceImpl implements ProfitLossService {
         for (TransactionLine transactionLine : transactionLines) {
             if (!transactionLine.getTransaction().isDraft()) {
                 if (transactionLine.getAccount().getAccountType() == AccountType.INCOME) {
-                    if (transactionLine.getTransaction().getTargetCurrency().equals(primaryCurrency)) {
-                        BigDecimal income = transactionLine.getOriginalCreditAmount().subtract(transactionLine.getOriginalDebitAmount());
-                        totalIncome = totalIncome.add(income);
-                    } else {
-                        BigDecimal income = transactionLine.getCreditAmount().subtract(transactionLine.getDebitAmount());
-                        totalIncome = totalIncome.add(income);
-                    }
+//                    if (transactionLine.getTransaction().getTargetCurrency().equals(primaryCurrency)) {
+//                        BigDecimal income = transactionLine.getOriginalCreditAmount().subtract(transactionLine.getOriginalDebitAmount());
+//                        totalIncome = totalIncome.add(income);
+//                    } else {
+//                        BigDecimal income = transactionLine.getCreditAmount().subtract(transactionLine.getDebitAmount());
+//                        totalIncome = totalIncome.add(income);
+//                    }
+                    BigDecimal income = transactionLine.getCreditAmount().subtract(transactionLine.getDebitAmount());
+                    totalIncome = totalIncome.add(income);
                 } else if (transactionLine.getAccount().getAccountType() == AccountType.EXPENSE) {
-                    if (transactionLine.getTransaction().getTargetCurrency().equals(primaryCurrency)) {
-                        BigDecimal expense = transactionLine.getOriginalDebitAmount().subtract(transactionLine.getOriginalCreditAmount());
-                        totalExpense = totalExpense.add(expense);
-                    } else {
-                        BigDecimal expense = transactionLine.getDebitAmount().subtract(transactionLine.getCreditAmount());
-                        totalExpense = totalExpense.add(expense);
-                    }
+//                    if (transactionLine.getTransaction().getTargetCurrency().equals(primaryCurrency)) {
+//                        BigDecimal expense = transactionLine.getOriginalDebitAmount().subtract(transactionLine.getOriginalCreditAmount());
+//                        totalExpense = totalExpense.add(expense);
+//                    } else {
+//                        BigDecimal expense = transactionLine.getDebitAmount().subtract(transactionLine.getCreditAmount());
+//                        totalExpense = totalExpense.add(expense);
+//                    }
+                    BigDecimal expense = transactionLine.getDebitAmount().subtract(transactionLine.getCreditAmount());
+                    totalExpense = totalExpense.add(expense);
                 }
             }
 

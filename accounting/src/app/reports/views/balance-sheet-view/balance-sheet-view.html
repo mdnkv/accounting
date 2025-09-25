@@ -1,0 +1,54 @@
+<div class="columns is-centered">
+  <div class="column is-8 is-full-mobile">
+
+    <!-- Form -->
+
+    <!-- Header -->
+    <div class="block has-text-centered">
+
+      @if (userOrganizationStore.isActiveOrganizationLoaded()){
+        <p class="has-text-grey">
+          {{userOrganizationStore.activeOrganization()!.organization.name}}
+        </p>
+      }
+
+      <p class="title is-3">Balance sheet</p>
+      @if (loaded()){
+        <p class="subtitle is-5">
+          Date: {{data()!.date|date}}
+        </p>
+      }
+
+      <hr>
+
+    </div>
+
+    <!-- Content -->
+    @if (loaded()){
+      <div class="block">
+        <div class="table-container">
+          <table class="table is-fullwidth is-striped">
+            <tfoot>
+              <tr>
+                <th>Total</th>
+                <th>{{ data()!.totalDebitAmount|currency:data()!.currency.code }}</th>
+                <th>{{ data()!.totalCreditAmount|currency:data()!.currency.code }}</th>
+              </tr>
+            </tfoot>
+            <tbody>
+              @for (item of data()!.items; track $index){
+                <tr>
+                  <td>{{item.account.code}} - {{item.account.name}}</td>
+                  <td>{{ item.debitAmount|currency:data()!.currency.code }}</td>
+                  <td>{{ item.creditAmount|currency:data()!.currency.code }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    }
+
+  </div>
+</div>

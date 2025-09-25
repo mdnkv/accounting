@@ -3,7 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 
 import {environment} from '../../../environments/environment';
-import {ExpenseCategory, NetWorthSummary, ProfitLossSummary} from '../models/reports.models';
+import {BalanceSheet, ExpenseCategory, NetWorthSummary, ProfitLossSummary} from '../models/reports.models';
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +23,10 @@ export class ReportService {
 
   getExpenseCategories(organizationId: string, daysCount : number): Observable<ExpenseCategory[]>{
     return this.http.get<ExpenseCategory[]>(`${this.serverUrl}/dashboard/expense-categories/${organizationId}?daysCount=${daysCount}`)
+  }
+
+  getBalanceSheet(organizationId: string): Observable<BalanceSheet>{
+    return this.http.get<BalanceSheet>(`${this.serverUrl}/reports/balance-sheet/${organizationId}`)
   }
 
 }
