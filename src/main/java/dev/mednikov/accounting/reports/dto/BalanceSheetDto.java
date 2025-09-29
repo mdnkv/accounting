@@ -11,8 +11,9 @@ public class BalanceSheetDto {
     private CurrencyDto currency;
     private LocalDate date;
     private  List<BalanceSheetLineDto> items;
-    private BigDecimal totalCreditAmount;
-    private BigDecimal totalDebitAmount;
+    private BigDecimal totalAssets;
+    private BigDecimal totalLiabilities;
+    private BigDecimal totalEquity;
     private boolean balanced;
 
     public CurrencyDto getCurrency() {
@@ -39,27 +40,35 @@ public class BalanceSheetDto {
         this.items = items;
     }
 
-    public BigDecimal getTotalCreditAmount() {
-        return totalCreditAmount;
-    }
-
-    public void setTotalCreditAmount(BigDecimal totalCreditAmount) {
-        this.totalCreditAmount = totalCreditAmount;
-    }
-
-    public BigDecimal getTotalDebitAmount() {
-        return totalDebitAmount;
-    }
-
-    public void setTotalDebitAmount(BigDecimal totalDebitAmount) {
-        this.totalDebitAmount = totalDebitAmount;
-    }
-
     public boolean isBalanced() {
         return balanced;
     }
 
     public void setBalanced(boolean balanced) {
         this.balanced = balanced;
+    }
+
+    public BigDecimal getTotalAssets() {
+        return totalAssets;
+    }
+
+    public void setTotalAssets(BigDecimal totalAssets) {
+        this.totalAssets = totalAssets;
+    }
+
+    public BigDecimal getTotalLiabilities() {
+        return totalLiabilities;
+    }
+
+    public void setTotalLiabilities(BigDecimal totalLiabilities) {
+        this.totalLiabilities = totalLiabilities;
+    }
+
+    public BigDecimal getTotalEquity() {
+        return totalEquity;
+    }
+
+    public void setTotalEquity(BigDecimal totalEquity) {
+        this.totalEquity = totalEquity;
     }
 }

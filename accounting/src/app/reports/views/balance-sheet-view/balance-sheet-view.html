@@ -20,7 +20,6 @@
       }
 
       <hr>
-
     </div>
 
     <!-- Content -->
@@ -28,21 +27,25 @@
       <div class="block">
         <div class="table-container">
           <table class="table is-fullwidth is-striped">
-            <tfoot>
-              <tr>
-                <th>Total</th>
-                <th>{{ data()!.totalDebitAmount|currency:data()!.currency.code }}</th>
-                <th>{{ data()!.totalCreditAmount|currency:data()!.currency.code }}</th>
-              </tr>
-            </tfoot>
             <tbody>
               @for (item of data()!.items; track $index){
                 <tr>
                   <td>{{item.account.code}} - {{item.account.name}}</td>
-                  <td>{{ item.debitAmount|currency:data()!.currency.code }}</td>
-                  <td>{{ item.creditAmount|currency:data()!.currency.code }}</td>
+                  <td>{{ item.balance|currency:data()!.currency.code }}</td>
                 </tr>
               }
+            <tr>
+              <td>Total assets: </td>
+              <td>{{data()!.totalAssets|currency:data()!.currency.code}}</td>
+            </tr>
+            <tr>
+              <td>Total liabilities: </td>
+              <td>{{data()!.totalLiabilities|currency:data()!.currency.code}}</td>
+            </tr>
+            <tr>
+              <td>Total equity: </td>
+              <td>{{data()!.totalEquity|currency:data()!.currency.code}}</td>
+            </tr>
             </tbody>
           </table>
         </div>

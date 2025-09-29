@@ -20,14 +20,15 @@ export interface ExpenseCategory {
 
 export interface BalanceSheetLine {
   account: Account
-  debitAmount: number
-  creditAmount: number
+  balance: number
 }
 
 export interface BalanceSheet {
-  totalCreditAmount: number
-  totalDebitAmount: number
+  totalAssets: number
+  totalLiabilities: number
+  totalEquity: number
   items: BalanceSheetLine[]
   currency: Currency
   date: Date
+  balanced: boolean
 }
