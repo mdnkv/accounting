@@ -4,9 +4,24 @@ import dev.mednikov.accounting.accounts.dto.AccountDto;
 
 import java.math.BigDecimal;
 
-public record BalanceSheetLineDto(
-        AccountDto account,
-        BigDecimal creditAmount,
-        BigDecimal debitAmount
-) {
+public final class BalanceSheetLineDto {
+
+    private AccountDto account;
+    private BigDecimal balance;
+
+    public AccountDto getAccount() {
+        return account;
+    }
+
+    public void setAccount(AccountDto account) {
+        this.account = account;
+    }
+
+    public BigDecimal getBalance() {
+        return balance;
+    }
+
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
+    }
 }

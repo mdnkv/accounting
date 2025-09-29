@@ -15,6 +15,7 @@ import dev.mednikov.accounting.journals.models.Journal;
 import dev.mednikov.accounting.journals.repositories.JournalRepository;
 import dev.mednikov.accounting.organizations.models.Organization;
 import dev.mednikov.accounting.organizations.repositories.OrganizationRepository;
+import dev.mednikov.accounting.shared.exceptions.AccessDeniedException;
 import dev.mednikov.accounting.transactions.dto.TransactionDto;
 import dev.mednikov.accounting.transactions.dto.TransactionDtoMapper;
 import dev.mednikov.accounting.transactions.dto.TransactionLineDto;
@@ -85,6 +86,9 @@ public class TransactionServiceImpl implements TransactionService {
         if (targetCurrency.isDeprecated()){
             throw new DeprecatedCurrencyException();
         }
+        if (!targetCurrency.getOrganization().getId().equals(organizationId)){
+            throw new AccessDeniedException();
+        }
         Currency baseCurrency = this.currencyRepository.findPrimaryCurrency(organizationId).orElseThrow(CurrencyNotFoundException::new);
         // Create transaction
         Transaction transaction = new Transaction();
@@ -94,7 +98,7 @@ public class TransactionServiceImpl implements TransactionService {
         transaction.setDate(payload.getDate());
         transaction.setBaseCurrency(baseCurrency);
         transaction.setTargetCurrency(targetCurrency);
-        transaction.setDraft(true);
+        transaction.setDraft(false);
 
         // Primary currency amount
         if (baseCurrency.equals(targetCurrency)){
@@ -112,6 +116,9 @@ public class TransactionServiceImpl implements TransactionService {
         // Set journal
         Long journalId = Long.valueOf(payload.getJournalId());
         Journal journal = this.journalRepository.findById(journalId).orElseThrow(JournalNotFoundException::new);
+        if (!journal.getOrganization().getId().equals(organizationId)){
+            throw new AccessDeniedException();
+        }
         transaction.setJournal(journal);
 
         // Persist transaction to the datasource
@@ -123,6 +130,9 @@ public class TransactionServiceImpl implements TransactionService {
             Account account = this.accountRepository.findById(accountId).orElseThrow(AccountNotFoundException::new);
             if (account.isDeprecated()){
                 throw new DeprecatedAccountException();
+            }
+            if (!account.getOrganization().getId().equals(organizationId)){
+                throw new AccessDeniedException();
             }
             // Create transaction line
             TransactionLine line = new TransactionLine();
@@ -149,7 +159,7 @@ public class TransactionServiceImpl implements TransactionService {
         // Attach lines to the transaction entity
         List<TransactionLine> linesResult = this.transactionLineRepository.saveAll(lines);
         transactionResult.setLines(linesResult);
-        transactionResult.setDraft(!baseCurrency.equals(targetCurrency));
+//        transactionResult.setDraft(!baseCurrency.equals(targetCurrency));
 
         // Save transaction with lines
         Transaction result = this.transactionRepository.save(transactionResult);

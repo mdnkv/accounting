@@ -15,7 +15,8 @@ public interface TransactionLineRepository extends JpaRepository<TransactionLine
     SELECT tl FROM TransactionLine tl
     WHERE tl.transaction.organization.id = :organizationId
     AND tl.account.accountType IN ('ASSET', 'LIABILITY', 'EQUITY')
-    AND tl.transaction.date <= :toDate ORDER BY tl.account.accountType ASC
+    AND tl.transaction.draft = false
+    AND tl.transaction.date <= :toDate
     """)
     List<TransactionLine> getBalanceSheetLines (Long organizationId, LocalDate toDate);
 
@@ -23,6 +24,7 @@ public interface TransactionLineRepository extends JpaRepository<TransactionLine
     SELECT tl FROM TransactionLine tl
     WHERE tl.transaction.organization.id = :organizationId
     AND (tl.transaction.date >= :fromDate AND tl.transaction.date <= :toDate)
+        AND tl.transaction.draft = false
     AND tl.account.accountType IN ('INCOME', 'EXPENSE')
     """)
     List<TransactionLine> getProfitLossLines(Long organizationId, LocalDate fromDate, LocalDate toDate);
@@ -32,6 +34,7 @@ public interface TransactionLineRepository extends JpaRepository<TransactionLine
     WHERE tl.transaction.organization.id = :organizationId
     AND tl.account.accountType IN ('ASSET', 'LIABILITY')
     AND (tl.transaction.date >= :fromDate AND tl.transaction.date <= :toDate)
+    AND tl.transaction.draft = false
     """)
     List<TransactionLine> getAssetsAndLiabilityLines (Long organizationId, LocalDate fromDate, LocalDate toDate);
 
@@ -40,9 +43,13 @@ public interface TransactionLineRepository extends JpaRepository<TransactionLine
     WHERE tl.transaction.organization.id = :organizationId
     AND tl.account.accountType = 'EXPENSE'
     AND (tl.transaction.date >= :fromDate AND tl.transaction.date <= :toDate)
+    AND tl.transaction.draft = false
     """)
     List<TransactionLine> getExpenseLines (Long organizationId, LocalDate fromDate, LocalDate toDate);
 
+    @Query("SELECT tl FROM TransactionLine  tl WHERE tl.account.id = :accountId AND tl.transaction.draft = false")
     List<TransactionLine> findByAccountId(Long accountId);
 
+    @Query("SELECT tl FROM TransactionLine  tl WHERE tl.account.id = :accountId AND tl.transaction.date <= :date AND tl.transaction.draft = false")
+    List<TransactionLine> findByAccountIdBeforeDate(Long accountId, LocalDate date);
 }

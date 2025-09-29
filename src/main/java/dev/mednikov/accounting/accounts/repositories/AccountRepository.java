@@ -19,4 +19,12 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     @Query("SELECT ac FROM Account ac WHERE ac.organization.id = :organizationId AND ac.deprecated = false ORDER BY ac.code")
     List<Account> findActiveByOrganizationId(Long organizationId);
 
+    @Query("""
+    SELECT ac FROM Account ac
+    WHERE ac.organization.id = :organizationId
+    AND ac.deprecated = false
+    AND ac.accountType IN ('ASSET', 'LIABILITY', 'EQUITY')
+    ORDER BY ac.code ASC
+""")
+    List<Account> findBalanceSheetAccounts (Long organizationId);
 }
