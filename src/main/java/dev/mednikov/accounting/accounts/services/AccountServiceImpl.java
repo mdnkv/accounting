@@ -7,6 +7,8 @@ import dev.mednikov.accounting.accounts.exceptions.AccountAlreadyExistsException
 import dev.mednikov.accounting.accounts.exceptions.AccountDeletionException;
 import dev.mednikov.accounting.accounts.exceptions.AccountNotFoundException;
 import dev.mednikov.accounting.accounts.models.Account;
+import dev.mednikov.accounting.accounts.models.AccountCategory;
+import dev.mednikov.accounting.accounts.repositories.AccountCategoryRepository;
 import dev.mednikov.accounting.accounts.repositories.AccountRepository;
 import dev.mednikov.accounting.organizations.models.Organization;
 import dev.mednikov.accounting.organizations.repositories.OrganizationRepository;
@@ -24,16 +26,19 @@ public class AccountServiceImpl implements AccountService {
     private final static SnowflakeGenerator snowflakeGenerator = new SnowflakeGenerator();
 
     private final AccountRepository accountRepository;
+    private final AccountCategoryRepository accountCategoryRepository;
     private final TransactionLineRepository transactionLineRepository;
     private final OrganizationRepository organizationRepository;
 
     public AccountServiceImpl(
             AccountRepository accountRepository,
             OrganizationRepository organizationRepository,
-            TransactionLineRepository transactionLineRepository) {
+            TransactionLineRepository transactionLineRepository,
+            AccountCategoryRepository accountCategoryRepository) {
         this.accountRepository = accountRepository;
         this.organizationRepository = organizationRepository;
         this.transactionLineRepository = transactionLineRepository;
+        this.accountCategoryRepository = accountCategoryRepository;
     }
 
     @Override
@@ -53,6 +58,15 @@ public class AccountServiceImpl implements AccountService {
         account.setAccountType(accountDto.getAccountType());
         account.setOrganization(organization);
         account.setDeprecated(false);
+
+        // Set category
+        if (accountDto.getAccountCategoryId() != null) {
+            Long accountCategoryId = Long.valueOf(accountDto.getAccountCategoryId());
+            AccountCategory accountCategory = this.accountCategoryRepository.getReferenceById(accountCategoryId);
+            account.setAccountCategory(accountCategory);
+        } else {
+            account.setAccountCategory(null);
+        }
 
         Account result = this.accountRepository.save(account);
 
@@ -76,6 +90,14 @@ public class AccountServiceImpl implements AccountService {
                 throw new AccountAlreadyExistsException();
             }
             account.setCode(code);
+        }
+
+        if (accountDto.getAccountCategoryId() != null) {
+            Long accountCategoryId = Long.valueOf(accountDto.getAccountCategoryId());
+            AccountCategory accountCategory = this.accountCategoryRepository.getReferenceById(accountCategoryId);
+            account.setAccountCategory(accountCategory);
+        } else {
+            account.setAccountCategory(null);
         }
 
         Account result = this.accountRepository.save(account);

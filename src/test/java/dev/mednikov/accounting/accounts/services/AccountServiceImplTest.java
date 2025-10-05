@@ -7,6 +7,7 @@ import dev.mednikov.accounting.accounts.exceptions.AccountDeletionException;
 import dev.mednikov.accounting.accounts.exceptions.AccountNotFoundException;
 import dev.mednikov.accounting.accounts.models.Account;
 import dev.mednikov.accounting.accounts.models.AccountType;
+import dev.mednikov.accounting.accounts.repositories.AccountCategoryRepository;
 import dev.mednikov.accounting.accounts.repositories.AccountRepository;
 import dev.mednikov.accounting.organizations.models.Organization;
 import dev.mednikov.accounting.organizations.repositories.OrganizationRepository;
@@ -32,6 +33,7 @@ class AccountServiceImplTest {
     @Mock private AccountRepository accountRepository;
     @Mock private OrganizationRepository organizationRepository;
     @Mock private TransactionLineRepository transactionLineRepository;
+    @Mock private AccountCategoryRepository accountCategoryRepository;
     @InjectMocks private AccountServiceImpl accountService;
 
     @Test
