@@ -4,13 +4,19 @@
   </div>
   <div class="media-content">
     <p>{{account().name}}</p>
-    <p class="has-text-grey is-size-7">
-      @switch (account().accountType){
-        @case('ASSET'){Asset}
-        @case('LIABILITY'){Liability}
-        @case('EQUITY'){Equity}
-        @case('INCOME'){Income}
-        @default {Expense}
+    <p class="has-text-grey-dark is-size-7">
+      <span class="has-text-weight-semibold">
+        @switch (account().accountType){
+          @case('ASSET'){Asset}
+          @case('LIABILITY'){Liability}
+          @case('EQUITY'){Equity}
+          @case('INCOME'){Income}
+          @default {Expense}
+        }
+      </span>
+      @if (account().accountCategory! != null){
+        <span> - </span>
+        <span>{{account().accountCategory!.name}}</span>
       }
     </p>
   </div>

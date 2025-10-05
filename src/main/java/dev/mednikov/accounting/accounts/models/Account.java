@@ -7,6 +7,7 @@ import org.hibernate.annotations.*;
 import org.hibernate.dialect.PostgreSQLEnumJdbcType;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Entity
 @Table(
@@ -22,6 +23,11 @@ public class Account {
     @JoinColumn(name = "organization_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Organization organization;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "account_category_id")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
+    private AccountCategory accountCategory;
 
     @Column(name = "account_type", nullable = false)
     @JdbcType(PostgreSQLEnumJdbcType.class)
@@ -105,5 +111,13 @@ public class Account {
 
     public void setDeprecated(boolean deprecated) {
         this.deprecated = deprecated;
+    }
+
+    public void setAccountCategory(AccountCategory accountCategory) {
+        this.accountCategory = accountCategory;
+    }
+
+    public Optional<AccountCategory> getAccountCategory() {
+        return Optional.ofNullable(accountCategory);
     }
 }

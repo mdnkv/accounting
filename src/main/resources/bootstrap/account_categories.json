@@ -1,0 +1,38 @@
+[
+  {
+    "name": "Current Assets",
+    "accountType": "ASSET"
+  },
+  {
+    "name": "Property, Plant, and Equipment",
+    "accountType": "ASSET"
+  },
+  {
+    "name": "Current Liabilities",
+    "accountType": "LIABILITY"
+  },
+  {
+    "name": "Long-term Liabilities",
+    "accountType": "LIABILITY"
+  },
+  {
+    "name": "Stockholders' Equity",
+    "accountType": "EQUITY"
+  },
+  {
+    "name": "Treasury stock",
+    "accountType": "EQUITY"
+  },
+  {
+    "name": "Sales",
+    "accountType": "INCOME"
+  },
+  {
+    "name": "Cost of Goods Sold",
+    "accountType": "EXPENSE"
+  },
+  {
+    "name": "Operating Expenses",
+    "accountType": "EXPENSE"
+  }
+]

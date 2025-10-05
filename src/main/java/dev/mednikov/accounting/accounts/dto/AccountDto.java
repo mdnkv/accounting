@@ -13,6 +13,8 @@ public final class AccountDto {
     @NotNull @NotBlank @Length(max=20) private String code;
     @NotNull private AccountType accountType;
     private boolean deprecated;
+    private String accountCategoryId;
+    private AccountCategoryDto accountCategory;
 
     public String getId() {
         return id;
@@ -60,5 +62,21 @@ public final class AccountDto {
 
     public void setDeprecated(boolean deprecated) {
         this.deprecated = deprecated;
+    }
+
+    public String getAccountCategoryId() {
+        return accountCategoryId;
+    }
+
+    public void setAccountCategoryId(String accountCategoryId) {
+        this.accountCategoryId = accountCategoryId;
+    }
+
+    public AccountCategoryDto getAccountCategory() {
+        return accountCategory;
+    }
+
+    public void setAccountCategory(AccountCategoryDto accountCategory) {
+        this.accountCategory = accountCategory;
     }
 }

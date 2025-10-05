@@ -11,6 +11,8 @@ import {MatDialog} from '@angular/material/dialog';
 import {Account} from '../../models/accounts.models';
 import {CancelFormDialog} from '../../../core/components/cancel-form-dialog/cancel-form-dialog';
 
+import {AccountCategoryStore} from '../../stores/account-category.store';
+
 @Component({
   selector: 'app-account-form',
   imports: [
@@ -26,6 +28,8 @@ import {CancelFormDialog} from '../../../core/components/cancel-form-dialog/canc
 })
 export class AccountForm {
 
+  readonly accountCategoryStore = inject(AccountCategoryStore)
+
   dialog: MatDialog = inject(MatDialog)
   saveAccount = output<Account>()
   cancel = output()
@@ -38,10 +42,12 @@ export class AccountForm {
     name: ['', [Validators.required, Validators.maxLength(255)]],
     code: ['', [Validators.required, Validators.maxLength(25)]],
     accountType: ['ASSET', [Validators.required]],
+    accountCategoryId: [null],
     deprecated: [false]
   })
 
   constructor() {
+    this.accountCategoryStore.getAccountCategories()
     effect(() => {
       if (this.currentAccount() != undefined){
         this.updateForm(this.currentAccount()!)
@@ -57,6 +63,7 @@ export class AccountForm {
     this.form.get('code')?.setValue(payload.code)
     this.form.get('accountType')?.setValue(payload.accountType)
     this.form.get('deprecated')?.setValue(payload.deprecated)
+    this.form.get('accountCategoryId')?.setValue(payload.accountCategoryId!)
   }
 
   onSubmit(){
@@ -68,7 +75,8 @@ export class AccountForm {
         name: this.form.get('name')?.value,
         code: this.form.get('code')?.value,
         deprecated: this.form.get('deprecated')?.value,
-        accountType: this.form.get('accountType')?.value
+        accountType: this.form.get('accountType')?.value,
+        accountCategoryId: this.form.get('accountCategoryId')?.value
       }
 
       this.saveAccount.emit(payload)
@@ -79,6 +87,7 @@ export class AccountForm {
         name: this.form.get('name')?.value,
         code: this.form.get('code')?.value,
         accountType: this.form.get('accountType')?.value,
+        accountCategoryId: this.form.get('accountCategoryId')?.value,
         deprecated: false
       }
 

@@ -2,7 +2,7 @@ package dev.mednikov.accounting.shared.bootstrap;
 
 import java.util.List;
 
-class RoleAuthorityDto {
+final class RoleAuthorityDto {
 
     private String name;
     private List<String> authorities;

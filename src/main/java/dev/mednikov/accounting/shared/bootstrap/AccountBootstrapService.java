@@ -4,6 +4,8 @@ import cn.hutool.core.lang.generator.SnowflakeGenerator;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.mednikov.accounting.accounts.models.Account;
+import dev.mednikov.accounting.accounts.models.AccountCategory;
+import dev.mednikov.accounting.accounts.repositories.AccountCategoryRepository;
 import dev.mednikov.accounting.accounts.repositories.AccountRepository;
 import dev.mednikov.accounting.organizations.events.OrganizationCreatedEvent;
 import dev.mednikov.accounting.organizations.models.Organization;
@@ -23,15 +25,18 @@ public class AccountBootstrapService {
     private final static Logger logger = LoggerFactory.getLogger(AccountBootstrapService.class);
     private final static SnowflakeGenerator snowflakeGenerator = new SnowflakeGenerator();
 
+    private final AccountCategoryRepository accountCategoryRepository;
     private final AccountRepository accountRepository;
     private final ObjectMapper objectMapper;
     private final ResourceLoader resourceLoader;
 
     public AccountBootstrapService(
+            AccountCategoryRepository accountCategoryRepository,
             AccountRepository accountRepository,
             ObjectMapper objectMapper,
             ResourceLoader resourceLoader)
     {
+        this.accountCategoryRepository = accountCategoryRepository;
         this.accountRepository = accountRepository;
         this.objectMapper = objectMapper;
         this.resourceLoader = resourceLoader;
@@ -41,23 +46,50 @@ public class AccountBootstrapService {
     public void onOrganizationCreatedEventListener(OrganizationCreatedEvent e){
         Organization organization = e.getOrganization();
         try {
-            Resource resource = this.resourceLoader.getResource("classpath:bootstrap/accounts.json");
-            TypeReference<List<Account>> typeReference = new TypeReference<>() {};
-            List<Account> data = this.objectMapper.readValue(resource.getInputStream(), typeReference);
-            List<Account> accounts = new ArrayList<>();
-            for (Account item : data) {
-                Account account = new Account();
-                account.setOrganization(organization);
-                account.setCode(item.getCode());
-                account.setName(item.getName());
-                account.setAccountType(item.getAccountType());
-                account.setId(snowflakeGenerator.next());
-                account.setDeprecated(false);
-                accounts.add(account);
-            }
-            accountRepository.saveAll(accounts);
+            createAccountCategories(organization);
+            createAccounts(organization);
         } catch (Exception ex){
             logger.error(ex.getMessage());
         }
+    }
+
+    // Create account categories
+    private void createAccountCategories (Organization organization) throws Exception{
+        Resource resource = this.resourceLoader.getResource("classpath:bootstrap/account_categories.json");
+        TypeReference<List<AccountCategoryBootstrapDto>> typeReference = new TypeReference<>() {};
+        List<AccountCategoryBootstrapDto> data = this.objectMapper.readValue(resource.getInputStream(), typeReference);
+        List<AccountCategory> categories = new ArrayList<>();
+        for (AccountCategoryBootstrapDto item : data) {
+            AccountCategory category = new AccountCategory();
+            category.setName(item.getName());
+            category.setAccountType(item.getAccountType());
+            category.setOrganization(organization);
+            category.setId(snowflakeGenerator.next());
+            categories.add(category);
+        }
+        accountCategoryRepository.saveAll(categories);
+    }
+
+    // Create accounts
+    private void createAccounts (Organization organization) throws Exception{
+        Resource resource = this.resourceLoader.getResource("classpath:bootstrap/accounts.json");
+        TypeReference<List<AccountBootstrapDto>> typeReference = new TypeReference<>() {};
+        List<AccountBootstrapDto> data = this.objectMapper.readValue(resource.getInputStream(), typeReference);
+        Long organizationId = organization.getId();
+        List<Account> accounts = new ArrayList<>();
+        for (AccountBootstrapDto item : data) {
+            Account account = new Account();
+            AccountCategory accountCategory = this.accountCategoryRepository.findByOrganizationIdAndName(organizationId, item.getCategoryName())
+                            .orElse(null);
+            account.setAccountCategory(accountCategory);
+            account.setOrganization(organization);
+            account.setCode(item.getCode());
+            account.setName(item.getName());
+            account.setAccountType(item.getAccountType());
+            account.setId(snowflakeGenerator.next());
+            account.setDeprecated(false);
+            accounts.add(account);
+        }
+        accountRepository.saveAll(accounts);
     }
 }

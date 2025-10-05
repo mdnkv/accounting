@@ -79,7 +79,7 @@ collection:
         meta:
           id: req_f074e6fc69fb4fb19290de9a2d3955df
           created: 1749035379556
-          modified: 1757244616828
+          modified: 1759659395627
           isPrivate: false
           description: ""
           sortKey: -1748881859977.5
@@ -88,7 +88,7 @@ collection:
           mimeType: application/json
           text: |-
             {
-            	"name":"Wieland Ebert GmbH"
+            	"name":"Strauß GmbH & Co. KG"
             }
         headers:
           - name: Content-Type
@@ -1516,18 +1516,171 @@ collection:
             send: true
             store: true
           rebuildPath: true
+  - name: Account categories
+    meta:
+      id: fld_55006a5b367945d2ae286e137027dd54
+      created: 1759659483570
+      modified: 1759659483570
+      sortKey: -1759659483570
+      description: ""
+    children:
+      - url: "{{ _.server_url }}account-categories/organization/:id"
+        name: Get account categories
+        meta:
+          id: req_211dbd9c17d4488aa1ad9ac3f0fdbeb4
+          created: 1759659486958
+          modified: 1759659529232
+          isPrivate: false
+          description: ""
+          sortKey: -1759659486958
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.6.1
+        authentication:
+          type: oauth2
+          grantType: authorization_code
+          authorizationUrl: "{{_.auth_url}}"
+          accessTokenUrl: "{{_.access_token_url}}"
+          clientId: "{{_.client_id}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: id
+            value: "{{_.active_organization_id}}"
+      - url: "{{ _.server_url }}account-categories/create"
+        name: Create account category
+        meta:
+          id: req_f68364fb488c46b58c350d368b1333d4
+          created: 1759659539608
+          modified: 1759659662677
+          isPrivate: false
+          description: ""
+          sortKey: -1758928512752.5
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"organizationId":"{{ _.active_organization_id }}",
+            "accountType":"INCOME",
+            "name":"Operating Revenues"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.6.1
+        authentication:
+          type: oauth2
+          grantType: authorization_code
+          authorizationUrl: "{{_.auth_url}}"
+          accessTokenUrl: "{{_.access_token_url}}"
+          clientId: "{{_.client_id}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.server_url }}account-categories/update"
+        name: Update account category
+        meta:
+          id: req_b6f3d1a6e6c14e3ba56f1adcc85867d5
+          created: 1759659681506
+          modified: 1759659705017
+          isPrivate: false
+          description: ""
+          sortKey: -1758563025649.75
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            		"id": "1974781830263472128",
+            		"name": "Stockholders' Equity",
+            		"organizationId": "{{_.active_organization_id}}",
+            		"accountType": "EQUITY"
+            	}
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.6.1
+        authentication:
+          type: oauth2
+          grantType: authorization_code
+          authorizationUrl: "{{_.auth_url}}"
+          accessTokenUrl: "{{_.access_token_url}}"
+          clientId: "{{_.client_id}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.server_url }}account-categories/delete/:id"
+        name: Delete account category
+        meta:
+          id: req_1da68b42b9654c938fd126fcd737703c
+          created: 1759659723773
+          modified: 1759659737999
+          isPrivate: false
+          description: ""
+          sortKey: -1759293999855.25
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/11.6.1
+        authentication:
+          type: oauth2
+          grantType: authorization_code
+          authorizationUrl: "{{_.auth_url}}"
+          accessTokenUrl: "{{_.access_token_url}}"
+          clientId: "{{_.client_id}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+        pathParameters:
+          - name: id
+            value: "1974781875780059136"
 cookieJar:
   name: Default Jar
   meta:
     id: jar_676597a9d4e9b24c6c7cf8e61c4566cefaacc897
     created: 1749035252073
-    modified: 1751716309041
+    modified: 1759659397127
+  cookies:
+    - key: JSESSIONID
+      value: 66EA2E517FDA9A79A0CED4E059FAAB8C
+      domain: localhost
+      path: /
+      httpOnly: true
+      hostOnly: true
+      creation: 2025-10-05T10:16:37.127Z
+      lastAccessed: 2025-10-05T10:16:37.127Z
+      id: 75e34da9-998b-4645-9b7f-6c1fb62988d6
 environments:
   name: Base Environment
   meta:
     id: env_676597a9d4e9b24c6c7cf8e61c4566cefaacc897
     created: 1749035252072
-    modified: 1757244714630
+    modified: 1759659476116
     isPrivate: false
   data:
     server_url: http://localhost:8000/api/
@@ -1535,4 +1688,4 @@ environments:
     access_token_url: "{{ _.keycloak_host }}/realms/accounting/protocol/openid-connect/token"
     auth_url: "{{_.keycloak_host}}/realms/accounting/protocol/openid-connect/auth"
     client_id: accounting-rest
-    active_organization_id: "1964652814969864192"
+    active_organization_id: "1974781063536312320"
