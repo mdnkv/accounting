@@ -22,7 +22,7 @@ Cloud SaaS general ledger accounting platform that supports multi tenancy, multi
 
 The initial goal was to implement a complete SaaS application that can handle both domain tasks (accounting) as well as all SaaS common functionality (such as multi tenancy, user management etc).
 
-![](docs/dashboard_material_0_0_2.png)
+![](docs/dashboard.png)
 
 As the result, this project was created after thorough domain research. As for now, it has more functionality than most advanced SaaS platforms on the market. For instance, here you have multi currency support out of the box - premium feature for most accounting "giants" 😎
 
@@ -130,17 +130,25 @@ The architecture of the project is presented on the C4 diagram below:
 
 ## Screenshots
 
-The application migrated from Bulma CSS to Angular Material, so there are some things to do on frontend.
+The frontend combines both Angular Material (mainly form components) and Bulma (for flex layouts)
 
-The current state of the project (v.0.0.2):
+The current state of the project:
 
-![](docs/dashboard_material_0_0_2.png)
+![](docs/dashboard.png)
 
 Dashboard
 
-![](docs/charts_of_accounts_material_0_0_2.png)
+![](docs/chart-of-accounts-2.png)
 
 Chart of Accounts
+
+![](docs/transactions.png)
+
+Transactions
+
+![](docs/new-transaction.png)
+
+Create a new transaction
 
 ## Author
 
