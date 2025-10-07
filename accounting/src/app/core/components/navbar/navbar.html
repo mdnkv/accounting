@@ -1,8 +1,32 @@
-<mat-toolbar class="app-level">
-  <div>
-    <button (click)="store.toggleSideMenu()" type="button" matIconButton>
-      <mat-icon>menu</mat-icon>
-    </button>
+<mat-toolbar class="level is-mobile">
+  <div class="level-left">
+    <div class="level-item">
+      <button (click)="coreStore.toggleSideMenu()" type="button" matIconButton>
+        <mat-icon>menu</mat-icon>
+      </button>
+    </div>
   </div>
-  <div></div>
+  <div class="level-right">
+    <div class="level-item">
+      <div class="dropdown is-right" [class.is-active]="isNavbarDropdownActive()">
+        <div class="dropdown-trigger">
+          <button
+            type="button"
+            matButton="outlined"
+            (click)="toggleNavbarDropdown()">
+            {{userStore.getDisplayedName()}}
+            <mat-icon>account_circle</mat-icon>
+          </button>
+        </div>
+        <div class="dropdown-menu">
+          <div class="dropdown-content">
+<!--            <a href="#" class="dropdown-item">My profile</a>-->
+            <a [routerLink]="['/organizations']" class="dropdown-item">My organizations</a>
+            <hr class="dropdown-divider">
+            <a (click)="onLogout()" class="dropdown-item">Logout</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </mat-toolbar>

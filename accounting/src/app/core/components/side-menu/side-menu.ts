@@ -4,8 +4,6 @@ import {RouterLink} from '@angular/router';
 import {MatListModule} from '@angular/material/list';
 import {MatIconModule} from '@angular/material/icon';
 
-import Keycloak from 'keycloak-js';
-
 import {CoreStore} from '../../stores/core.store';
 import {SideNavMenuItem} from '../../models/core.models';
 
@@ -18,7 +16,6 @@ import {SideNavMenuItem} from '../../models/core.models';
 export class SideMenu {
 
   readonly store = inject(CoreStore)
-  keycloak = inject(Keycloak)
 
   SIDENAV_MENU_ITEMS: SideNavMenuItem[] = [
     {
@@ -47,9 +44,5 @@ export class SideMenu {
       route: '/reports'
     }
   ]
-
-  onLogout(){
-    this.keycloak.logout()
-  }
 
 }
