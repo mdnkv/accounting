@@ -1,10 +1,17 @@
 package dev.mednikov.accounting.shared.bootstrap;
 
 import cn.hutool.core.lang.generator.SnowflakeGenerator;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.mednikov.accounting.journals.models.Journal;
 import dev.mednikov.accounting.journals.repositories.JournalRepository;
 import dev.mednikov.accounting.organizations.events.OrganizationCreatedEvent;
+import dev.mednikov.accounting.organizations.models.Organization;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,39 +21,39 @@ import java.util.List;
 public class JournalBootstrapService {
 
     private final static SnowflakeGenerator snowflakeGenerator = new SnowflakeGenerator();
+    private final static Logger logger = LoggerFactory.getLogger(JournalBootstrapService.class);
+
+    private final ObjectMapper objectMapper;
+    private final ResourceLoader resourceLoader;
 
     private final JournalRepository journalRepository;
 
-    public JournalBootstrapService(JournalRepository journalRepository) {
+    public JournalBootstrapService(JournalRepository journalRepository, ObjectMapper objectMapper, ResourceLoader resourceLoader) {
         this.journalRepository = journalRepository;
+        this.objectMapper = objectMapper;
+        this.resourceLoader = resourceLoader;
     }
 
     @EventListener
     public void onOrganizationCreatedEventListener(OrganizationCreatedEvent e) {
-        List<Journal> journals = new ArrayList<>();
-
-        Journal generalJournal = new Journal();
-        generalJournal.setId(snowflakeGenerator.next());
-        generalJournal.setOrganization(e.getOrganization());
-        generalJournal.setName("General");
-        generalJournal.setActive(true);
-        journals.add(generalJournal);
-
-        Journal salesJournal = new Journal();
-        salesJournal.setId(snowflakeGenerator.next());
-        salesJournal.setOrganization(e.getOrganization());
-        salesJournal.setName("Sales");
-        salesJournal.setActive(true);
-        journals.add(salesJournal);
-
-        Journal purchaseJournal = new Journal();
-        purchaseJournal.setId(snowflakeGenerator.next());
-        purchaseJournal.setOrganization(e.getOrganization());
-        purchaseJournal.setName("Purchases");
-        purchaseJournal.setActive(true);
-        journals.add(purchaseJournal);
-
-        this.journalRepository.saveAll(journals);
+        Organization organization = e.getOrganization();
+        try {
+            Resource resource = this.resourceLoader.getResource("classpath:bootstrap/journals.json");
+            TypeReference<List<Journal>> typeReference = new TypeReference<>() {};
+            List<Journal> data = this.objectMapper.readValue(resource.getInputStream(), typeReference);
+            List<Journal> journals = new ArrayList<>();
+            for (Journal item : data) {
+                Journal journal = new Journal();
+                journal.setId(snowflakeGenerator.next());
+                journal.setName(item.getName());
+                journal.setOrganization(organization);
+                journal.setActive(true);
+                journals.add(journal);
+            }
+            this.journalRepository.saveAll(journals);
+        } catch (Exception ex){
+            logger.error(ex.getMessage());
+        }
     }
 
 
