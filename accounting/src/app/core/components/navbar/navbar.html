@@ -10,17 +10,22 @@
     <div class="level-item">
       <div class="dropdown is-right" [class.is-active]="isNavbarDropdownActive()">
         <div class="dropdown-trigger">
-          <button
-            type="button"
-            matButton="outlined"
-            (click)="toggleNavbarDropdown()">
-            {{userStore.getDisplayedName()}}
-            <mat-icon>account_circle</mat-icon>
+
+          <button type="button" matButton="text" (click)="toggleNavbarDropdown()">
+            <div class="media">
+              <div class="media-left">
+                <div class="image is-24x24">
+                  <img [src]="userStore.getGravatar()" alt="" class="is-rounded">
+                </div>
+              </div>
+              <div class="media-content">{{userStore.getDisplayedName()}}</div>
+            </div>
           </button>
+
+
         </div>
         <div class="dropdown-menu">
           <div class="dropdown-content">
-<!--            <a href="#" class="dropdown-item">My profile</a>-->
             <a [routerLink]="['/organizations']" class="dropdown-item">My organizations</a>
             <hr class="dropdown-divider">
             <a (click)="onLogout()" class="dropdown-item">Logout</a>

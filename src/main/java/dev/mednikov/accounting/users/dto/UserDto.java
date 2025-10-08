@@ -5,6 +5,7 @@ public final class UserDto {
     private String id;
     private String firstName;
     private String lastName;
+    private String gravatarUrl;
 
     public String getId() {
         return id;
@@ -28,5 +29,13 @@ public final class UserDto {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getGravatarUrl() {
+        return gravatarUrl;
+    }
+
+    public void setGravatarUrl(String gravatarUrl) {
+        this.gravatarUrl = gravatarUrl;
     }
 }

@@ -34,6 +34,13 @@ export const UserStore = signalStore(
         } else {
           return 'User'
         }
+      },
+      getGravatar(){
+        if (store.currentUser() != undefined){
+          return store.currentUser()!.gravatarUrl
+        } else {
+          return ''
+        }
       }
     }
   })
