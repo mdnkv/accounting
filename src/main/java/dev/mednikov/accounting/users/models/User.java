@@ -30,6 +30,12 @@ public class User {
     @Column(name = "last_name")
     private String lastName;
 
+    @Column(name = "is_active", nullable = false)
+    private boolean active;
+
+    @Column(name = "is_superuser", nullable = false)
+    private boolean superuser;
+
     @Column(name = "created_at")
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -88,5 +94,21 @@ public class User {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public boolean isSuperuser() {
+        return superuser;
+    }
+
+    public void setSuperuser(boolean superuser) {
+        this.superuser = superuser;
     }
 }

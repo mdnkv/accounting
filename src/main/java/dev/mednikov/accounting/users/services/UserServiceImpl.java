@@ -63,6 +63,8 @@ public class UserServiceImpl implements UserService {
             user.setLastName(lastName);
             user.setKeycloakId(keycloakId);
             user.setId(snowflakeGenerator.next());
+            user.setActive(true);
+            user.setSuperuser(false);
 
             User savedUser = this.userRepository.save(user);
 
