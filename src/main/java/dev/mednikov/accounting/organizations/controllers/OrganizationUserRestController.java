@@ -4,6 +4,8 @@ import dev.mednikov.accounting.organizations.dto.CreateOrganizationUserRequestDt
 import dev.mednikov.accounting.organizations.dto.OrganizationUserDto;
 import dev.mednikov.accounting.organizations.dto.UserOrganizationDto;
 import dev.mednikov.accounting.organizations.services.OrganizationUserService;
+import dev.mednikov.accounting.users.dto.CurrentUserDto;
+import dev.mednikov.accounting.users.dto.CurrentUserDtoMapper;
 import dev.mednikov.accounting.users.models.User;
 import dev.mednikov.accounting.users.services.UserService;
 import jakarta.validation.Valid;
@@ -58,7 +60,9 @@ public class OrganizationUserRestController {
 
     @GetMapping("/current/all")
     public @ResponseBody List<UserOrganizationDto> getAllForUser(@AuthenticationPrincipal Jwt jwt) {
-        User user = this.userService.getOrCreateUser(jwt);
+        CurrentUserDtoMapper currentUserDtoMapper = new CurrentUserDtoMapper();
+        CurrentUserDto currentUserDto = currentUserDtoMapper.apply(jwt);
+        User user = this.userService.getOrCreateUser(currentUserDto);
         return this.organizationUserService.getAllForUser(user);
     }
 
@@ -67,13 +71,17 @@ public class OrganizationUserRestController {
             @AuthenticationPrincipal Jwt jwt,
             @PathVariable Long id
     ) {
-        User user = this.userService.getOrCreateUser(jwt);
+        CurrentUserDtoMapper currentUserDtoMapper = new CurrentUserDtoMapper();
+        CurrentUserDto currentUserDto = currentUserDtoMapper.apply(jwt);
+        User user = this.userService.getOrCreateUser(currentUserDto);
         return this.organizationUserService.setActiveForUser(user, id);
     }
 
     @GetMapping("/current/active")
     public ResponseEntity<UserOrganizationDto> getActiveForUser (@AuthenticationPrincipal Jwt jwt) {
-        User user = this.userService.getOrCreateUser(jwt);
+        CurrentUserDtoMapper currentUserDtoMapper = new CurrentUserDtoMapper();
+        CurrentUserDto currentUserDto = currentUserDtoMapper.apply(jwt);
+        User user = this.userService.getOrCreateUser(currentUserDto);
         Optional<UserOrganizationDto> result = this.organizationUserService.getActiveForUser(user);
         return ResponseEntity.of(result);
     }

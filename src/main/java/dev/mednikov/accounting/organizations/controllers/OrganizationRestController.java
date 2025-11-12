@@ -2,6 +2,8 @@ package dev.mednikov.accounting.organizations.controllers;
 
 import dev.mednikov.accounting.organizations.dto.OrganizationDto;
 import dev.mednikov.accounting.organizations.services.OrganizationService;
+import dev.mednikov.accounting.users.dto.CurrentUserDto;
+import dev.mednikov.accounting.users.dto.CurrentUserDtoMapper;
 import dev.mednikov.accounting.users.models.User;
 import dev.mednikov.accounting.users.services.UserService;
 import jakarta.validation.Valid;
@@ -32,7 +34,9 @@ public class OrganizationRestController {
             @RequestBody @Valid OrganizationDto organizationDto,
             @AuthenticationPrincipal Jwt jwt
             ) {
-        User user = this.userService.getOrCreateUser(jwt);
+        CurrentUserDtoMapper currentUserDtoMapper = new CurrentUserDtoMapper();
+        CurrentUserDto currentUserDto = currentUserDtoMapper.apply(jwt);
+        User user = this.userService.getOrCreateUser(currentUserDto);
         return this.organizationService.createOrganization(user, organizationDto);
     }
 

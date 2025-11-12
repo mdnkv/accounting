@@ -3,6 +3,8 @@ package dev.mednikov.accounting.shared.auth;
 import dev.mednikov.accounting.authorities.models.Authority;
 import dev.mednikov.accounting.organizations.models.OrganizationUser;
 import dev.mednikov.accounting.organizations.repositories.OrganizationUserRepository;
+import dev.mednikov.accounting.users.dto.CurrentUserDto;
+import dev.mednikov.accounting.users.dto.CurrentUserDtoMapper;
 import dev.mednikov.accounting.users.models.User;
 import dev.mednikov.accounting.users.services.UserService;
 import org.springframework.context.annotation.Profile;
@@ -31,7 +33,9 @@ public class RoleConverter implements Converter<Jwt, AbstractAuthenticationToken
 
     @Override
     public AbstractAuthenticationToken convert(Jwt jwt) {
-        User user = this.userService.getOrCreateUser(jwt);
+        CurrentUserDtoMapper currentUserDtoMapper = new CurrentUserDtoMapper();
+        CurrentUserDto currentUserDto = currentUserDtoMapper.apply(jwt);
+        User user = this.userService.getOrCreateUser(currentUserDto);
         Optional<OrganizationUser> currentActive = this.organizationUserRepository.findActiveForUser(user.getId());
         if (currentActive.isPresent()) {
             OrganizationUser result = currentActive.get();

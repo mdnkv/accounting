@@ -26,7 +26,7 @@
         </div>
         <div class="dropdown-menu">
           <div class="dropdown-content">
-            <a [routerLink]="['/organizations']" class="dropdown-item">My organizations</a>
+            <a (click)="openLink('/organizations')" class="dropdown-item">My organizations</a>
             <hr class="dropdown-divider">
             <a (click)="onLogout()" class="dropdown-item">Logout</a>
           </div>
