@@ -35,10 +35,14 @@ public class OrganizationUserRestController {
     @PreAuthorize("hasAuthority(#body.organizationId) and hasAuthority('organization-users:create')")
     public ResponseEntity<OrganizationUserDto> createOrganizationUser (@RequestBody @Valid CreateOrganizationUserRequestDto body){
         Optional<OrganizationUserDto> result = this.organizationUserService.createOrganizationUser(body);
-        return ResponseEntity.of(result);
+        if (result.isPresent()){
+            return ResponseEntity.status(HttpStatus.CREATED).body(result.get());
+        } else {
+            return ResponseEntity.noContent().build();
+        }
     }
 
-    @PostMapping("/update")
+    @PutMapping("/update")
     @PreAuthorize("hasAuthority(#body.organizationId) and hasAuthority('organization-users:update')")
     public @ResponseBody OrganizationUserDto updateOrganizationUser (@RequestBody OrganizationUserDto body){
         return this.organizationUserService.updateOrganizationUser(body);
@@ -52,7 +56,7 @@ public class OrganizationUserRestController {
     }
 
     @GetMapping("/organization/{organizationId}")
-    @PreAuthorize("hasAuthority(#organizationId)")
+    @PreAuthorize("hasAuthority(#organizationId) and hasAuthority('organization-users:view')")
     public @ResponseBody List<OrganizationUserDto> getUsersInOrganization (@PathVariable Long organizationId){
         return this.organizationUserService.getUsersInOrganization(organizationId);
     }

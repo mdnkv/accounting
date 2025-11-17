@@ -41,4 +41,9 @@ export class OrganizationCard {
     this.router.navigate(['/organizations/update', id])
   }
 
+  viewOrganizationUsers() {
+    const id = this.userOrganization().organization.id!
+    this.router.navigate(['/organizations/users', id])
+  }
+
 }

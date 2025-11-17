@@ -16,10 +16,12 @@ import {UpdateJournalView} from './journals/views/update-journal-view/update-jou
 import {HasActiveOrganizationGuard, HasAuthorityGuard} from './core/guards/organizations.guards';
 import {ReportsHomeView} from './reports/views/reports-home-view/reports-home-view';
 import {BalanceSheetView} from './reports/views/balance-sheet-view/balance-sheet-view';
+import {OrganizationUsersView} from './organizations/views/organization-users-view/organization-users-view';
 
 export const routes: Routes = [
   {path: 'dashboard', component: DashboardView},
   {path: 'organizations/create', component: CreateOrganizationView},
+  {path: 'organizations/users/:organizationId', component: OrganizationUsersView, canActivate: [HasAuthorityGuard("organization-users:view")]},
   {path: 'organizations/update/:id', component: UpdateOrganizationView, canActivate: [HasAuthorityGuard('organizations:update')]},
   {path: 'organizations', component: OrganizationsView},
   {path: 'accounts/create', component: CreateAccountView, canActivate: [HasAuthorityGuard('accounts:create')]},
