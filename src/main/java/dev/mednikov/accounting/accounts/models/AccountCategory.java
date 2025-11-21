@@ -4,7 +4,7 @@ import dev.mednikov.accounting.organizations.models.Organization;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
 import org.hibernate.annotations.*;
-import org.hibernate.dialect.PostgreSQLEnumJdbcType;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
 
@@ -28,7 +28,7 @@ public class AccountCategory {
 
     @Column(name = "account_type", nullable = false)
     @Enumerated(EnumType.STRING)
-    @JdbcType(PostgreSQLEnumJdbcType.class)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     private AccountType accountType;
 
     @Column(name = "created_at")
