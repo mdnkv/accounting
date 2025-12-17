@@ -27,7 +27,6 @@ public class AuthenticationConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/error/**").permitAll()
-                        .requestMatchers("/", "/index.html**", "/*.css", "/*.js", "/media/**", "/*.ico", "/*.png").permitAll()
                         .anyRequest().authenticated()
                 )
                 .cors(Customizer.withDefaults())
