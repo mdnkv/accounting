@@ -128,6 +128,10 @@ The architecture of the project is presented on the C4 diagram below:
 
 ![](docs/architecture.png)
 
+## Frontend migration
+
+Since version 0.0.4, the frontend application was moved to the separate project. It can be accessed in this [github repository](https://github.com/mdnkv/accounting-app). Consequently, hash URLs and Maven frontend pipeline were abandoned.
+
 ## Screenshots
 
 The frontend combines both Angular Material (mainly form components) and Bulma (for flex layouts)
