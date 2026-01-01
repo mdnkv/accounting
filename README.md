@@ -156,6 +156,6 @@ Create a new transaction
 
 ## Author
 
-(C) 2025 Iurii Mednikov ```iurii.mednikov@iu-study.org```
+(C) 2025-2026 Iurii Mednikov ```iurii.mednikov@iu-study.org```
 
 The code is delivered under terms of the MIT software license. For more information, check the ```LICENSE.txt``` file.
