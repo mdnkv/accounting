@@ -5,12 +5,12 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.8</version>
+        <version>4.0.1</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>dev.mednikov</groupId>
     <artifactId>accounting</artifactId>
-    <version>0.0.4</version>
+    <version>1.0</version>
     <name>Accounting</name>
     <description>Multi tenant cloud accounting application</description>
     <url/>
@@ -29,6 +29,7 @@
     </developers>
     <properties>
         <java.version>24</java.version>
+        <jacoco.version>0.8.13</jacoco.version>
     </properties>
     <dependencies>
         <dependency>
@@ -96,7 +97,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.13</version>
+                <version>${jacoco.version}</version>
                 <executions>
                     <execution>
                         <goals>
